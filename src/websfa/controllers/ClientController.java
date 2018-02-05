@@ -6,10 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import websfa.beans.client.CautareClient;
-import websfa.beans.client.ClientLite;
-import websfa.beans.client.DetaliiClient;
-import websfa.model.client.OperatiiClient;
+import websfa.beans.CautareClient;
+import websfa.beans.ClientLite;
+import websfa.beans.DetaliiClient;
+import websfa.model.articole.OperatiiClient;
 
 @Controller
 public class ClientController {

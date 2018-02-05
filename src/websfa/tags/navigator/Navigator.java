@@ -47,6 +47,12 @@ public class Navigator extends SimpleTagSupport {
 		navigationLinks.add(nd);
 
 		nd = new NavigationDetails();
+		nd.setLink(String.format("%s/aprobacmd", root));
+		nd.setText("Aprobare comanda");
+		nd.setNume(EnumMeniu.AFISARE_COMANDA);
+		navigationLinks.add(nd);
+
+		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/afiscom", root));
 		nd.setText("Afisare comanda");
 		nd.setNume(EnumMeniu.AFISARE_COMANDA);

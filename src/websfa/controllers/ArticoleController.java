@@ -15,7 +15,7 @@ import websfa.model.articole.OperatiiArticole;
 @Controller
 public class ArticoleController {
 
-	@RequestMapping(value = "/cauta", produces = "application/json")
+	@RequestMapping(value = "/cautaArticol", produces = "application/json")
 	@ResponseBody
 	public List<Articol> cautaArticole(Articol articolCautare) {
 

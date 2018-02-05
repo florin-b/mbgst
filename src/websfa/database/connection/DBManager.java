@@ -6,13 +6,13 @@ import oracle.jdbc.pool.OracleDataSource;
 
 public class DBManager {
 
-	public DataSource getProdDataSource() {
+	public DataSource getTestDataSource() {
 
 		OracleDataSource oracleDS = null;
 		try {
 
 			oracleDS = new OracleDataSource();
-			oracleDS.setURL("jdbc:oracle:thin:@10.1.3.94:1521:prd002");
+			oracleDS.setURL("jdbc:oracle:thin:@10.1.3.89:1527:tes");
 			oracleDS.setUser("WEBSAP");
 			oracleDS.setPassword("2INTER7");
 		} catch (Exception e) {
@@ -21,4 +21,7 @@ public class DBManager {
 		return oracleDS;
 	}
 
+	
+
+	
 }

@@ -1,4 +1,4 @@
-package websfa.beans.user;
+package websfa.beans;
 
 public class Login {
 

@@ -3,9 +3,15 @@ package websfa.controllers;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import websfa.beans.CautaCmdAprob;
+import websfa.beans.Comanda;
+import websfa.beans.ComandaAprobareAfis;
+import websfa.beans.ComandaAprobareDetalii;
 import websfa.beans.articole.CautareComanda;
 import websfa.beans.articole.ComandaDetalii;
 import websfa.beans.articole.ComandaHeader;
@@ -27,6 +33,30 @@ public class ComenziController {
 	public ComandaDetalii getDetaliiComanda(String idCmd) {
 
 		return new OperatiiComenzi().getDetaliiComanda(idCmd);
+
+	}
+
+	@RequestMapping(value = "/salveazaComanda", method = RequestMethod.POST)
+	@ResponseBody
+	public void salveazaComanda(@RequestBody Comanda comanda) {
+
+		new OperatiiComenzi().salveazaComanda(comanda);
+
+	}
+
+	@RequestMapping(value = "/getCmdAprob", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public List<ComandaAprobareAfis> getComenziAprobare(CautaCmdAprob cautaCmd) {
+
+		return new OperatiiComenzi().getComenziAprobare(cautaCmd);
+
+	}
+
+	@RequestMapping(value = "/getDetCmdAprob", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ComandaAprobareDetalii getComandaAprobare(String idComanda) {
+
+		return new OperatiiComenzi().getDetaliiComandaAprob(idComanda);
 
 	}
 

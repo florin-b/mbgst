@@ -1,4 +1,4 @@
-package websfa.beans.client;
+package websfa.beans;
 
 import websfa.beans.articole.Adresa;
 

@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Stocuri</title>
+<title>Afisare comanda</title>
 
 
 
@@ -21,24 +21,36 @@
 
 
 
-
-
-<script src="<c:url value="/resources/scripts/stocuri.js" />"></script>
+<script src="<c:url value="/resources/scripts/afiseaza_comanda.js" />"></script>
 
 
 <style>
+.zebra {
+	background-color: EAEAEA;
+}
+
 #listDiv {
-	height: 450px;
+	height: 400px;
 	overflow: scroll;
 }
 
-#stocTable {
+#datelivrareTable tbody td, th {
+	color: #68838B;
+	font-weight: normal;
+}
+
+#articoleTable, #antetTable tbody td {
+	color: #473C8B;
+	font-weight: normal;
+}
+
+#articoleTable, #antetTable {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	border-collapse: collapse;
 	width: 100%;
 }
 
-#stocTable td {
+#articoleTable td, #antetTable  td {
 	padding: 2px;
 }
 </style>
@@ -48,8 +60,7 @@
 
 <body>
 
-
-	<div data-role="page" id="stocuri" data-theme="a" data-url="">
+	<div data-role="page" id="aprobacomanda" data-theme="a" data-url="">
 
 
 		<div data-role="panel" data-display="overlay" data-position="left"
@@ -62,56 +73,44 @@
 			</ul>
 		</div>
 		<div data-role="header" data-theme="a">
-			<h1>Stocuri</h1>
+			<h1>Aprobare comanda</h1>
 			<a href="#left-panel" data-theme="d" data-icon="arrow-r"
 				data-iconpos="notext" data-shadow="false" data-iconshadow="false"
 				class="ui-icon-nodisc">Meniu</a>
 		</div>
 
 
-
-
-
 		<div data-role="content" class="ui-content">
 
+			<select name="cmd_aprob_select" id="cmd_aprob_select">
+
+			</select> <br> <br> <b><font color="#008B00">Antet</font></b>
+			<hr>
+
+			<div id="antetCmdAprob"></div>
 
 
-			<form>
-				<fieldset data-role="controlgroup" data-type="horizontal">
-
-					<input type="radio" name="radio-articol" id="radio-cod" value="cod"
-						checked="checked"> <label for="radio-cod">Cod
-						articol</label> <input type="radio" name="radio-articol" id="radio-nume"
-						value="nume"> <label for="radio-nume">Nume articol</label>
-				</fieldset>
-			</form>
+			<br> <br> <b><font color="#008B00">Articole</font></b>
+			<hr>
 
 
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<input id="codArticol" data-type="search">
-				</div>
-				<div class="ui-block-b">
 
-					<input type="button" name="salveazaAuto" id="cautaArticol"
-						onClick="cautaArticol();" value="Cauta" />
 
-				</div>
+			<div id="articoleCmdAprob">
+				<table data-role="table" style="width: 100%" id="articoleTable"
+					class="ui-responsive" data-mode="reflow">
+					<thead></thead>
+					<tbody>
+					</tbody>
+				</table>
+
 			</div>
-
-			<br>
-
-			<div data-role="collapsible-set" data-iconpos="right"
-				id="articoleset"></div>
-
-
-
 
 
 		</div>
-	</div>
 
-	<div id="userbean" style="visibility: hidden">${userjson}</div>
+		<div id="userbean" style="visibility: hidden">${userjson}</div>
 
+		<script src="<c:url value="/resources/scripts/aproba_comanda.js" />"></script>
 </body>
 </html>

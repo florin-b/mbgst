@@ -8,12 +8,6 @@ $(document).on('pagebeforeshow', '#preturi', function() {
 	$('#numeArtSel').parent().css('margin-left', '50px');
 	$('#numeArtSel').parent().css('margin-right', '50px');
 
-	$('#list-articole').on('click', 'li', function() {
-		numeArtSel = $(this).text();
-		getPret($(this).attr("codart"));
-
-	});
-
 });
 
 $(document).on('pageshow', '#preturi', function() {
@@ -30,10 +24,15 @@ $(document).on('pageshow', '#preturi', function() {
 
 });
 
+$(document).on('pagecreate', '#preturi', function() {
+
+	setColapsibleArticolListenerPret();
+
+});
+
 function cautaArticol() {
 
-	$("#pretResult").hide();
-	$("#listDiv").hide();
+
 
 	if ($('#codArticol').val().trim() == '')
 		return;
@@ -54,7 +53,7 @@ function cautaArticol() {
 
 	$.ajax({
 		type : 'GET',
-		url : 'cauta',
+		url : 'cautaArticol',
 		data : articol,
 		success : function(data) {
 			afiseazaListArticole(data);
@@ -71,27 +70,41 @@ function cautaArticol() {
 
 function afiseazaListArticole(listArticole) {
 
-	var html = "";
+	$("#articoleset").empty();
 
-	if (listArticole.length == 0)
-		return;
+	for (var u = 0; u < listArticole.length; u++) {
+		var content = "<div data-role='collapsible' data-content-theme='a' id='"
+				+ listArticole[u].cod
+				+ "'><h2><div id='numeart"
+				+ listArticole[u].cod
+				+ "'>"
+				+ listArticole[u].nume
+				+ "</div></h2><div id='articol"
+				+ listArticole[u].cod
+				+ "'></div></div>";
 
-	for (var i = 0; i < listArticole.length; i++) {
-
-		var backColor = "style='background-color:white;border:0px;'";
-		if (i % 2 != 0)
-			backColor = "style='background-color:#E6E6FA;border:0px;'";
-
-		html += "<li codart=" + listArticole[i].cod + "  " + backColor + ">"
-				+ listArticole[i].nume + "</li>";
+		$("#articoleset").append(content).collapsibleset("refresh");
 	}
 
-	$('#list-articole').html(html);
-	$('#list-articole').children().removeClass('ui-body-c');
+}
 
-	$('#list-articole').listview("refresh");
-	$('#list-articole').trigger("updatelayout");
-	$("#listDiv").show();
+function setColapsibleArticolListenerPret() {
+	$('#articoleset').bind('collapsibleexpand', function(data) {
+
+		var codArt = data.target.id;
+
+		var contentId = '#' + codArt;
+
+		var position = $(contentId).offset().top;
+		$.mobile.silentScroll(position);
+
+		getPret(codArt);
+
+	});
+
+	$('#articoleset').bind('collapsiblecollapse', function(data) {
+
+	});
 
 }
 
@@ -108,7 +121,7 @@ function getPret(codArticol) {
 			departament : userObj.codDepart
 		}),
 		success : function(data) {
-			afiseazaPret(data);
+			afiseazaPret(codArticol, data);
 			$.mobile.loading('hide');
 		},
 		error : function(exception) {
@@ -120,22 +133,25 @@ function getPret(codArticol) {
 
 }
 
-function afiseazaPret(articolPret) {
+function afiseazaPret(articolCod, articolPret) {
 
-	$("#pretResult").show();
-	$('#numeArtSel').html(numeArtSel);
+	var contentId = '#articol' + articolCod;
 
-	var pretArt = '';
+	var content = '<table data-role="table" id="pretTable" class="ui-responsive table" data-mode="reflow"  style="width:100%;padding: 10px;">';
 
-	pretArt += '<tr><td>' + articolPret.pret + '</td>';
-	pretArt += '<td>' + articolPret.um + '</td></tr>';
+	content += '<tr>';
+	content += '<td style="width:25%">Pret</td>';
+	content += '<td style="width:25%">Um</td>';
+	content += '</tr>';
 
-	$('#pretArticol').html(pretArt);
+	content += '<tr>';
+	content += '<td style="width:25%">' + articolPret.pret + '</td>';
+	content += '<td style="width:25%">' + articolPret.um + '</td>';
+	content += '</tr>';
 
-}
+	content += '</table>';
 
-function clearScreen() {
-	$("#pretResult").hide();
-	$("#listDiv").hide();
-	$("#codArticol").val('');
+	$("#pretTable").remove();
+	$(content).appendTo(contentId).enhanceWithin();
+
 }

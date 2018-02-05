@@ -6,8 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import websfa.beans.user.Login;
-import websfa.beans.user.User;
+import websfa.beans.Login;
+import websfa.beans.User;
 import websfa.database.connection.DBManager;
 import websfa.helper.user.UserHelper;
 import websfa.queries.user.UserSqlQueries;
@@ -21,7 +21,7 @@ public class UserDAO {
 		String storedProcedure = "{ call web_pkg.wlogin(?,?,?,?,?,?,?,?,?,?) }";
 		int logonStatus = 0;
 
-		try (Connection conn = new DBManager().getProdDataSource().getConnection();
+		try (Connection conn = new DBManager().getTestDataSource().getConnection();
 				CallableStatement callableStatement = conn.prepareCall(storedProcedure);) {
 
 			callableStatement.setString(1, login.getUsername());

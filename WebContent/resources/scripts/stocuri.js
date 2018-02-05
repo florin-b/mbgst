@@ -8,12 +8,6 @@ $(document).on('pagebeforeshow', '#stocuri', function() {
 	$('#numeArtSel').parent().css('margin-left', '50px');
 	$('#numeArtSel').parent().css('margin-right', '50px');
 
-	$('#list-articole').on('click', 'li', function() {
-		numeArtSel = $(this).text();
-		getStoc($(this).attr("codart"));
-
-	});
-
 });
 
 $(document).on('pageshow', '#stocuri', function() {
@@ -23,17 +17,20 @@ $(document).on('pageshow', '#stocuri', function() {
 	$(":input[name= 'radio-articol']").on('change', function() {
 		var clicked = $(this).val();
 		clearScreen();
-		
+
 		$('#codArticol').focus();
 
 	});
 
 });
 
-function cautaArticol() {
+$(document).on('pagecreate', '#stocuri', function() {
 
-	$("#stocResult").hide();
-	$("#listDiv").hide();
+	setColapsibleArticolListenerStoc();
+
+});
+
+function cautaArticol() {
 
 	if ($('#codArticol').val().trim() == '')
 		return;
@@ -54,7 +51,7 @@ function cautaArticol() {
 
 	$.ajax({
 		type : 'GET',
-		url : 'cauta',
+		url : 'cautaArticol',
 		data : articol,
 		success : function(data) {
 			afiseazaListArticole(data);
@@ -69,29 +66,43 @@ function cautaArticol() {
 
 }
 
+function setColapsibleArticolListenerStoc() {
+	$('#articoleset').bind('collapsibleexpand', function(data) {
+
+		var codArt = data.target.id;
+
+		var contentId = '#' + codArt;
+
+		var position = $(contentId).offset().top;
+		$.mobile.silentScroll(position);
+
+		getStoc(codArt);
+
+	});
+
+	$('#articoleset').bind('collapsiblecollapse', function(data) {
+
+	});
+
+}
+
 function afiseazaListArticole(listArticole) {
 
-	var html = "";
+	$("#articoleset").empty();
 
-	if (listArticole.length == 0)
-		return;
+	for (var u = 0; u < listArticole.length; u++) {
+		var content = "<div data-role='collapsible' data-content-theme='a' id='"
+				+ listArticole[u].cod
+				+ "'><h2><div id='numeart"
+				+ listArticole[u].cod
+				+ "'>"
+				+ listArticole[u].nume
+				+ "</div></h2><div id='articol"
+				+ listArticole[u].cod
+				+ "'></div></div>";
 
-	for (var i = 0; i < listArticole.length; i++) {
-
-		var backColor = "style='background-color:white;border:0px;'";
-		if (i % 2 != 0)
-			backColor = "style='background-color:#E6E6FA;border:0px;'";
-
-		html += "<li codart=" + listArticole[i].cod + "  " + backColor + ">"
-				+ listArticole[i].nume + "</li>";
+		$("#articoleset").append(content).collapsibleset("refresh");
 	}
-
-	$('#list-articole').html(html);
-	$('#list-articole').children().removeClass('ui-body-c');
-
-	$('#list-articole').listview("refresh");
-	$('#list-articole').trigger("updatelayout");
-	$("#listDiv").show();
 
 }
 
@@ -107,7 +118,7 @@ function getStoc(codArticol) {
 			filiala : userObj.unitLog
 		}),
 		success : function(data) {
-			afiseazaStoc(data);
+			afiseazaStoc(codArticol, data);
 			$.mobile.loading('hide');
 		},
 		error : function(exception) {
@@ -119,26 +130,28 @@ function getStoc(codArticol) {
 
 }
 
-function afiseazaStoc(articolStoc) {
+function afiseazaStoc(articolCod, articolStoc) {
 
-	$("#stocResult").show();
-	$('#numeArtSel').html(numeArtSel);
+	var contentId = '#articol' + articolCod;
 
-	var stocuriArt = '';
+	var content = '<table data-role="table" id="stocTable" class="ui-responsive table" data-mode="reflow"  style="width:100%;padding: 10px;">';
+
+	content += '<tr>';
+	content += '<td style="width:25%">Cantitate</td>';
+	content += '<td style="width:25%">Um</td>';
+	content += '<td style="width:25%">Depozit</td>';
+	content += '</tr>';
 
 	for (var i = 0; i < articolStoc.length; i++) {
-		stocuriArt += '<tr><td>' + articolStoc[i].cantitate + '</td>';
-		stocuriArt += '<td>' + articolStoc[i].um + '</td>';
-		stocuriArt += '<td>' + articolStoc[i].depozit + '</td></tr>';
+		content += '<tr><td>' + articolStoc[i].cantitate + '</td>';
+		content += '<td>' + articolStoc[i].um + '</td>';
+		content += '<td>' + articolStoc[i].depozit + '</td></tr>';
 
 	}
 
-	$('#stocuriArticol').html(stocuriArt);
+	content += '</table>';
 
-}
+	$("#stocTable").remove();
+	$(content).appendTo(contentId).enhanceWithin();
 
-function clearScreen() {
-	$("#stocResult").hide();
-	$("#listDiv").hide();
-	$("#codArticol").val('');
 }

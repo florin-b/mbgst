@@ -28,6 +28,16 @@
 	height: 450px;
 	overflow: scroll;
 }
+
+#pretTable {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#pretTable td {
+	padding: 2px;
+}
 </style>
 
 </head>
@@ -88,36 +98,8 @@
 
 			<br>
 
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<div id="listDiv">
-						<ul id="list-articole" data-role="listview" data-inset="true">
-
-						</ul>
-					</div>
-				</div>
-				<div class="ui-block-b" id='pretResult'>
-
-					<div>
-						<div id='numeArtSel'></div>
-						<br>
-						<table data-role="table" id="pret-table" data-mode="reflow"
-							class="ui-responsive table-stroke">
-							<thead>
-								<tr>
-									<th data-priority="1">Pret</th>
-									<th data-priority="2">Um</th>
-
-								</tr>
-							</thead>
-							<tbody id='pretArticol'>
-							</tbody>
-						</table>
-
-					</div>
-
-				</div>
-			</div>
+			<div data-role="collapsible-set" data-iconpos="right"
+				id="articoleset"></div>
 
 
 		</div>

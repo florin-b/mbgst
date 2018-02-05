@@ -1,4 +1,4 @@
-package websfa.model.client;
+package websfa.model.articole;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,11 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import websfa.beans.CautareClient;
+import websfa.beans.ClientLite;
+import websfa.beans.DetaliiClient;
+import websfa.beans.StareClient;
 import websfa.beans.articole.Adresa;
-import websfa.beans.client.CautareClient;
-import websfa.beans.client.ClientLite;
-import websfa.beans.client.DetaliiClient;
-import websfa.beans.client.StareClient;
 import websfa.database.connection.DBManager;
 import websfa.enums.EnumJudete;
 import websfa.queries.user.ClientSqlQueries;
@@ -22,7 +22,7 @@ public class OperatiiClient {
 
 		List<ClientLite> listClienti = new ArrayList<>();
 
-		try (Connection conn = new DBManager().getProdDataSource().getConnection();
+		try (Connection conn = new DBManager().getTestDataSource().getConnection();
 				PreparedStatement stmt = conn.prepareStatement(ClientSqlQueries.getClient())) {
 
 			stmt.clearParameters();
@@ -51,7 +51,7 @@ public class OperatiiClient {
 	public DetaliiClient getDetaliiClient(String codClient) {
 
 		DetaliiClient detaliiClient = new DetaliiClient();
-		try (Connection conn = new DBManager().getProdDataSource().getConnection();) {
+		try (Connection conn = new DBManager().getTestDataSource().getConnection();) {
 
 			detaliiClient.setCod(codClient);
 			detaliiClient.setAdresa(getAdresaSediulSocialClient(conn, codClient));

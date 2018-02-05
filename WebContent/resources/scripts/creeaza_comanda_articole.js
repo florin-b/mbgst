@@ -5,6 +5,9 @@ var globalDetaliiClient;
 var pretInit;
 var numeArticolCurent;
 var listaArticole = [];
+var departArticol;
+var aprobaSD = false;
+var aprobaDV = false;
 
 $(document).on('pagebeforeshow', '#crearecomanda', function() {
 
@@ -49,7 +52,7 @@ $('#cautaArticol').click(function() {
 
 	$.ajax({
 		type : 'GET',
-		url : 'cauta',
+		url : 'cautaArticol',
 		data : articol,
 		success : function(data) {
 			afiseazaListArticole(data);
@@ -77,7 +80,8 @@ function afiseazaListArticole(listArticole) {
 				+ listArticole[u].nume
 				+ "</div></h2><div id='articol"
 				+ listArticole[u].cod
-				+ "'></div></div>";
+				+ "'></div><div id='obj1' style='display:none'>"
+				+ JSON.stringify(listArticole[u]) + "</div></div>";
 
 		$("#articoleset").append(content).collapsibleset("refresh");
 	}
@@ -99,6 +103,10 @@ function setColapsibleArticolListener() {
 		var numeArtId = '#numeart' + codArt;
 
 		numeArticolCurent = $("#articoleset h2 " + numeArtId).text();
+
+		var obj = jQuery.parseJSON($('#obj1').text());
+
+		departArticol = obj.depart;
 
 		// $('#numeart'+data.target.id).addClass('greybackcolor');
 
@@ -126,7 +134,7 @@ function setColapsibleSelectArticolListener() {
 }
 
 function getDetaliiArticol(codArticol) {
-	var depozit = userObj.codDepart + $('#select-depoz').val();
+	var depozit = departArticol + $('#select-depoz').val();
 
 	getStocArticol(codArticol, depozit);
 
@@ -260,11 +268,10 @@ function afisPretArticol(codArticol, datePret) {
 	content += '<tr><td style="width:25%">Pret cu tva</td>';
 	content += '<td >22</td>';
 	content += '</tr>';
-	
+
 	content += '<tr><td style="width:25%">Discount client (%)</td>';
 	content += '<td >2</td>';
-	content += '</tr>';	
-	
+	content += '</tr>';
 
 	var articolSelectat = new Object();
 	articolSelectat.nume = numeArticolCurent;
@@ -315,7 +322,13 @@ function trateazaArticol(articolSelectat) {
 	articolSelectat.cant = $(idTextCant).val();
 	articolSelectat.pret = $(idTextPret).val();
 	articolSelectat.procent = $(idTextProcent).val();
+	articolSelectat.depozit = departArticol + $('#select-depoz').val();
 	listaArticole.push(articolSelectat);
+
+	if (articolSelectat.procent > 0) {
+		aprobaSD = true;
+		aprobaDV = true;
+	}
 
 	$('#' + articolSelectat.cod).collapsible("collapse");
 
@@ -411,3 +424,41 @@ function setPretReducere(codArticol) {
 	$(idTextPret).val(Number(valoarePret).toFixed(2));
 
 }
+
+$('#salveazaComanda').click(function() {
+
+	var comanda = new Object();
+	var articole = new Object();
+	var dateLivrare = new Object();
+
+	comanda.codClient = globalDetaliiClient.cod;
+	comanda.codAgent = userObj.codPers;
+	comanda.aprobaSD = aprobaSD;
+	comanda.aprobaDV = aprobaDV;
+	comanda.unitLog = userObj.unitLog;
+	comanda.dateLivrare = getDateLivrare();
+	comanda.listArticole = getArticoleComanda(listaArticole);
+
+	$.mobile.loading('show');
+
+	$.ajax({
+		type : 'POST',
+		url : 'salveazaComanda',
+		data : JSON.stringify(comanda),
+		success : function(data) {
+			$.mobile.loading('hide');
+
+		},
+		dataType : 'json',
+		contentType : 'application/json',
+		
+		error : function(exception) {
+			$.mobile.loading('hide');
+
+		}
+
+	});
+
+	resetCmdData();
+
+});

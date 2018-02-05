@@ -5,8 +5,8 @@ var globalDetaliiClient;
 
 $(document).on('pagebeforeshow', '#crearecomanda', function() {
 
-	//$('#select_client_div').css('margin-left', '10px');
-	//$('#select_client_div').css('margin-right', '20px');
+	// $('#select_client_div').css('margin-left', '10px');
+	// $('#select_client_div').css('margin-right', '20px');
 
 });
 
@@ -184,5 +184,70 @@ function selecteazaClient() {
 
 	// $('#' + globalDetaliiClient.cod).collapsible("collapse");
 	$('#inner_optiuni_div').collapsible("collapse");
+	
+	resetSelectOptions();
 
 }
+
+$('#creare_comanda_select').on('change', function() {
+	var selectId = this.value;
+
+	$('#selectClientDiv').hide();
+	$('#selectArticoleDiv').hide();
+	$('#selectDateLivrareDiv').hide();
+
+	if (selectId == 0) {
+		$('#selectClientDiv').hide();
+		$('#selectArticoleDiv').hide();
+		$('#selectDateLivrareDiv').hide();
+	} else if (selectId == 1) {
+		$('#selectClientDiv').show();
+
+	} else if (selectId == 2) {
+		$('#selectArticoleDiv').show();
+
+	} else if (selectId == 3) {
+		$('#selectDateLivrareDiv').show();
+
+	}
+
+});
+
+
+function resetSelectOptions()
+{
+	$('#selectClientDiv').hide();
+	$('#selectArticoleDiv').hide();
+	$('#selectDateLivrareDiv').hide();
+	
+	$("#creare_comanda_select").val("0").change();
+}
+
+function resetCmdData()
+{
+	
+	
+	$('#clientComanda').html("");
+	
+	listaArticole = "";
+	$("#art_table_body").empty();
+	
+	
+	$('#numeJudet').val("");
+	$('#localitate').val("");
+	$('#strada').val("");
+	$('#persContact').val("");
+	$('#telPersContact').val("");
+	$('#selectTipReducere').val("1").change();
+	$('#selectDocInsotitor').val("1").change();
+	$('#selectPlata').val("B").change();
+	$('#selectResponsabil').val("AV").change();
+	$('#selectTransport').val("TRAP").change();
+	$('#dataLivrare').val("");
+	$('#obsLivrare').val("");
+	
+	resetSelectOptions()
+
+}
+
+

@@ -13,8 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import websfa.beans.user.Login;
-import websfa.beans.user.User;
+import websfa.beans.Login;
+import websfa.beans.User;
 import websfa.database.user.UserDAO;
 
 @Controller
@@ -87,6 +87,21 @@ public class MainMenuController {
 		Gson gson = new GsonBuilder().create();
 
 		model = new ModelAndView("afiseaza_comanda");
+		model.addObject("user", user);
+		model.addObject("userjson", gson.toJson(user));
+
+		return model;
+	}
+	
+	
+	@RequestMapping(value = "/aprobacmd", method = RequestMethod.GET)
+	public ModelAndView aprobaComanda(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model;
+
+		Gson gson = new GsonBuilder().create();
+
+		model = new ModelAndView("aproba_comanda");
 		model.addObject("user", user);
 		model.addObject("userjson", gson.toJson(user));
 

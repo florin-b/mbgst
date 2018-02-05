@@ -6,6 +6,7 @@ public class ArticolStoc {
 	private String um;
 	private String depozit;
 	private String sintetic;
+	private String codDepart;
 
 	public double getCantitate() {
 		return cantitate;
@@ -39,9 +40,19 @@ public class ArticolStoc {
 		this.sintetic = sintetic;
 	}
 
+	public String getCodDepart() {
+		return codDepart;
+	}
+
+	public void setCodDepart(String codDepart) {
+		this.codDepart = codDepart;
+	}
+
 	@Override
 	public String toString() {
-		return "ArticolStoc [cantitate=" + cantitate + ", um=" + um + ", depozit=" + depozit + ", sintetic=" + sintetic + "]";
+		return "ArticolStoc [cantitate=" + cantitate + ", um=" + um + ", depozit=" + depozit + ", sintetic=" + sintetic + ", codDepart=" + codDepart + "]";
 	}
+
+	
 
 }

@@ -26,7 +26,7 @@ public class OperatiiArticole {
 		else
 			sqlString = SqlQueries.cautaArticoleNume(articol.getNume());
 
-		try (Connection conn = new DBManager().getProdDataSource().getConnection(); PreparedStatement stmt = conn.prepareStatement(sqlString)) {
+		try (Connection conn = new DBManager().getTestDataSource().getConnection(); PreparedStatement stmt = conn.prepareStatement(sqlString)) {
 
 			stmt.clearParameters();
 			stmt.setString(1, articol.getDepart());
@@ -39,6 +39,8 @@ public class OperatiiArticole {
 				Articol art = new Articol();
 				art.setNume(rs.getString(1));
 				art.setCod(rs.getString(2));
+				art.setDepart(articol.getDepart());
+			
 				listArticole.add(art);
 
 			}
@@ -53,7 +55,7 @@ public class OperatiiArticole {
 	public List<ArticolStoc> getStoc(String codArticol, String filiala) {
 		List<ArticolStoc> listArticole = new ArrayList<>();
 
-		try (Connection conn = new DBManager().getProdDataSource().getConnection(); PreparedStatement stmt = conn.prepareStatement(SqlQueries.getStoc())) {
+		try (Connection conn = new DBManager().getTestDataSource().getConnection(); PreparedStatement stmt = conn.prepareStatement(SqlQueries.getStoc())) {
 
 			stmt.clearParameters();
 			stmt.setString(1, ArticoleHelper.formatCodArt(codArticol));
@@ -88,7 +90,7 @@ public class OperatiiArticole {
 	public ArticolStoc getStoc(String codArticol, String filiala, String depozit) {
 		ArticolStoc articolStoc = new ArticolStoc();
 
-		try (Connection conn = new DBManager().getProdDataSource().getConnection();
+		try (Connection conn = new DBManager().getTestDataSource().getConnection();
 				PreparedStatement stmt = conn.prepareStatement(SqlQueries.getStocDepozit())) {
 
 			stmt.clearParameters();
