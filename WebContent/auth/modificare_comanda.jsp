@@ -60,7 +60,7 @@
 
 <body>
 
-	<div data-role="page" id="aprobacomanda" data-theme="a" data-url="">
+	<div data-role="page" id="modifcmd" data-theme="a" data-url="">
 
 
 		<div data-role="panel" data-display="overlay" data-position="left"
@@ -73,7 +73,7 @@
 			</ul>
 		</div>
 		<div data-role="header" data-theme="a">
-			<h1>Aprobare comanda</h1>
+			<h1>Modificare comanda</h1>
 			<a href="#left-panel" data-theme="d" data-icon="arrow-r"
 				data-iconpos="notext" data-shadow="false" data-iconshadow="false"
 				class="ui-icon-nodisc">Meniu</a>
@@ -83,13 +83,20 @@
 		<div data-role="content" class="ui-content">
 
 			<select name="cmd_aprob_select" id="cmd_aprob_select">
-
-			</select> <br> <br> <b><font color="#008B00">Date
+			</select> <br>
+			
+			 <select name="modif_cmd_select" id="modif_cmd_select" >
+				<option value="0">Selectati o actiune</option>
+				<option value="2">Adaugare articole</option>
+				<option value="3">Modificare date livrare</option>
+			</select> <br>
+			
+			 <br> <br> <b><font color="#008B00">Date
 					generale</font></b>
 			<hr>
 
 			<div id="antetCmdAprob">
-			<table data-role="table" style="width: 100%" id="dateGenTable"
+				<table data-role="table" style="width: 100%" id="dateGenTable"
 					class="ui-responsive" data-mode="reflow">
 					<thead></thead>
 					<tbody>
@@ -112,17 +119,19 @@
 
 			</div>
 
-	<br>
+			<br>
 
 			<div class="ui-grid-a ui-responsive" id="opereazaCmdDiv"
 				style="display: none;">
 
 				<div class="ui-block-a">
-					<a href="#" id="aprobaCmd" class="ui-btn ui-corner-all" style="background: #bbefbb;">Aproba</a>
+					<a href="#" id="aprobaCmd" class="ui-btn ui-corner-all"
+						style="background: #bbefbb;">Aproba</a>
 				</div>
 
 				<div class="ui-block-b">
-					<a href="#" id="respingeCmd" class="ui-btn ui-corner-all" style="background: #f1c0af;">Respinge</a>
+					<a href="#" id="respingeCmd" class="ui-btn ui-corner-all"
+						style="background: #f1c0af;">Respinge</a>
 				</div>
 			</div>
 
@@ -134,6 +143,7 @@
 
 		<div id="userbean" style="visibility: hidden">${userjson}</div>
 
-		<script src="<c:url value="/resources/scripts/aproba_comanda.js" />"></script>
+		<script
+			src="<c:url value="/resources/scripts/modificare_comanda.js" />"></script>
 </body>
 </html>

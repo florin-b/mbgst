@@ -72,18 +72,17 @@ function afiseazaListArticole(listArticole) {
 	$("#articoleset").empty();
 
 	for (var u = 0; u < listArticole.length; u++) {
-		var content = "<div data-role='collapsible' data-content-theme='a' id='"
-				+ listArticole[u].cod
-				+ "'><h2><div id='numeart"
-				+ listArticole[u].cod
-				+ "'>"
-				+ listArticole[u].nume
-				+ "</div></h2><div id='articol"
-				+ listArticole[u].cod
-				+ "'></div><div id='obj1' style='display:none'>"
-				+ JSON.stringify(listArticole[u]) + "</div></div>";
 
-		$("#articoleset").append(content).collapsibleset("refresh");
+		var articol = $(
+				"<div data-role='collapsible' data-content-theme='a' id='"
+						+ listArticole[u].cod + "'><h2><div id='numeart"
+						+ listArticole[u].cod + "'>" + listArticole[u].cod
+						+ ' - ' + listArticole[u].nume
+						+ "</div></h2><div id='articol" + listArticole[u].cod
+						+ "'></div></div>").data('objArt', listArticole[u]);
+
+		$("#articoleset").append(articol).collapsibleset("refresh");
+
 	}
 
 }
@@ -95,26 +94,20 @@ function setColapsibleArticolListener() {
 
 		var contentId = '#' + codArt;
 
+		var articolCurent = $(contentId).data('objArt');
+
 		var position = $(contentId).offset().top;
 		$.mobile.silentScroll(position);
 
 		getDetaliiArticol(codArt);
 
-		var numeArtId = '#numeart' + codArt;
+		numeArticolCurent = articolCurent.nume;
 
-		numeArticolCurent = $("#articoleset h2 " + numeArtId).text();
-
-		var obj = jQuery.parseJSON($('#obj1').text());
-
-		departArticol = obj.depart;
-
-		// $('#numeart'+data.target.id).addClass('greybackcolor');
+		departArticol = articolCurent.depart;
 
 	});
 
 	$('#articoleset').bind('collapsiblecollapse', function(data) {
-
-		// $('#numeart'+data.target.id).removeClass('greybackcolor');
 
 	});
 
@@ -174,35 +167,62 @@ function afisStocArticol(codArticol, dateStoc) {
 
 	var stocId = 'stoc' + codArticol;
 
-	var getPretFunc = 'getPretArticol(' + codArticol + ')';
+	var stocTable = $(
+			'<table data-role="table" class="ui-responsive table" data-mode="reflow"></table>',
+			{
+				id : "stocTable" + codArticol
+			}).addClass("detaliiTable");
 
-	var content = '<table data-role="table" id="stocTable" class="ui-responsive table" data-mode="reflow"  style="width:100%;padding: 10px;">';
+	var row = $('<tr></tr>');
+	$(row).appendTo(stocTable);
 
-	content += '<tr>';
-	content += '<td style="width:25%">Stoc</td>';
-	content += '<td style="width:25%"><div id=' + stocId + '>'
-			+ dateStoc.cantitate + '</div></td>';
-	content += '<td style="width:10%">' + dateStoc.um + '</td>';
-	content += '</tr>';
+	$('<td></td>').text('Stoc').attr('style', 'width:25%').appendTo(row);
+	$('<td></td>').text(dateStoc.cantitate).attr('style', 'width:30%').attr(
+			'id', stocId).appendTo(row);
+	$('<td></td>').text(dateStoc.um).attr('style', 'width:70%').appendTo(row);
 
-	var idTextCantitate = 'cant' + codArticol;
+	row = $('<tr></tr>');
+	$(row).appendTo(stocTable);
 
-	content += '<tr>';
-	content += '<td style="width:25%" >Cantitate</td>';
-	content += '<td ><input type="text" value=1 id=' + idTextCantitate
-			+ '></td>';
-	content += '<td >' + dateStoc.um + '</td>';
-	content += '<td><input type="button" name="pretArticol" id="pretArticol" onClick="'
-			+ getPretFunc + '" value="Pret" /></td>';
-	content += '</tr>';
+	$('<td></td>').text('Cantitate').attr('style', 'width:25%').appendTo(row);
 
-	content += '</table>';
+	var textCant = $('<input/>', {
+		type : 'text',
+		id : 'cant' + codArticol,
+		value : 1,
+		width : '40%'
 
-	$("#stocTable").remove();
+	});
 
-	$("#pretTable").remove();
+	var tdCant = $('<td></td>', {
+		width : '30%'
+	}).appendTo(row);
+	$(textCant).appendTo(tdCant).textinput();
+	$('<td></td>').text(dateStoc.um).attr('style', 'width:10%').appendTo(row);
 
-	$(content).appendTo(contentId).enhanceWithin();
+	row = $('<tr></tr>');
+	$(row).appendTo(stocTable);
+
+	var tdPret = $('<td></td>', {
+		colspan : '3'
+	}).appendTo(row);
+
+	var btnPretArt = $('<input>', {
+		type : 'button',
+		name : 'pret',
+		value : 'Pret',
+		style : 'width:100%'
+	}).bind('click', {
+		articol : codArticol
+	}, function(event) {
+		getPretArticol(event.data.articol);
+	});
+
+	$(btnPretArt).appendTo(tdPret).buttonMarkup();
+
+	$(contentId).empty();
+
+	$(stocTable).appendTo(contentId);
 
 }
 
@@ -232,6 +252,106 @@ function getPretArticol(codArticol) {
 }
 
 function afisPretArticol(codArticol, datePret) {
+
+	pretInit = datePret.pret;
+
+	var contentId = '#articol' + codArticol;
+
+	var pretTable = $(
+			'<table data-role="table" class="ui-responsive table" data-mode="reflow"></table>',
+			{
+				id : "pretTable" + codArticol
+			}).addClass("detaliiTable");
+
+	var row = $('<tr></tr>');
+	$(row).appendTo(pretTable);
+
+	$('<td></td>').text('Pret').attr('style', 'width:25%').appendTo(row);
+
+	var textPret = $('<input/>', {
+		type : 'text',
+		id : 'pret_art' + codArticol,
+		value : datePret.pret,
+		width : '40%'
+
+	}).keyup(function() {
+		setProcentReducere(codArticol);
+	});
+
+	var tdPret = $('<td></td>', {
+		width : '25%'
+	}).appendTo(row);
+
+	$(textPret).appendTo(tdPret).textinput();
+
+	$('<td></td>').text(datePret.um).appendTo(row);
+
+	$('<td></td>').text('Unitate pret').appendTo(row);
+	$('<td></td>').text('1 BUC').appendTo(row);
+
+	row = $('<tr></tr>');
+	$(row).appendTo(pretTable);
+	$('<td></td>').text('Reducere').attr('style', 'width:25%').appendTo(row);
+
+	var textProcRed = $('<input/>', {
+		type : 'text',
+		id : 'procent_art' + codArticol,
+		value : 0,
+		width : '40%'
+
+	}).keyup(function() {
+		setPretReducere(codArticol);
+	});
+
+	var tdProcRed = $('<td></td>', {
+		width : '30%'
+	}).appendTo(row);
+	$(textProcRed).appendTo(tdProcRed).textinput();
+
+	$('<td></td>').text('%').appendTo(row);
+
+	row = $('<tr></tr>');
+	$(row).appendTo(pretTable);
+	$('<td></td>').text('Pret cu tva').attr('style', 'width:25%').appendTo(row);
+	$('<td></td>').text('24.55').appendTo(row);
+
+	row = $('<tr></tr>');
+	$(row).appendTo(pretTable);
+	$('<td></td>').text('Discount client').attr('style', 'width:25%').appendTo(
+			row);
+	$('<td></td>').text('5').appendTo(row);
+	$('<td></td>').text('%').appendTo(row);
+
+	var articolSelectat = new Object();
+	articolSelectat.nume = numeArticolCurent;
+	articolSelectat.cod = codArticol;
+	articolSelectat.um = datePret.um;
+
+	row = $('<tr></tr>');
+	$(row).appendTo(pretTable);
+
+	var tdAdaugaArt = $('<td></td>', {
+		colspan : '5'
+	}).appendTo(row);
+
+	var btnAdaugaArt = $('<input>', {
+		type : 'button',
+		name : 'adauga',
+		value : 'Adauga',
+		style : 'width:100%'
+	}).bind('click', {
+		articol : articolSelectat
+	}, function(event) {
+		trateazaArticol(event.data.articol);
+	});
+
+	$(btnAdaugaArt).appendTo(tdAdaugaArt).buttonMarkup();
+
+	$(pretTable).appendTo(contentId);
+
+}
+
+function afisPretArticol_old(codArticol, datePret) {
 
 	pretInit = datePret.pret;
 
@@ -300,6 +420,9 @@ function afisPretArticol(codArticol, datePret) {
 
 function trateazaArticol(articolSelectat) {
 
+	if ($('#divArticole').css('display') == 'none')
+		$('#divArticole').show();
+
 	var idTextStoc = '#stoc' + articolSelectat.cod;
 	var idTextCant = '#cant' + articolSelectat.cod;
 
@@ -316,8 +439,8 @@ function trateazaArticol(articolSelectat) {
 		}
 	}
 
-	var idTextPret = '#pret' + articolSelectat.cod;
-	var idTextProcent = '#procent' + articolSelectat.cod;
+	var idTextPret = '#pret_art' + articolSelectat.cod;
+	var idTextProcent = '#procent_art' + articolSelectat.cod;
 
 	articolSelectat.cant = $(idTextCant).val();
 	articolSelectat.pret = $(idTextPret).val();
@@ -399,9 +522,9 @@ function eliminaArticol(codArticol) {
 
 function setProcentReducere(codArticol) {
 
-	var idTextPret = '#pret' + codArticol;
+	var idTextPret = '#pret_art' + codArticol;
 
-	var idTextProcent = '#procent' + codArticol;
+	var idTextProcent = '#procent_art' + codArticol;
 
 	var pretSchimbat = $(idTextPret).val();
 
@@ -413,15 +536,23 @@ function setProcentReducere(codArticol) {
 
 function setPretReducere(codArticol) {
 
-	var idTextPret = '#pret' + codArticol;
+	var idTextPret = '#pret_art' + codArticol;
 
-	var idTextProcent = '#procent' + codArticol;
+	var idTextProcent = '#procent_art' + codArticol;
 
 	var procent = $(idTextProcent).val();
 
 	var valoarePret = pretInit - (procent / 100) * pretInit;
 
 	$(idTextPret).val(Number(valoarePret).toFixed(2));
+
+}
+
+function afisSalveazaCmdButton() {
+
+	if ($('#divClient').is(':visible') && $('#divArticole').is(':visible')
+			&& $('#divDateLivrare').is(':visible'))
+		$('#divSalveazaComanda').show();
 
 }
 
@@ -451,8 +582,8 @@ $('#salveazaComanda').click(function() {
 		},
 		dataType : 'json',
 		contentType : 'application/json',
-		
-		error : function(exception) {
+
+		error : function() {
 			$.mobile.loading('hide');
 
 		}

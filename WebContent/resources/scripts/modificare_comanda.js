@@ -1,17 +1,21 @@
 var userObj;
 var globalListArticole = [];
 
-$(document).on('pageshow', '#aprobacomanda', function() {
+$(document).on('pageshow', '#modifcmd', function() {
 
 	userObj = JSON.parse($('#userbean').text());
 
-	getComenziAprobare();
+
+	getComenziModificare();
 
 });
 
-$(document).on('pagecreate', '#aprobacomanda', function() {
+$(document).on('pagecreate', '#modifcmd', function() {
 
 	setColapsibleArticoleListener();
+	$('#modif_cmd_select').parent().hide();
+	
+	
 
 });
 
@@ -38,7 +42,7 @@ function afisDetaliiArticol(codArticol) {
 
 }
 
-function getComenziAprobare() {
+function getComenziModificare() {
 
 	var cautaCmdAprob = new Object();
 
@@ -74,6 +78,10 @@ function getComenziAprobare() {
 function afisComenziAprob(listComenzi) {
 
 	if (listComenzi.length > 0) {
+		
+		
+		
+		
 		$('#cmd_aprob_select').append($('<option>', {
 			value : 0,
 			text : "Selectati o comanda"
@@ -128,6 +136,8 @@ function getDetaliiCmdAprob(idComanda) {
 
 function afiseazaComandaAprob(comanda) {
 
+	$('#modif_cmd_select').parent().show();
+	
 	var dateGenTable = '#dateGenTable';
 	
 	$('#dateGenTable tbody').remove();

@@ -24,6 +24,12 @@
 <link rel="stylesheet"
 	href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
+
+<link rel="stylesheet" href="resources/css/creare_comanda.css">
+
+
+
+
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script
@@ -34,7 +40,7 @@
 	background: yellow;
 }
 
-#pretTable, #stocTable {
+#pretTable, #stocTable, #clientTable {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	border-collapse: collapse;
 	width: 100%;
@@ -314,124 +320,135 @@ hr {
 			</div>
 
 
-			<br> <br> <b><font color="#008B00">Client</font></b>
-			<hr>
+			<br> <br>
+			<div id="divClient" style="display: none">
+				<b><font color="#008B00">Client</font></b>
+				<hr>
 
-			<div id='clientComanda'></div>
+				<div id='clientComanda'></div>
+			</div>
 
-			<br> <br> <b><font color="#008B00">Articole</font></b>
-			<hr>
+			<br> <br>
+			<div id="divArticole" style="display: none">
+				<b><font color="#008B00">Articole</font></b>
+				<hr>
 
-			<table data-role="table" data-mode="reflow" class="ui-responsive"
-				id="art_com_table">
-				<thead>
-					<tr>
-						<th>Articol</th>
-						<th style='text-align: right;'>Cantitate</th>
-						<th>Um</th>
-						<th style='text-align: right;'>Pret</th>
-						<th style='text-align: right;'>Reducere (%)</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody id="art_table_body">
-				</tbody>
-			</table>
-
-
-			<br> <br> <b><font color="#008B00">Date livrare</font></b>
-			<hr>
-
-
-			<div>
 				<table data-role="table" data-mode="reflow" class="ui-responsive"
-					id="datelivrare_table_afis">
+					id="art_com_table">
 					<thead>
 						<tr>
-							<td></td>
+							<th>Articol</th>
+							<th style='text-align: right;'>Cantitate</th>
+							<th>Um</th>
+							<th style='text-align: right;'>Pret</th>
+							<th style='text-align: right;'>Reducere (%)</th>
+							<th></th>
 						</tr>
 					</thead>
-
-					<tbody>
-						<tr id="rowJudetAfis" style="display: none">
-							<td style="width: 25%">Judet</td>
-							<td><div id="numeJudetAfis"></div></td>
-						</tr>
-
-
-						<tr id="rowLocalitateAfis" style="display: none">
-							<td>Localitate</td>
-							<td><div id="localitateAfis"></div></td>
-						</tr>
-
-						<tr id="rowStradaAfis" style="display: none">
-							<td>Strada</td>
-							<td><div id="stradaAfis"></div></td>
-						</tr>
-
-						<tr id="rowPersContactAfis" style="display: none">
-							<td>Persoana de contact</td>
-							<td><div id="persContactAfis"></div></td>
-						</tr>
-
-						<tr id="rowTelefonAfis" style="display: none">
-							<td>Telefon</td>
-							<td><div id="telPersContactAfis"></div></td>
-						</tr>
-
-						<tr id="rowTipReducereAfis" style="display: none">
-							<td>Tip reducere</td>
-							<td><div id="tipReducereAfis"></div></td>
-						</tr>
-
-						<tr id="rowDocInsotitorAfis" style="display: none">
-							<td>Document insotitor</td>
-							<td><div id="docInsotitorAfis"></div></td>
-						</tr>
-
-
-						<tr id="rowPlataAfis" style="display: none">
-							<td>Plata</td>
-							<td><div id="plataAfis"></div></td>
-						</tr>
-
-						<tr id="rowRespIncasareAfis" style="display: none">
-							<td>Responsabil incasare</td>
-							<td><div id="responsabilAfis"></div></td>
-						</tr>
-
-						<tr id="rowTransportAfis" style="display: none">
-							<td>Transport</td>
-							<td><div id="transportAfis"></div></td>
-						</tr>
-
-
-						<tr id="rowDataLivrareAfis" style="display: none">
-							<td>Data livrare</td>
-							<td><div id="dataLivrareAfis"></div></td>
-						</tr>
-
-						<tr id="rowObsLivrareAfis" style="display: none">
-							<td>Observatii livrare</td>
-							<td><div id="obsLivrareAfis"></div></td>
-						</tr>
-
-
-
-
+					<tbody id="art_table_body">
 					</tbody>
-
 				</table>
+			</div>
 
+			<br> <br>
+
+			<div id="divDateLivrare" style="display: none">
+				<b><font color="#008B00">Date livrare</font></b>
+				<hr>
+
+
+				<div>
+					<table data-role="table" data-mode="reflow" class="ui-responsive"
+						id="datelivrare_table_afis">
+						<thead>
+							<tr>
+								<td></td>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr id="rowJudetAfis" style="display: none">
+								<td style="width: 25%">Judet</td>
+								<td><div id="numeJudetAfis"></div></td>
+							</tr>
+
+
+							<tr id="rowLocalitateAfis" style="display: none">
+								<td>Localitate</td>
+								<td><div id="localitateAfis"></div></td>
+							</tr>
+
+							<tr id="rowStradaAfis" style="display: none">
+								<td>Strada</td>
+								<td><div id="stradaAfis"></div></td>
+							</tr>
+
+							<tr id="rowPersContactAfis" style="display: none">
+								<td>Persoana de contact</td>
+								<td><div id="persContactAfis"></div></td>
+							</tr>
+
+							<tr id="rowTelefonAfis" style="display: none">
+								<td>Telefon</td>
+								<td><div id="telPersContactAfis"></div></td>
+							</tr>
+
+							<tr id="rowTipReducereAfis" style="display: none">
+								<td>Tip reducere</td>
+								<td><div id="tipReducereAfis"></div></td>
+							</tr>
+
+							<tr id="rowDocInsotitorAfis" style="display: none">
+								<td>Document insotitor</td>
+								<td><div id="docInsotitorAfis"></div></td>
+							</tr>
+
+
+							<tr id="rowPlataAfis" style="display: none">
+								<td>Plata</td>
+								<td><div id="plataAfis"></div></td>
+							</tr>
+
+							<tr id="rowRespIncasareAfis" style="display: none">
+								<td>Responsabil incasare</td>
+								<td><div id="responsabilAfis"></div></td>
+							</tr>
+
+							<tr id="rowTransportAfis" style="display: none">
+								<td>Transport</td>
+								<td><div id="transportAfis"></div></td>
+							</tr>
+
+
+							<tr id="rowDataLivrareAfis" style="display: none">
+								<td>Data livrare</td>
+								<td><div id="dataLivrareAfis"></div></td>
+							</tr>
+
+							<tr id="rowObsLivrareAfis" style="display: none">
+								<td>Observatii livrare</td>
+								<td><div id="obsLivrareAfis"></div></td>
+							</tr>
+
+
+
+
+						</tbody>
+
+					</table>
+
+
+				</div>
 
 			</div>
 
 
+			<br>
+			<div id='divSalveazaComanda' style="display: none">
+				<input type="button" name="salveazaComanda" id="salveazaComanda"
+					value="Salveaza comanda" />
 
-
-			<br> <input type="button" name="salveazaComanda"
-				id="salveazaComanda" value="Salveaza comanda" />
-
+			</div>
 
 
 

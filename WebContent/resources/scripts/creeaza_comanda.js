@@ -21,7 +21,7 @@ $(document).on('pagecreate', '#crearecomanda', function() {
 	$('#select_client_div').bind('collapsibleexpand', function(data) {
 
 		$("#alegeClntDiv").hide();
-		// highlist header
+		// highlight header
 
 	});
 
@@ -70,7 +70,7 @@ function afisClienti(listClienti) {
 	$("#clientiset").empty();
 
 	for (var u = 0; u < listClienti.length; u++) {
-		var content = "<div data-role='collapsible'  data-content-theme='a' id='"
+		var content = "<div data-role='collapsible'  data-content-theme='a'  id='"
 				+ listClienti[u].cod
 				+ "'><h2>"
 				+ listClienti[u].nume
@@ -118,7 +118,7 @@ function getDetaliiClient(codClient1) {
 		}),
 		success : function(data) {
 			$.mobile.loading('hide');
-			afisdetaliiClient(data);
+			afisDetaliiClient(data);
 		},
 		error : function(exception) {
 			alert('Exeption:' + JSON.stringify(exception));
@@ -129,62 +129,82 @@ function getDetaliiClient(codClient1) {
 
 }
 
-function afisdetaliiClient(detaliiClient) {
+function afisDetaliiClient(detaliiClient) {
 
-	var content = '<table data-role="table" id="clientTable" class="ui-responsive table" data-mode="reflow" >';
+	var clientTable = $('<table></table>').attr({
+		id : "clientTable",
+		width : "100%",
+		border : "0",
+
+	}).addClass("detaliiTable");
 
 	var adresa = detaliiClient.adresa.numeJudet + ' '
 			+ detaliiClient.adresa.localitate + ' '
 			+ detaliiClient.adresa.strada;
 
-	content += '<tr>';
-	content += '<td style="width:25%">Adresa</td>';
-	content += '<td >' + adresa + '</td>';
-	content += '</tr>';
+	var row = $('<tr></tr>').appendTo(clientTable);
 
-	content += '<tr>';
-	content += '<td style="width:25%">Limita client</td>';
-	content += '<td >' + detaliiClient.stareClient.limitaCredit + '</td>';
-	content += '</tr>';
+	$('<td></td>').attr('style', 'width:20%').text('Adresa').appendTo(row);
+	$('<td></td>').attr('style', 'width:70%').text(adresa).appendTo(row);
 
-	content += '<tr>';
-	content += '<td style="width:25%">Rest credit</td>';
-	content += '<td >' + detaliiClient.stareClient.restCredit + '</td>';
-	content += '</tr>';
+	row = $('<tr></tr>').appendTo(clientTable);
 
-	content += '<tr>';
-	content += '<td style="width:25%">Stare client</td>';
-	content += '<td >' + detaliiClient.stareClient.stare + '</td>';
-	content += '</tr>';
+	$('<td></td>').attr('style', 'width:20%').text('Limita credit').appendTo(
+			row);
+	$('<td></td>').attr('style', 'width:70%').text(
+			detaliiClient.stareClient.limitaCredit).appendTo(row);
 
-	content += '<tr>';
-	content += '<td colspan=2><input type="button" name="getComenzi" id="selecteazaClient" onClick="selecteazaClient();" value="Selecteaza" /></td>';
-	content += '</tr>';
+	row = $('<tr></tr>').appendTo(clientTable);
 
-	content += '</table>';
+	$('<td></td>').attr('style', 'width:20%').text('Rest credit').appendTo(row);
+	$('<td></td>').attr('style', 'width:70%').text(
+			detaliiClient.stareClient.restCredit).appendTo(row);
 
-	var contentId = '#client' + detaliiClient.cod;
+	row = $('<tr></tr>').appendTo(clientTable);
+
+	$('<td></td>').attr('style', 'width:20%').text('Stare client')
+			.appendTo(row);
+	$('<td></td>').attr('style', 'width:70%').text(
+			detaliiClient.stareClient.stare).appendTo(row);
+
+	row = $('<tr></tr>').appendTo(clientTable);
+
+	var tdSelectClient = $('<td></td>', {
+		colspan : '2',
+		style : 'text-align : center'
+	}).appendTo(row);
+
+	var btnSelectClient = $('<button>', {
+		text : 'Selecteaza',
+		style : 'width:100%'
+
+	}).bind('click', {
+		client : detaliiClient
+	}, function(event) {
+		selecteazaClient(event.data.client);
+	});
+
+	btnSelectClient.appendTo(tdSelectClient).buttonMarkup();
 
 	globalDetaliiClient = detaliiClient;
 
-	$("#datelivrareTable").remove();
-	$(content).appendTo(contentId).enhanceWithin();
+	$('#client' + detaliiClient.cod).css('background-color', '#FFFFF2');
+
+	$(clientTable).appendTo($('#client' + detaliiClient.cod));
 
 }
 
-function selecteazaClient() {
+function selecteazaClient(client) {
 
 	$("#clientiset").empty();
 	$('#numeClient').val('');
 
-	// $("#divCautaClient").hide();
-	// $("#alegeClntDiv").show();
-
-	$('#clientComanda').text(globalDetaliiClient.stareClient.numeClient);
-
-	// $('#' + globalDetaliiClient.cod).collapsible("collapse");
+	$('#clientComanda').text(client.stareClient.numeClient);
 	$('#inner_optiuni_div').collapsible("collapse");
-	
+
+	if ($('#divClient').css('display') == 'none')
+		$('#divClient').show();
+
 	resetSelectOptions();
 
 }
@@ -213,26 +233,22 @@ $('#creare_comanda_select').on('change', function() {
 
 });
 
-
-function resetSelectOptions()
-{
+function resetSelectOptions() {
 	$('#selectClientDiv').hide();
 	$('#selectArticoleDiv').hide();
 	$('#selectDateLivrareDiv').hide();
-	
+
 	$("#creare_comanda_select").val("0").change();
+
 }
 
-function resetCmdData()
-{
-	
-	
+function resetCmdData() {
+
 	$('#clientComanda').html("");
-	
+
 	listaArticole = "";
 	$("#art_table_body").empty();
-	
-	
+
 	$('#numeJudet').val("");
 	$('#localitate').val("");
 	$('#strada').val("");
@@ -245,9 +261,9 @@ function resetCmdData()
 	$('#selectTransport').val("TRAP").change();
 	$('#dataLivrare').val("");
 	$('#obsLivrare').val("");
-	
-	resetSelectOptions()
+
+	$('#datelivrare_table_afis tbody').remove();
+
+	resetSelectOptions();
 
 }
-
-

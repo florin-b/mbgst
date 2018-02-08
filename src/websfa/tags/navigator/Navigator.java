@@ -41,7 +41,7 @@ public class Navigator extends SimpleTagSupport {
 		navigationLinks.add(nd);
 
 		nd = new NavigationDetails();
-		nd.setLink(String.format("%s/auth/modificaDelegatie.jsp", root));
+		nd.setLink(String.format("%s/modifcmd", root));
 		nd.setText("Modificare comanda");
 		nd.setNume(EnumMeniu.MODIFICARE_COMANDA);
 		navigationLinks.add(nd);

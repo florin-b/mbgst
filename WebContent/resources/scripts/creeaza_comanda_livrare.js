@@ -17,6 +17,11 @@ function initDateField() {
 $('#salveazaDateLivrare').click(
 		function() {
 
+			if ($('#divDateLivrare').css('display') == 'none') {
+				$('#divDateLivrare').show();
+				afisSalveazaCmdButton();
+			}
+
 			var dateLivrare = getDateLivrare();
 
 			if (dateLivrare.codJudet != null) {
@@ -73,7 +78,7 @@ $('#salveazaDateLivrare').click(
 				$('#obsLivrareAfis').text(dateLivrare.obsLivrare);
 				$('#rowObsLivrareAfis').show();
 			}
-			
+
 			resetSelectOptions();
 
 		});

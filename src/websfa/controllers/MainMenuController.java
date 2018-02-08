@@ -108,6 +108,20 @@ public class MainMenuController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/modifcmd", method = RequestMethod.GET)
+	public ModelAndView modificaComanda(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model;
+
+		Gson gson = new GsonBuilder().create();
+
+		model = new ModelAndView("modificare_comanda");
+		model.addObject("user", user);
+		model.addObject("userjson", gson.toJson(user));
+
+		return model;
+	}
+	
 	@RequestMapping(value = "/comanda", method = RequestMethod.GET)
 	public ModelAndView creeazaComanda(HttpServletRequest request, HttpServletResponse response) {
 
