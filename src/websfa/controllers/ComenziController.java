@@ -12,6 +12,7 @@ import websfa.beans.CautaCmdAprob;
 import websfa.beans.Comanda;
 import websfa.beans.ComandaAprobareAfis;
 import websfa.beans.ComandaAprobareDetalii;
+import websfa.beans.Status;
 import websfa.beans.articole.CautareComanda;
 import websfa.beans.articole.ComandaDetalii;
 import websfa.beans.articole.ComandaHeader;
@@ -36,11 +37,11 @@ public class ComenziController {
 
 	}
 
-	@RequestMapping(value = "/salveazaComanda", method = RequestMethod.POST)
+	@RequestMapping(value = "/salveazaComanda", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public void salveazaComanda(@RequestBody Comanda comanda) {
+	public Status salveazaComanda(@RequestBody Comanda comanda) {
 
-		new OperatiiComenzi().salveazaComanda(comanda);
+		return new OperatiiComenzi().salveazaComanda(comanda);
 
 	}
 

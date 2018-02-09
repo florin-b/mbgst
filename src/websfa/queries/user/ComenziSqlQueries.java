@@ -35,7 +35,7 @@ public class ComenziSqlQueries {
 		StringBuilder sqlString = new StringBuilder();
 
 		sqlString.append(" begin insert into sapprd.zcomhead_tableta(mandt,id,cod_client,ul,status,status_aprov ,datac, cod_agent,tip_plata, ");
-		sqlString.append(" pers_contact,telefon,adr_livrare,valoare,mt,com_referinta,accept1,accept2, fact_red, city, region,  obstra) ");
+		sqlString.append(" pers_contact,telefon,adr_livrare,valoare,mt,nrcmdsap,accept1,accept2,  fact_red, city, region,  obstra) ");
 		sqlString.append(" values ('900', pk_key.nextval, :codCl,:ul,:status,:status_aprov, ");
 		sqlString.append(" :datac, :agent,:plata,:perscont,:tel,:adr,:valoare,:transp,:comsap,:accept1,:accept2, ");
 		sqlString.append(" :factred,:city,:region,:obslivr) ");

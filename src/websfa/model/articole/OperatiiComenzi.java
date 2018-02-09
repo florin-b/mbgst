@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import websfa.beans.ArticolCmdAprob;
 import websfa.beans.ArticolComanda;
@@ -15,6 +16,7 @@ import websfa.beans.CautaCmdAprob;
 import websfa.beans.Comanda;
 import websfa.beans.ComandaAprobareAfis;
 import websfa.beans.ComandaAprobareDetalii;
+import websfa.beans.Status;
 import websfa.beans.articole.Adresa;
 import websfa.beans.articole.ArticolAfis;
 import websfa.beans.articole.Cantitate;
@@ -129,15 +131,17 @@ public class OperatiiComenzi {
 		return detaliiComanda;
 	}
 
-	public void salveazaComanda(Comanda comanda) {
+	public Status salveazaComanda(Comanda comanda) {
 
-		int idComanda = salveazaAntetComanda(comanda);
+		return salveazaAntetComanda(comanda);
 
 	}
 
-	private int salveazaAntetComanda(Comanda comanda) {
+	private Status salveazaAntetComanda(Comanda comanda) {
 
 		int idComanda = 0;
+
+		Status status = new Status();
 
 		try (Connection conn = new DBManager().getTestDataSource().getConnection();
 				CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.salveazaAntetComanda())) {
@@ -153,9 +157,9 @@ public class OperatiiComenzi {
 			stmt.setString(8, comanda.getDateLivrare().getPersContact());
 			stmt.setString(9, comanda.getDateLivrare().getTelPersContact());
 			stmt.setString(10, comanda.getDateLivrare().getCodJudet());
-			stmt.setString(11, "123"); // valoare
+			stmt.setDouble(11, comanda.getTotalComanda());
 			stmt.setString(12, comanda.getDateLivrare().getTipTransp());
-			stmt.setString(13, "2");// nrcmdsap
+			stmt.setString(13, generateCmdSap());
 			stmt.setString(14, comanda.isAprobaSD() ? "X" : " ");
 			stmt.setString(15, comanda.isAprobaDV() ? "X" : " ");
 			stmt.setString(16, comanda.getDateLivrare().getTipReducere());
@@ -169,16 +173,27 @@ public class OperatiiComenzi {
 
 			idComanda = stmt.getInt(20);
 
-			salveazaArticoleComanda(conn, comanda.getListArticole(), idComanda);
+			status = salveazaArticoleComanda(conn, comanda.getListArticole(), idComanda);
 
 		} catch (SQLException e) {
-			System.out.println(e.toString());
+			status.setSuccess(false);
+			status.setMessage("Eroare salvare date comanda");
 		}
 
-		return idComanda;
+		return status;
 	}
 
-	private void salveazaArticoleComanda(Connection conn, List<ArticolComanda> listArticole, int idComanda) {
+	public static String generateCmdSap() {
+		Random rand = new Random();
+
+		return String.valueOf(rand.nextInt(1000000) + 100000);
+	}
+
+	private Status salveazaArticoleComanda(Connection conn, List<ArticolComanda> listArticole, int idComanda) {
+
+		Status status = new Status();
+		status.setSuccess(true);
+		status.setMessage("Comanda salvata");
 
 		int poz = 10;
 
@@ -211,8 +226,13 @@ public class OperatiiComenzi {
 
 			} catch (SQLException e) {
 				e.printStackTrace();
+				status.setSuccess(false);
+				status.setMessage("Eroare salvare articole comanda");
 			}
+
 		}
+
+		return status;
 
 	}
 

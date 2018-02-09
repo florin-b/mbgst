@@ -55,7 +55,7 @@ function getComenziAprobare() {
 		data : cautaCmdAprob,
 		success : function(data) {
 			$.mobile.loading('hide');
-			afisComenziAprob(data);
+			afisComenziModificare(data);
 
 		},
 		dataType : 'json',
@@ -96,7 +96,7 @@ $('#cmd_aprob_select').on('change', function() {
 	var idComanda = $("#cmd_aprob_select option:selected").val();
 
 	if (idComanda > 0)
-		getDetaliiCmdAprob(idComanda);
+		getDetaliiComandaModif(idComanda);
 
 });
 
@@ -111,7 +111,7 @@ function getDetaliiCmdAprob(idComanda) {
 			idComanda : idComanda
 		}),
 		success : function(data) {
-			afiseazaComandaAprob(data);
+			afiseazaComandaModif(data);
 		},
 		dataType : 'json',
 		contentType : 'application/json',

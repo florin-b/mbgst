@@ -5,7 +5,6 @@ $(document).on('pageshow', '#modifcmd', function() {
 
 	userObj = JSON.parse($('#userbean').text());
 
-
 	getComenziModificare();
 
 });
@@ -13,9 +12,11 @@ $(document).on('pageshow', '#modifcmd', function() {
 $(document).on('pagecreate', '#modifcmd', function() {
 
 	setColapsibleArticoleListener();
-	$('#modif_cmd_select').parent().hide();
-	
-	
+	$('#modif_act_select').parent().hide();
+	$('#antetCmdModif').hide();
+	$('#articoleCmdModif').hide();
+	$('#selectArtModifDiv').hide();
+	$('#selectDateLivrareModifDiv').hide();
 
 });
 
@@ -32,8 +33,28 @@ function setColapsibleArticoleListener() {
 	});
 }
 
-function afisDetaliiArticol(codArticol) {
+$('#modif_act_select').on('change', function() {
 
+	var selectId = this.value;
+
+	$('#selectArtModifDiv').hide();
+	$('#selectDateLivrareDiv').hide();
+	$('#selectDateLivrareModifDiv').hide();
+
+	if (selectId == 0) {
+		$('#selectArtModifDiv').hide();
+		$('#selectDateLivrareDiv').hide();
+		$('#selectDateLivrareModifDiv').hide();
+	} else if (selectId == 1) {
+		$('#selectArtModifDiv').show();
+	} else if (selectId == 2) {
+		$('#selectDateLivrareModifDiv').show();
+
+	}
+
+});
+
+function afisDetaliiArticol(codArticol) {
 
 	var idContCant = '#idCCant' + codArticol;
 
@@ -59,7 +80,7 @@ function getComenziModificare() {
 		data : cautaCmdAprob,
 		success : function(data) {
 			$.mobile.loading('hide');
-			afisComenziAprob(data);
+			afisComenziModificare(data);
 
 		},
 		dataType : 'json',
@@ -75,40 +96,37 @@ function getComenziModificare() {
 
 }
 
-function afisComenziAprob(listComenzi) {
+function afisComenziModificare(listComenzi) {
 
 	if (listComenzi.length > 0) {
-		
-		
-		
-		
-		$('#cmd_aprob_select').append($('<option>', {
+
+		$('#cmd_modif_select').append($('<option>', {
 			value : 0,
 			text : "Selectati o comanda"
 		}));
 
 		for (var i = 0; i < listComenzi.length; i++) {
-			$('#cmd_aprob_select').append($('<option>', {
+			$('#cmd_modif_select').append($('<option>', {
 				value : listComenzi[i].idComanda,
 				text : listComenzi[i].numeClient
 			}));
 		}
 
-		$("#cmd_aprob_select").val("0").change();
+		$("#cmd_modif_select").val("0").change();
 
 	}
 
 }
 
-$('#cmd_aprob_select').on('change', function() {
-	var idComanda = $("#cmd_aprob_select option:selected").val();
+$('#cmd_modif_select').on('change', function() {
+	var idComanda = $("#cmd_modif_select option:selected").val();
 
 	if (idComanda > 0)
-		getDetaliiCmdAprob(idComanda);
+		getDetaliiComandaModif(idComanda);
 
 });
 
-function getDetaliiCmdAprob(idComanda) {
+function getDetaliiComandaModif(idComanda) {
 
 	$.mobile.loading('show');
 
@@ -119,7 +137,7 @@ function getDetaliiCmdAprob(idComanda) {
 			idComanda : idComanda
 		}),
 		success : function(data) {
-			afiseazaComandaAprob(data);
+			afiseazaComandaModif(data);
 		},
 		dataType : 'json',
 		contentType : 'application/json',
@@ -134,12 +152,16 @@ function getDetaliiCmdAprob(idComanda) {
 
 }
 
-function afiseazaComandaAprob(comanda) {
+function afiseazaComandaModif(comanda) {
 
-	$('#modif_cmd_select').parent().show();
-	
+	$('#antetCmdModif').show();
+	$('#articoleCmdModif').show();
+	$('#divDateLivrareModif').show();
+
+	$('#modif_act_select').parent().show();
+
 	var dateGenTable = '#dateGenTable';
-	
+
 	$('#dateGenTable tbody').remove();
 
 	var row = $('<tr></tr>').appendTo(dateGenTable);
@@ -173,7 +195,7 @@ function afiseazaComandaAprob(comanda) {
 function afiseazaArticoleComanda(listArticole) {
 
 	$('#articoleTable tbody').remove();
-	
+
 	if (listArticole.length > 0)
 		$('#opereazaCmdDiv').show();
 
@@ -465,6 +487,6 @@ function isNumeric(val) {
 	return Number(parseFloat(val)) === val;
 }
 
-$("#aprobaCmd").click(function() {
-	alert("Aprobre comanda");
+$("#salveazaCmdModif").click(function() {
+	alert("Salvare comanda modificata");
 });

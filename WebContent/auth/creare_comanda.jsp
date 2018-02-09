@@ -348,6 +348,9 @@ hr {
 					<tbody id="art_table_body">
 					</tbody>
 				</table>
+				
+				<br>
+				<div style="display:inline;"><b>Total comanda </b></div><div style="display: inline;"  id='divTotalCmd' ><b>0.00 RON</b></div>
 			</div>
 
 			<br> <br>
@@ -456,6 +459,20 @@ hr {
 
 		</div>
 	</div>
+	
+	
+	<div data-role="dialog" id="dialogCreare">
+		<div data-role="header">
+			<h1>
+				<div id="tipAlertC"></div>
+			</h1>
+		</div>
+		<div data-role="content">
+			<div id="textAlertC"></div>
+		</div>
+	</div>
+	
+	
 
 	<div id="userbean" style="visibility: hidden">${userjson}</div>
 

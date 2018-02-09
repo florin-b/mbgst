@@ -257,11 +257,11 @@ function afisPretArticol(codArticol, datePret) {
 
 	var contentId = '#articol' + codArticol;
 
+	$('#pretTable' + codArticol).remove();
+
 	var pretTable = $(
-			'<table data-role="table" class="ui-responsive table" data-mode="reflow"></table>',
-			{
-				id : "pretTable" + codArticol
-			}).addClass("detaliiTable");
+			'<table data-role="table" class="ui-responsive table" data-mode="reflow"></table>')
+			.attr('id', "pretTable" + codArticol).addClass("detaliiTable");
 
 	var row = $('<tr></tr>');
 	$(row).appendTo(pretTable);
@@ -351,73 +351,6 @@ function afisPretArticol(codArticol, datePret) {
 
 }
 
-function afisPretArticol_old(codArticol, datePret) {
-
-	pretInit = datePret.pret;
-
-	var contentId = '#articol' + codArticol;
-
-	var content = '<table data-role="table" id="pretTable" class="ui-responsive table" data-mode="reflow" style="width:100%;padding: 10px;">';
-	content += '<tr>';
-	content += '<td style="width:25%">Pret</td>';
-
-	var keyUpPretFunc = 'setProcentReducere(' + codArticol + ')';
-	var keyUpProcFunc = 'setPretReducere(' + codArticol + ')';
-
-	var idTextPret = 'pret' + codArticol;
-
-	content += '<td style="width:25%"><input type="text" value='
-			+ datePret.pret + ' id=' + idTextPret + ' onKeyUp=' + keyUpPretFunc
-			+ '></td>';
-	content += '<td >' + datePret.um + '</td>';
-
-	content += '<td >Unitate pret:</td>';
-	content += '<td >1 BUC</td>';
-	content += '</tr>';
-
-	content += '<tr>';
-	content += '<td style="width:25%">Reducere</td>';
-
-	var idTextProcent = 'procent' + codArticol;
-
-	content += '<td style="width:25%"><input type="text" value=0 id='
-			+ idTextProcent + ' onKeyUp=' + keyUpProcFunc + ' ></td>';
-	content += '<td >%</td>';
-	content += '</tr>';
-
-	content += '<tr><td style="width:25%">Pret cu tva</td>';
-	content += '<td >22</td>';
-	content += '</tr>';
-
-	content += '<tr><td style="width:25%">Discount client (%)</td>';
-	content += '<td >2</td>';
-	content += '</tr>';
-
-	var articolSelectat = new Object();
-	articolSelectat.nume = numeArticolCurent;
-	articolSelectat.cod = codArticol;
-	articolSelectat.um = datePret.um;
-
-	content += '<tr>';
-	content += '<td colspan=5><input type="button" name="adaugaArticol" id="adaugaArticol"  value="Adauga" /></td>';
-	content += '</tr>';
-
-	content += '</table>';
-
-	$("#pretTable").remove();
-
-	$(content).appendTo(contentId).enhanceWithin();
-
-	var adaugaArticolButton = document.getElementById('adaugaArticol');
-
-	adaugaArticolButton.addEventListener('click', handlerForAdaugaArt);
-
-	function handlerForAdaugaArt() {
-		trateazaArticol(articolSelectat);
-	}
-
-}
-
 function trateazaArticol(articolSelectat) {
 
 	if ($('#divArticole').css('display') == 'none')
@@ -446,6 +379,7 @@ function trateazaArticol(articolSelectat) {
 	articolSelectat.pret = $(idTextPret).val();
 	articolSelectat.procent = $(idTextProcent).val();
 	articolSelectat.depozit = departArticol + $('#select-depoz').val();
+
 	listaArticole.push(articolSelectat);
 
 	if (articolSelectat.procent > 0) {
@@ -456,6 +390,8 @@ function trateazaArticol(articolSelectat) {
 	$('#' + articolSelectat.cod).collapsible("collapse");
 
 	afiseazaListaArticole();
+
+	calculeazaTotalCmd();
 
 }
 
@@ -511,12 +447,28 @@ function eliminaArticol(codArticol) {
 	for (var i = 0; i < listaArticole.length; i++) {
 
 		if (listaArticole[i].cod == codArticol) {
+
 			listaArticole.splice(i, 1);
 			break;
 		}
 	}
 
 	afiseazaListaArticole();
+	calculeazaTotalCmd();
+
+}
+
+function calculeazaTotalCmd() {
+
+	var totalComanda = 0;
+	for (var i = 0; i < listaArticole.length; i++) {
+		totalComanda += listaArticole[i].pret * listaArticole[i].cant;
+
+	}
+
+	$('#divTotalCmd').html(totalComanda).css({
+		'font-weight' : 'bold'
+	}).data("totalCmd", totalComanda);
 
 }
 
@@ -569,6 +521,7 @@ $('#salveazaComanda').click(function() {
 	comanda.unitLog = userObj.unitLog;
 	comanda.dateLivrare = getDateLivrare();
 	comanda.listArticole = getArticoleComanda(listaArticole);
+	comanda.totalComanda = $('#divTotalCmd').data('totalCmd');
 
 	$.mobile.loading('show');
 
@@ -577,19 +530,35 @@ $('#salveazaComanda').click(function() {
 		url : 'salveazaComanda',
 		data : JSON.stringify(comanda),
 		success : function(data) {
-			$.mobile.loading('hide');
+			showAlertStatus(data);
 
 		},
 		dataType : 'json',
 		contentType : 'application/json',
 
 		error : function() {
-			$.mobile.loading('hide');
 
 		}
 
 	});
 
-	resetCmdData();
+	$.mobile.loading('hide');
 
 });
+
+function showAlertStatus(statusCreare) {
+
+	if (statusCreare.success)
+		resetCmdData();
+
+	showAlertDialog("Status", statusCreare.message);
+
+}
+
+function showAlertDialog(tipAlert, mesajAlert) {
+	$('#tipAlertC').text(tipAlert);
+	$('#textAlertC').text(mesajAlert);
+	$.mobile.changePage('#dialogCreare', {
+		transition : "none"
+	});
+}

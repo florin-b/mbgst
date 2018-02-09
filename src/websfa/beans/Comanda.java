@@ -9,6 +9,7 @@ public class Comanda {
 	private String unitLog;
 	private boolean aprobaSD;
 	private boolean aprobaDV;
+	private double totalComanda;
 	private DateLivrare dateLivrare;
 	List<ArticolComanda> listArticole;
 
@@ -68,9 +69,18 @@ public class Comanda {
 		this.unitLog = unitLog;
 	}
 
+	public double getTotalComanda() {
+		return totalComanda;
+	}
+
+	public void setTotalComanda(double totalComanda) {
+		this.totalComanda = totalComanda;
+	}
+
 	@Override
 	public String toString() {
-		return "Comanda [codClient=" + codClient + ", codAgent=" + codAgent + ", dateLivrare=" + dateLivrare + ", listArticole=" + listArticole + "]";
+		return "Comanda [codClient=" + codClient + ", codAgent=" + codAgent + ", unitLog=" + unitLog + ", aprobaSD=" + aprobaSD + ", aprobaDV=" + aprobaDV
+				+ ", totalComanda=" + totalComanda + ", dateLivrare=" + dateLivrare + ", listArticole=" + listArticole + "]";
 	}
 
 }

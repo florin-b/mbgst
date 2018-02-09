@@ -11,7 +11,7 @@ public class TestClass {
 		// System.out.println(new OperatiiArticole().getStoc("10900027", "GL10",
 		// "09V1"));
 
-		System.out.println(new OperatiiComenzi().getDetaliiComandaAprob("5499130"));
+		System.out.println(new OperatiiComenzi().generateCmdSap());
 
 	}
 
