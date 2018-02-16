@@ -11,11 +11,16 @@ import java.util.List;
 import java.util.Random;
 
 import websfa.beans.ArticolCmdAprob;
+import websfa.beans.ArticolCmdModif;
 import websfa.beans.ArticolComanda;
+import websfa.beans.ArticolConditii;
 import websfa.beans.CautaCmdAprob;
 import websfa.beans.Comanda;
 import websfa.beans.ComandaAprobareAfis;
 import websfa.beans.ComandaAprobareDetalii;
+import websfa.beans.ComandaAprobareOperare;
+import websfa.beans.ComandaModificareDetalii;
+import websfa.beans.DateLivrare;
 import websfa.beans.Status;
 import websfa.beans.articole.Adresa;
 import websfa.beans.articole.ArticolAfis;
@@ -25,20 +30,30 @@ import websfa.beans.articole.ComandaDetalii;
 import websfa.beans.articole.ComandaHeader;
 import websfa.beans.articole.DateLivrareAfis;
 import websfa.database.connection.DBManager;
+import websfa.enums.EnumOpereazaComanda;
 import websfa.queries.user.ComenziSqlQueries;
 import websfa.utils.DateUtils;
 
 public class OperatiiComenzi {
 
-	public List<ComandaHeader> getComenzi(CautareComanda cautareComanda) {
+	public List<ComandaHeader> getComenziAfisare(CautareComanda cautareComanda) {
 
 		List<ComandaHeader> listHeaderComenzi = new ArrayList<>();
 
 		try (Connection conn = new DBManager().getTestDataSource().getConnection();
 				PreparedStatement stmt = conn.prepareStatement(ComenziSqlQueries.getListComenzi())) {
 
+			String dataCautare = "";
+			if (cautareComanda.getInterval().equals("1"))
+				dataCautare = DateUtils.getCurrentDate();
+			else if (cautareComanda.getInterval().equals("2"))
+				dataCautare = DateUtils.addDaysToDate(-7);
+			else if (cautareComanda.getInterval().equals("3"))
+				dataCautare = DateUtils.addDaysToDate(-30);
+
 			stmt.clearParameters();
 			stmt.setString(1, cautareComanda.getCodAngajat());
+			stmt.setString(2, dataCautare);
 
 			stmt.executeQuery();
 
@@ -133,6 +148,9 @@ public class OperatiiComenzi {
 
 	public Status salveazaComanda(Comanda comanda) {
 
+		if (comanda.getIdCmdSap() != null)
+			modificaStareComanda(comanda.getIdCmd(), EnumOpereazaComanda.RESPINGERE);
+
 		return salveazaAntetComanda(comanda);
 
 	}
@@ -156,7 +174,7 @@ public class OperatiiComenzi {
 			stmt.setString(7, comanda.getDateLivrare().getTipPlata());
 			stmt.setString(8, comanda.getDateLivrare().getPersContact());
 			stmt.setString(9, comanda.getDateLivrare().getTelPersContact());
-			stmt.setString(10, comanda.getDateLivrare().getCodJudet());
+			stmt.setString(10, comanda.getDateLivrare().getStrada());
 			stmt.setDouble(11, comanda.getTotalComanda());
 			stmt.setString(12, comanda.getDateLivrare().getTipTransp());
 			stmt.setString(13, generateCmdSap());
@@ -166,16 +184,20 @@ public class OperatiiComenzi {
 			stmt.setString(17, comanda.getDateLivrare().getLocalitate());
 			stmt.setString(18, comanda.getDateLivrare().getCodJudet());
 			stmt.setString(19, comanda.getDateLivrare().getObsLivrare());
+			stmt.setString(20, DateUtils.formatDateSap(comanda.getDateLivrare().getDataLivrare()));
+			stmt.setString(21, comanda.getDateLivrare().getDocumentInsotitor());
+			stmt.setString(22, comanda.getDateLivrare().getRespIncasare());
 
-			stmt.registerOutParameter(20, Types.INTEGER);
+			stmt.registerOutParameter(23, Types.INTEGER);
 
 			stmt.executeQuery();
 
-			idComanda = stmt.getInt(20);
+			idComanda = stmt.getInt(23);
 
 			status = salveazaArticoleComanda(conn, comanda.getListArticole(), idComanda);
 
 		} catch (SQLException e) {
+			e.printStackTrace();
 			status.setSuccess(false);
 			status.setMessage("Eroare salvare date comanda");
 		}
@@ -238,14 +260,14 @@ public class OperatiiComenzi {
 
 	public List<ComandaAprobareAfis> getComenziAprobare(CautaCmdAprob cautaCmd) {
 
-		List<ComandaAprobareAfis> comenzi = new ArrayList<ComandaAprobareAfis>();
+		List<ComandaAprobareAfis> comenzi = new ArrayList<>();
 
 		try (Connection conn = new DBManager().getTestDataSource().getConnection();
 				CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.getComenziAprobare())) {
 
 			stmt.clearParameters();
-			stmt.setString(1, DateUtils.getCurrentDate());
-			stmt.setString(2, cautaCmd.getCodAngajat());
+			stmt.setString(1, cautaCmd.getUnitLog());
+			stmt.setString(2, cautaCmd.getCodDepart());
 			stmt.executeQuery();
 
 			ResultSet rs = stmt.getResultSet();
@@ -266,6 +288,167 @@ public class OperatiiComenzi {
 		}
 
 		return comenzi;
+
+	}
+
+	public List<ComandaAprobareAfis> getComenziModificare(CautaCmdAprob cautaCmd) {
+		List<ComandaAprobareAfis> comenzi = new ArrayList<>();
+
+		try (Connection conn = new DBManager().getTestDataSource().getConnection();
+				CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.getComenziModificare())) {
+
+			stmt.clearParameters();
+			stmt.setString(1, cautaCmd.getCodAngajat());
+			stmt.executeQuery();
+
+			ResultSet rs = stmt.getResultSet();
+
+			while (rs.next()) {
+
+				ComandaAprobareAfis cmd = new ComandaAprobareAfis();
+				cmd.setIdComanda(String.valueOf(rs.getInt(1)));
+				cmd.setValoareComanda(rs.getDouble(2));
+				cmd.setNumeClient(rs.getString(3));
+
+				comenzi.add(cmd);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return comenzi;
+	}
+
+	public ComandaModificareDetalii getDetaliiComandaModif(String idComanda) {
+		ComandaModificareDetalii comandaModificare = new ComandaModificareDetalii();
+
+		try (Connection conn = new DBManager().getTestDataSource().getConnection();
+				CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.getHeaderComandaAprob())) {
+
+			stmt.clearParameters();
+			stmt.setString(1, idComanda);
+			stmt.executeQuery();
+
+			ResultSet rs = stmt.getResultSet();
+
+			while (rs.next()) {
+				comandaModificare.setIdComandaSAP(rs.getString(1));
+				comandaModificare.setValoare(rs.getDouble(2));
+				comandaModificare.setDataEmitere(rs.getString(3));
+				comandaModificare.setNumeClient(rs.getString(4));
+				comandaModificare.setCodClient(rs.getString(6));
+				comandaModificare.setUnitLog(rs.getString(7));
+				comandaModificare.setIdStareComanda(rs.getString(8));
+
+			}
+
+			comandaModificare.setListArticole(getArticoleComandaModificare(conn, idComanda));
+			comandaModificare.setDateLivrare(getDateLivrareComandaModificare(conn, idComanda));
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return comandaModificare;
+	}
+
+	public List<ArticolCmdModif> getArticoleComandaModificare(Connection conn, String idComanda) {
+		List<ArticolCmdModif> listArticole = new ArrayList<>();
+
+		try (CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.getArticoleComandaAprob())) {
+
+			stmt.clearParameters();
+			stmt.setString(1, idComanda);
+			stmt.executeQuery();
+
+			ResultSet rs = stmt.getResultSet();
+
+			while (rs.next()) {
+
+				ArticolCmdModif articol = new ArticolCmdModif();
+				articol.setCodArticol(rs.getString(1));
+				articol.setCantitate(rs.getDouble(2));
+				articol.setPretUnitar(rs.getDouble(3));
+				articol.setDepozit(rs.getString(4));
+				articol.setUm(rs.getString(5));
+				articol.setProcentReducere(rs.getDouble(7));
+				articol.setNumeArticol(rs.getString(8));
+
+				listArticole.add(articol);
+
+			}
+
+			getConditiiArticoleComanda(conn, idComanda, listArticole);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return listArticole;
+	}
+
+	public DateLivrare getDateLivrareComandaModificare(Connection conn, String idComanda) {
+		DateLivrare dateLivrare = new DateLivrare();
+
+		try (PreparedStatement stmt = conn.prepareStatement(ComenziSqlQueries.getDateLivrareCmdModif())) {
+
+			stmt.clearParameters();
+			stmt.setString(1, idComanda);
+			stmt.executeQuery();
+
+			ResultSet rs = stmt.getResultSet();
+
+			while (rs.next()) {
+				dateLivrare.setCodJudet(rs.getString(1));
+				dateLivrare.setLocalitate(rs.getString(2));
+				dateLivrare.setStrada(rs.getString(3));
+				dateLivrare.setPersContact(rs.getString(4));
+				dateLivrare.setTelPersContact(rs.getString(5));
+				dateLivrare.setTipReducere(rs.getString(6));
+				dateLivrare.setDocumentInsotitor(rs.getString(7));
+				dateLivrare.setTipPlata(rs.getString(8));
+				dateLivrare.setRespIncasare(rs.getString(9));
+				dateLivrare.setTipTransp(rs.getString(10));
+				dateLivrare.setDataLivrare(rs.getString(11));
+				dateLivrare.setObsLivrare(rs.getString(12));
+
+			}
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		return dateLivrare;
+	}
+
+	private void getConditiiArticoleComanda(Connection conn, String idComanda, List<ArticolCmdModif> listArticole) {
+
+		try (PreparedStatement stmt = conn.prepareStatement(ComenziSqlQueries.getConditiiArticole())) {
+
+			stmt.clearParameters();
+			stmt.setString(1, idComanda);
+			stmt.executeQuery();
+
+			ResultSet rs = stmt.getResultSet();
+
+			while (rs.next()) {
+
+				for (ArticolCmdModif articol : listArticole) {
+					if (articol.getCodArticol().equals(rs.getString(1))) {
+						articol.setConditiiCant(rs.getDouble(2));
+						articol.setConditiiVal(rs.getDouble(3));
+						break;
+					}
+				}
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -290,7 +473,7 @@ public class OperatiiComenzi {
 
 			}
 
-			comandaAprobare.setListArticole(getArticoleComanda(conn, idComanda));
+			comandaAprobare.setListArticole(getArticoleComandaAprobare(conn, idComanda));
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -299,7 +482,7 @@ public class OperatiiComenzi {
 		return comandaAprobare;
 	}
 
-	private List<ArticolCmdAprob> getArticoleComanda(Connection conn, String idComanda) {
+	private List<ArticolCmdAprob> getArticoleComandaAprobare(Connection conn, String idComanda) {
 		List<ArticolCmdAprob> listArticole = new ArrayList<>();
 
 		try (CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.getArticoleComandaAprob())) {
@@ -332,6 +515,107 @@ public class OperatiiComenzi {
 		}
 
 		return listArticole;
+	}
+
+	public Status opereazaComanda(ComandaAprobareOperare comanda) {
+
+		EnumOpereazaComanda stareComanda;
+
+		if (comanda.isSeAproba())
+			stareComanda = EnumOpereazaComanda.APROBARE;
+		else
+			stareComanda = EnumOpereazaComanda.RESPINGERE;
+
+		if (!comanda.getListConditii().isEmpty() && comanda.isSeAproba()) {
+			stareComanda = EnumOpereazaComanda.CONDITIONARE;
+			salveazaConditiiComanda(comanda);
+		}
+
+		return modificaStareComanda(comanda.getId(), stareComanda);
+	}
+
+	public void salveazaConditiiComanda(ComandaAprobareOperare comanda) {
+
+		try (Connection conn = new DBManager().getTestDataSource().getConnection();
+				CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.salveazaAntetConditii())) {
+
+			stmt.clearParameters();
+			stmt.setString(1, comanda.getCodAngaj());
+			stmt.setString(2, DateUtils.getCurrentDate());
+			stmt.setString(3, DateUtils.getCurrentTime());
+			stmt.setString(4, comanda.getId());
+			stmt.setString(5, " ");// cmd modif
+			stmt.setFloat(6, 0);// conditii calitative
+			stmt.setInt(7, 0);// nr facturi
+			stmt.setString(8, " ");// observatii
+			stmt.setFloat(9, 0);// castig brut
+
+			stmt.registerOutParameter(10, Types.INTEGER);
+
+			stmt.executeQuery();
+
+			int idComanda = stmt.getInt(10);
+
+			int poz = 1;
+			for (ArticolConditii articol : comanda.getListConditii()) {
+
+				try (PreparedStatement stmtArt = conn.prepareCall(ComenziSqlQueries.salveazaArticoleConditii())) {
+
+					stmtArt.clearParameters();
+					stmtArt.setInt(1, idComanda);
+					stmtArt.setInt(2, poz);
+
+					String codArticol = articol.getCod();
+					codArticol = codArticol.length() == 8 ? "0000000000" + codArticol : codArticol;
+
+					stmtArt.setString(3, codArticol);
+					stmtArt.setDouble(4, articol.getCantitate());
+					stmtArt.setString(5, articol.getUm());
+					stmtArt.setDouble(6, articol.getValoare());
+
+					stmtArt.executeQuery();
+
+					poz++;
+
+				}
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+
+	}
+
+	public Status modificaStareComanda(String idComanda, EnumOpereazaComanda stareComanda) {
+		Status status = new Status();
+
+		String sqlString = ComenziSqlQueries.respingeComanda();
+
+		if (stareComanda == EnumOpereazaComanda.APROBARE)
+			sqlString = ComenziSqlQueries.aprobaComanda();
+		else if (stareComanda == EnumOpereazaComanda.RESPINGERE)
+			sqlString = ComenziSqlQueries.respingeComanda();
+		else if (stareComanda == EnumOpereazaComanda.CONDITIONARE)
+			sqlString = ComenziSqlQueries.conditioneazaComanda();
+
+		try (Connection conn = new DBManager().getTestDataSource().getConnection(); PreparedStatement stmt = conn.prepareCall(sqlString)) {
+
+			stmt.clearParameters();
+			stmt.setString(1, idComanda);
+
+			stmt.executeQuery();
+
+			status.setSuccess(true);
+			status.setMessage("Operatie reusita");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			status.setSuccess(false);
+			status.setMessage("Eroare modificare stare");
+		}
+
+		return status;
 	}
 
 }

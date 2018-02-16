@@ -1,0 +1,10 @@
+.dateLivrareTable {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.dateLivrareTable td, .stocTable th {
+	padding: 3px;
+	color: #056E4D;
+}

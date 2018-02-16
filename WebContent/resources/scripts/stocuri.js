@@ -12,11 +12,8 @@ $(document).on('pagebeforeshow', '#stocuri', function() {
 
 $(document).on('pageshow', '#stocuri', function() {
 
-	clearScreen();
-
 	$(":input[name= 'radio-articol']").on('change', function() {
 		var clicked = $(this).val();
-		clearScreen();
 
 		$('#codArticol').focus();
 
@@ -96,7 +93,7 @@ function afiseazaListArticole(listArticole) {
 				+ "'><h2><div id='numeart"
 				+ listArticole[u].cod
 				+ "'>"
-				+ listArticole[u].nume
+				+ listArticole[u].cod + ' - ' + listArticole[u].nume
 				+ "</div></h2><div id='articol"
 				+ listArticole[u].cod
 				+ "'></div></div>";
@@ -134,24 +131,43 @@ function afiseazaStoc(articolCod, articolStoc) {
 
 	var contentId = '#articol' + articolCod;
 
-	var content = '<table data-role="table" id="stocTable" class="ui-responsive table" data-mode="reflow"  style="width:100%;padding: 10px;">';
+	$(contentId).html('');
 
-	content += '<tr>';
-	content += '<td style="width:25%">Cantitate</td>';
-	content += '<td style="width:25%">Um</td>';
-	content += '<td style="width:25%">Depozit</td>';
-	content += '</tr>';
+	var stocTable = $('<table></table>').attr({
+		id : 'stocTable',
+		width : "100%",
+		border : "0"
+	}).addClass('stocTable');
 
-	for (var i = 0; i < articolStoc.length; i++) {
-		content += '<tr><td>' + articolStoc[i].cantitate + '</td>';
-		content += '<td>' + articolStoc[i].um + '</td>';
-		content += '<td>' + articolStoc[i].depozit + '</td></tr>';
+	$('#stocTable tbody').remove();
 
-	}
+	var row = $('<tr></tr>').appendTo(stocTable);
 
-	content += '</table>';
+	$('<td></td>').attr('style', 'width:25%').text('Cantitate').appendTo(row);
 
-	$("#stocTable").remove();
-	$(content).appendTo(contentId).enhanceWithin();
+	$('<td></td>').attr('style', 'width:25%').text('Um').appendTo(row);
+
+	$('<td></td>').attr('style', 'width:25%').text('Depozit').appendTo(row);
+
+	if (articolStoc.length == 0) {
+		row = $('<tr></tr>').appendTo(stocTable);
+
+		$('<td></td>').text('0').appendTo(row);
+		$('<td></td>').appendTo(row);
+		$('<td></td>').appendTo(row);
+	} else
+		for (var i = 0; i < articolStoc.length; i++) {
+
+			row = $('<tr></tr>').appendTo(stocTable);
+
+			$('<td></td>').text(articolStoc[i].cantitate).appendTo(row);
+			$('<td></td>').text(articolStoc[i].um).appendTo(row);
+			$('<td></td>').text(articolStoc[i].depozit).appendTo(row);
+
+		}
+
+	$('<br>').appendTo($(contentId));
+	$(stocTable).appendTo($(contentId));
+	$('<br>').appendTo($(contentId));
 
 }

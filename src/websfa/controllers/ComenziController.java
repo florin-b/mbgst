@@ -12,20 +12,23 @@ import websfa.beans.CautaCmdAprob;
 import websfa.beans.Comanda;
 import websfa.beans.ComandaAprobareAfis;
 import websfa.beans.ComandaAprobareDetalii;
+import websfa.beans.ComandaAprobareOperare;
+import websfa.beans.ComandaModificareDetalii;
 import websfa.beans.Status;
 import websfa.beans.articole.CautareComanda;
 import websfa.beans.articole.ComandaDetalii;
 import websfa.beans.articole.ComandaHeader;
+import websfa.enums.EnumOpereazaComanda;
 import websfa.model.articole.OperatiiComenzi;
 
 @Controller
 public class ComenziController {
 
-	@RequestMapping(value = "/getcom", produces = "application/json")
+	@RequestMapping(value = "/getComAfis", produces = "application/json")
 	@ResponseBody
 	public List<ComandaHeader> getComenzi(CautareComanda cautareComanda) {
 
-		return new OperatiiComenzi().getComenzi(cautareComanda);
+		return new OperatiiComenzi().getComenziAfisare(cautareComanda);
 
 	}
 
@@ -58,6 +61,38 @@ public class ComenziController {
 	public ComandaAprobareDetalii getComandaAprobare(String idComanda) {
 
 		return new OperatiiComenzi().getDetaliiComandaAprob(idComanda);
+
+	}
+
+	@RequestMapping(value = "/getCmdModif", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public List<ComandaAprobareAfis> getComenziModificare(CautaCmdAprob cautaCmd) {
+
+		return new OperatiiComenzi().getComenziModificare(cautaCmd);
+
+	}
+
+	@RequestMapping(value = "/getDetCmdModif", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ComandaModificareDetalii getDetaliiCmdModificare(String idComanda) {
+
+		return new OperatiiComenzi().getDetaliiComandaModif(idComanda);
+
+	}
+
+	@RequestMapping(value = "/aprobaComanda", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public Status aprobaComanda(@RequestBody ComandaAprobareOperare comanda) {
+
+		return new OperatiiComenzi().opereazaComanda(comanda);
+
+	}
+
+	@RequestMapping(value = "/stergeComanda", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public Status stergeComanda(String idComanda) {
+
+		return new OperatiiComenzi().modificaStareComanda(idComanda, EnumOpereazaComanda.RESPINGERE);
 
 	}
 

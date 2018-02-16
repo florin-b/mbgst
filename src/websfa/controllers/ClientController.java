@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import websfa.beans.CautareClient;
 import websfa.beans.ClientLite;
 import websfa.beans.DetaliiClient;
+import websfa.beans.Status;
 import websfa.model.articole.OperatiiClient;
 
 @Controller
@@ -28,6 +29,13 @@ public class ClientController {
 
 		return new OperatiiClient().getDetaliiClient(codClient);
 
+	}
+	
+	@RequestMapping(value = "/aprobacmd", produces = "application/json")
+	@ResponseBody
+	public Status AprobaComanda(String idComanda)
+	{
+		return null;
 	}
 
 }

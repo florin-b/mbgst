@@ -138,6 +138,8 @@ function afisDetaliiClient(detaliiClient) {
 
 	}).addClass("detaliiTable");
 
+	$('#clientTable tbody').remove();
+
 	var adresa = detaliiClient.adresa.numeJudet + ' '
 			+ detaliiClient.adresa.localitate + ' '
 			+ detaliiClient.adresa.strada;
@@ -160,31 +162,37 @@ function afisDetaliiClient(detaliiClient) {
 	$('<td></td>').attr('style', 'width:70%').text(
 			detaliiClient.stareClient.restCredit).appendTo(row);
 
-	row = $('<tr></tr>').appendTo(clientTable);
+	if (detaliiClient.stareClient.isBlocat) {
 
-	$('<td></td>').attr('style', 'width:20%').text('Stare client')
-			.appendTo(row);
-	$('<td></td>').attr('style', 'width:70%').text(
-			detaliiClient.stareClient.stare).appendTo(row);
+		row = $('<tr></tr>').appendTo(clientTable);
 
-	row = $('<tr></tr>').appendTo(clientTable);
+		$('<td></td>').attr('style', 'width:20%').text('Stare client')
+				.appendTo(row);
+		$('<td></td>').attr('style', 'width:70%').text('Client blocat')
+				.appendTo(row);
 
-	var tdSelectClient = $('<td></td>', {
-		colspan : '2',
-		style : 'text-align : center'
-	}).appendTo(row);
+	}
 
-	var btnSelectClient = $('<button>', {
-		text : 'Selecteaza',
-		style : 'width:100%'
+	if (!detaliiClient.stareClient.isBlocat) {
+		row = $('<tr></tr>').appendTo(clientTable);
 
-	}).bind('click', {
-		client : detaliiClient
-	}, function(event) {
-		selecteazaClient(event.data.client);
-	});
+		var tdSelectClient = $('<td></td>', {
+			colspan : '2',
+			style : 'text-align : center'
+		}).appendTo(row);
 
-	btnSelectClient.appendTo(tdSelectClient).buttonMarkup();
+		var btnSelectClient = $('<button>', {
+			text : 'Selecteaza',
+			style : 'width:100%'
+
+		}).bind('click', {
+			client : detaliiClient
+		}, function(event) {
+			selecteazaClient(event.data.client);
+		});
+
+		btnSelectClient.appendTo(tdSelectClient).buttonMarkup();
+	}
 
 	globalDetaliiClient = detaliiClient;
 

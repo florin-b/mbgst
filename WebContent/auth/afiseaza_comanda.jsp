@@ -19,7 +19,7 @@
 <script
 	src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
-
+<link rel="stylesheet" href="resources/css/afiseaza_comanda.css">
 
 <script src="<c:url value="/resources/scripts/afiseaza_comanda.js" />"></script>
 
@@ -99,16 +99,16 @@
 								</thead>
 								<tbody>
 									<tr>
-										<td>Interval</td>
+										<td>Interval emitere</td>
 										<td><select id='intervalCautare'>
 												<option value="1">Astazi</option>
 												<option value="2">Ultimele 7 zile</option>
 												<option value="3">Ultimele 30 de zile</option>
-												<option value="4">Toate</option>
+
 										</select></td>
 									</tr>
 									<tr>
-										<td>Tip</td>
+										<td>Stare comanda</td>
 										<td><select id='tipComanda'>
 												<option value="1">Emise</option>
 												<option value="2">Respinse/sterse</option>

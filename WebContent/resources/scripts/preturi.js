@@ -12,11 +12,8 @@ $(document).on('pagebeforeshow', '#preturi', function() {
 
 $(document).on('pageshow', '#preturi', function() {
 
-	clearScreen();
-
 	$(":input[name= 'radio-articol']").on('change', function() {
 		var clicked = $(this).val();
-		clearScreen();
 
 		$('#codArticol').focus();
 
@@ -31,8 +28,6 @@ $(document).on('pagecreate', '#preturi', function() {
 });
 
 function cautaArticol() {
-
-
 
 	if ($('#codArticol').val().trim() == '')
 		return;
@@ -78,10 +73,11 @@ function afiseazaListArticole(listArticole) {
 				+ "'><h2><div id='numeart"
 				+ listArticole[u].cod
 				+ "'>"
+				+ listArticole[u].cod
+				+ ' - '
 				+ listArticole[u].nume
 				+ "</div></h2><div id='articol"
-				+ listArticole[u].cod
-				+ "'></div></div>";
+				+ listArticole[u].cod + "'></div></div>";
 
 		$("#articoleset").append(content).collapsibleset("refresh");
 	}
@@ -92,7 +88,6 @@ function setColapsibleArticolListenerPret() {
 	$('#articoleset').bind('collapsibleexpand', function(data) {
 
 		var codArt = data.target.id;
-
 		var contentId = '#' + codArt;
 
 		var position = $(contentId).offset().top;
@@ -134,6 +129,36 @@ function getPret(codArticol) {
 }
 
 function afiseazaPret(articolCod, articolPret) {
+
+	var contentId = '#articol' + articolCod;
+	
+	$(contentId).html('');
+
+	var pretTable = $('<table></table>').attr({
+		id : 'pretTable',
+		width : "100%",
+		border : "0"
+	}).addClass('pretTable');
+
+	$('#pretTable tbody').remove();
+
+	var row = $('<tr></tr>').appendTo(pretTable);
+	$('<td></td>').attr('style', 'width:25%').text('Pret').appendTo(row);
+	$('<td></td>').text('Um').appendTo(row);
+
+	row = $('<tr></tr>').appendTo(pretTable);
+	$('<td></td>').attr('style', 'width:25%').text(articolPret.pret).appendTo(
+			row);
+	$('<td></td>').text(articolPret.um)
+			.appendTo(row);
+
+	$('<br>').appendTo($(contentId));
+	$(pretTable).appendTo($(contentId));
+	$('<br>').appendTo($(contentId));
+
+}
+
+function afiseazaPret_old(articolCod, articolPret) {
 
 	var contentId = '#articol' + articolCod;
 

@@ -10,6 +10,8 @@ public class Comanda {
 	private boolean aprobaSD;
 	private boolean aprobaDV;
 	private double totalComanda;
+	private String idCmd;
+	private String idCmdSap;
 	private DateLivrare dateLivrare;
 	List<ArticolComanda> listArticole;
 
@@ -77,10 +79,27 @@ public class Comanda {
 		this.totalComanda = totalComanda;
 	}
 
+	public String getIdCmdSap() {
+		return idCmdSap;
+	}
+
+	public void setIdCmdSap(String idCmdSap) {
+		this.idCmdSap = idCmdSap;
+	}
+
+	public String getIdCmd() {
+		return idCmd;
+	}
+
+	public void setIdCmd(String idCmd) {
+		this.idCmd = idCmd;
+	}
+
 	@Override
 	public String toString() {
 		return "Comanda [codClient=" + codClient + ", codAgent=" + codAgent + ", unitLog=" + unitLog + ", aprobaSD=" + aprobaSD + ", aprobaDV=" + aprobaDV
-				+ ", totalComanda=" + totalComanda + ", dateLivrare=" + dateLivrare + ", listArticole=" + listArticole + "]";
+				+ ", totalComanda=" + totalComanda + ", idCmd=" + idCmd + ", idCmdSap=" + idCmdSap + ", dateLivrare=" + dateLivrare + ", listArticole="
+				+ listArticole + "]";
 	}
 
 }

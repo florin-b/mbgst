@@ -1,5 +1,6 @@
 var userObj;
 var globalListArticole = [];
+var comandaCurenta;
 
 $(document).on('pageshow', '#aprobacomanda', function() {
 
@@ -30,7 +31,6 @@ function setColapsibleArticoleListener() {
 
 function afisDetaliiArticol(codArticol) {
 
-
 	var idContCant = '#idCCant' + codArticol;
 
 	var result_style = document.getElementById(idContCant).style;
@@ -38,11 +38,23 @@ function afisDetaliiArticol(codArticol) {
 
 }
 
+function hideSections() {
+	$('#divDateGenAprob').hide();
+	$('#divArticoleAprob').hide();
+	$('#dateGenTable tbody').remove();
+	$('#articoleTable tbody').remove();
+	$('#aprobaCmd').hide();
+	$('#respingeCmd').hide();
+
+}
+
 function getComenziAprobare() {
+
+	hideSections();
 
 	var cautaCmdAprob = new Object();
 
-	// cautaCmdAprob.tipAngajat = userObj.tipAngajat;
+	cautaCmdAprob.tipAngajat = userObj.tipAngajat;
 	cautaCmdAprob.unitLog = userObj.unitLog;
 	cautaCmdAprob.codDepart = userObj.codDepart;
 	cautaCmdAprob.codAngajat = userObj.codPers;
@@ -55,14 +67,14 @@ function getComenziAprobare() {
 		data : cautaCmdAprob,
 		success : function(data) {
 			$.mobile.loading('hide');
-			afisComenziModificare(data);
+			afisComenziAprob(data);
 
 		},
 		dataType : 'json',
 		contentType : 'application/json',
 
 		error : function(exception) {
-
+			alert(exception);
 		}
 
 	});
@@ -72,6 +84,8 @@ function getComenziAprobare() {
 }
 
 function afisComenziAprob(listComenzi) {
+
+	$('#cmd_aprob_select').empty();
 
 	if (listComenzi.length > 0) {
 		$('#cmd_aprob_select').append($('<option>', {
@@ -96,7 +110,7 @@ $('#cmd_aprob_select').on('change', function() {
 	var idComanda = $("#cmd_aprob_select option:selected").val();
 
 	if (idComanda > 0)
-		getDetaliiComandaModif(idComanda);
+		getDetaliiCmdAprob(idComanda);
 
 });
 
@@ -111,7 +125,7 @@ function getDetaliiCmdAprob(idComanda) {
 			idComanda : idComanda
 		}),
 		success : function(data) {
-			afiseazaComandaModif(data);
+			afiseazaComandaAprob(data);
 		},
 		dataType : 'json',
 		contentType : 'application/json',
@@ -129,7 +143,17 @@ function getDetaliiCmdAprob(idComanda) {
 function afiseazaComandaAprob(comanda) {
 
 	var dateGenTable = '#dateGenTable';
-	
+
+	$('#divDateGenAprob').show();
+	$('#aprobaCmd').show();
+	$('#respingeCmd').show();
+
+	comandaCurenta = new Object();
+
+	comandaCurenta.id = $("#cmd_aprob_select option:selected").val();
+	comandaCurenta.nrCmdSap = comanda.idComandaSAP;
+	comandaCurenta.codAngaj = userObj.codPers;
+
 	$('#dateGenTable tbody').remove();
 
 	var row = $('<tr></tr>').appendTo(dateGenTable);
@@ -156,16 +180,19 @@ function afiseazaComandaAprob(comanda) {
 	$('<td></td>').attr('style', 'width:20%').text('Nume agent').appendTo(row);
 	$('<td></td>').text(comanda.numeAgent).appendTo(row);
 
-	afiseazaArticoleComanda(comanda.listArticole);
+	globalListArticole = comanda.listArticole;
+	afisArtComAprob(comanda.listArticole);
 
 }
 
-function afiseazaArticoleComanda(listArticole) {
+function afisArtComAprob(listArticole) {
 
 	$('#articoleTable tbody').remove();
-	
-	if (listArticole.length > 0)
+
+	if (listArticole.length > 0) {
+		$('#divArticoleAprob').show();
 		$('#opereazaCmdDiv').show();
+	}
 
 	for (var i = 0; i < listArticole.length; i++) {
 
@@ -189,7 +216,8 @@ function afiseazaArticoleComanda(listArticole) {
 				listArticole[i].numeArticol).appendTo(row);
 		$('<td></td>').attr({
 			style : 'align:right'
-		}).text(listArticole[i].cantitate).appendTo(row);
+		}).attr('style', 'width:10%').text(listArticole[i].cantitate).appendTo(
+				row);
 		$('<td></td>').attr('style', 'width:5%').text(listArticole[i].um)
 				.appendTo(row);
 
@@ -210,20 +238,25 @@ function afiseazaArticoleComanda(listArticole) {
 
 		row = $('<tr></tr>').appendTo(mytable);
 		$('<td></td>').attr('style', 'width:5%').appendTo(row);
+		
+		$('<td></td>').appendTo(row);
 
-		var tdAddCond = $('<td></td>', {
-			style : 'text-align : right'
-		}).appendTo(row);
+		var tdAddCond = $('<td></td>').attr('style', 'text-align:center').attr('colspan', '2');
 
 		var btnAddConditii = $('<button>', {
-			text : 'Conditii'
+			text : 'Adauga conditii',
+			position: 'relative',
+			margin : '0 auto',
+			style : 'width : 70%'
 		}).bind('click', {
 			articol : listArticole[i]
 		}, function(event) {
 			setConditiiInputVisibility(event.data.articol);
-		});
+		}).addClass('ui-btn ui-mini');
 
 		$(btnAddConditii).appendTo(tdAddCond);
+
+		tdAddCond.appendTo(row);
 
 		row = $('<tr></tr>', {
 			id : 'rowCondCant' + listArticole[i].codArticol,
@@ -281,13 +314,18 @@ function afiseazaArticoleComanda(listArticole) {
 		});
 
 		$(row).appendTo(mytable);
-		$('<td></td>').attr('style', 'width:3%').appendTo(row);
+		$('<td></td>').attr('style', 'width:3%').attr('style',
+				'text-align:right').appendTo(row);
 
-		var tdSaveCond = $('<td></td>').attr('style', 'text-align:right')
-				.appendTo(row);
+		$('<td></td>').appendTo(row);
+		
+		var tdSaveCond = $('<td></td>').attr('style', 'text-align:right').attr(
+				'colspan', '2').appendTo(row);
 
 		var btnSaveConditii = $('<button>', {
 			text : 'Salveaza conditii',
+			class : 'ui-btn ui-mini',
+			style : 'width : 70%'
 		}).bind('click', {
 			articol : listArticole[i]
 		}, function(event) {
@@ -413,14 +451,6 @@ function setConditiiAfisVisibility(articol) {
 
 }
 
-function handlerForSalveazaConditii(articol) {
-	trateazaArticol(articol);
-}
-
-function trateazaArticol(articol) {
-	alert(articol.codArticol);
-}
-
 function afisConditiiLayout(codArticol) {
 
 	var idRowConditii = '#tblCond' + codArticol;
@@ -455,6 +485,76 @@ function isNumeric(val) {
 	return Number(parseFloat(val)) === val;
 }
 
-$("#aprobaCmd").click(function() {
-	alert("Aprobre comanda");
+$("#aprobaCmd").click(
+		function() {
+
+			var listConditii = [];
+
+			for (var i = 0; i < globalListArticole.length; i++) {
+
+				if (globalListArticole[i].conditiiCant > 0
+						|| globalListArticole[i].conditiiVal > 0) {
+					var conditie = new Object();
+					conditie.cod = globalListArticole[i].codArticol;
+					conditie.cantitate = globalListArticole[i].conditiiCant;
+					conditie.valoare = globalListArticole[i].conditiiVal;
+					conditie.um = globalListArticole[i].um;
+					listConditii.push(conditie);
+
+				}
+
+			}
+
+			comandaCurenta.listConditii = listConditii;
+			comandaCurenta.seAproba = true;
+
+			callService(comandaCurenta);
+
+		});
+
+$("#respingeCmd").click(function() {
+	comandaCurenta.listConditii = [];
+	comandaCurenta.seAproba = false;
+	callService(comandaCurenta);
 });
+
+function callService(comanda) {
+	$.mobile.loading('show');
+
+	$.ajax({
+		type : 'POST',
+		url : 'aprobaComanda',
+		data : JSON.stringify(comanda),
+		success : function(data) {
+			showAlertStatus(data);
+		},
+		dataType : 'json',
+		contentType : 'application/json',
+
+	});
+
+	$.mobile.loading('hide');
+
+}
+
+function showAlertStatus(statusAprobare) {
+
+	showAlertDialog("Status", statusAprobare.message);
+
+	if (statusAprobare.success) {
+		$('body,html').animate({
+			scrollTop : 0
+		}, 500);
+		getComenziAprobare();
+	}
+
+}
+
+function showAlertDialog(tipAlert, mesajAlert) {
+
+	$('#tipAlertM').text(tipAlert);
+	$('#textAlertM').text(mesajAlert);
+	$.mobile.changePage('#dialogAprobare', {
+		transition : "none"
+	});
+}

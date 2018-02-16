@@ -20,7 +20,7 @@
 	src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
 
-
+<link rel="stylesheet" href="resources/css/stocuri.css">
 
 
 <script src="<c:url value="/resources/scripts/stocuri.js" />"></script>

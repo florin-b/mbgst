@@ -348,9 +348,14 @@ hr {
 					<tbody id="art_table_body">
 					</tbody>
 				</table>
-				
+
 				<br>
-				<div style="display:inline;"><b>Total comanda </b></div><div style="display: inline;"  id='divTotalCmd' ><b>0.00 RON</b></div>
+				<div style="display: inline;">
+					<b>Total comanda </b>
+				</div>
+				<div style="display: inline;" id='divTotalCmd'>
+					<b>0.00 RON</b>
+				</div>
 			</div>
 
 			<br> <br>
@@ -448,8 +453,9 @@ hr {
 
 			<br>
 			<div id='divSalveazaComanda' style="display: none">
-				<input type="button" name="salveazaComanda" id="salveazaComanda"
-					value="Salveaza comanda" />
+
+				<a href="#" id="salveazaComanda" class="ui-btn ui-corner-all"
+					style="background: #bbefbb;">Salveaza comanda</a>
 
 			</div>
 
@@ -459,8 +465,8 @@ hr {
 
 		</div>
 	</div>
-	
-	
+
+
 	<div data-role="dialog" id="dialogCreare">
 		<div data-role="header">
 			<h1>
@@ -471,8 +477,8 @@ hr {
 			<div id="textAlertC"></div>
 		</div>
 	</div>
-	
-	
+
+
 
 	<div id="userbean" style="visibility: hidden">${userjson}</div>
 

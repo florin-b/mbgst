@@ -19,7 +19,7 @@
 <script
 	src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
-
+<link rel="stylesheet" href="resources/css/preturi.css">
 <script src="<c:url value="/resources/scripts/preturi.js" />"></script>
 
 

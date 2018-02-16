@@ -207,4 +207,18 @@ public class DateUtils {
 		return date;
 	}
 
+	public static String addDaysToDate(int nrDays) {
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyymmdd");
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, nrDays);
+
+		Date date = calendar.getTime();
+
+		return dateFormat.format(date);
+	}
+
+	
+
 }

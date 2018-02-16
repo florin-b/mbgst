@@ -14,7 +14,7 @@ $(document).on('pagebeforeshow', '#afiscomanda', function() {
 
 $(document).on('pageshow', '#afiscomanda', function() {
 
-	getComenzi();
+	getComenziAfisare();
 
 });
 
@@ -45,7 +45,7 @@ function setContentComanda(idComanda) {
 
 }
 
-function getComenzi() {
+function getComenziAfisare() {
 
 	userObj = JSON.parse($('#userbean').text());
 
@@ -57,20 +57,7 @@ function getComenzi() {
 	cautareComanda.tipComanda = '1';
 	cautareComanda.codAngajat = userObj.codPers;
 
-	$.ajax({
-		type : 'GET',
-		url : 'getcom',
-		data : cautareComanda,
-		success : function(data) {
-			afiseazaComenziHeader(data);
-			$.mobile.loading('hide');
-		},
-		error : function(exception) {
-			alert('Exeption:' + JSON.stringify(exception));
-			$.mobile.loading('hide');
-		}
-
-	});
+	cautaComandaService(cautareComanda);
 
 }
 
@@ -156,16 +143,22 @@ function cautaComenzi() {
 	cautareComanda.tipComanda = $("#tipComanda").val();
 	cautareComanda.codAngajat = userObj.codPers;
 
+	cautaComandaService(cautareComanda);
+
+}
+
+function cautaComandaService(cautareComanda) {
+	$.mobile.loading('show');
+
 	$.ajax({
 		type : 'GET',
-		url : 'getcom',
+		url : 'getComAfis',
 		data : cautareComanda,
 		success : function(data) {
 			afiseazaComenziHeader(data);
 			$.mobile.loading('hide');
 		},
 		error : function(exception) {
-			alert('Exeption:' + JSON.stringify(exception));
 			$.mobile.loading('hide');
 		}
 
@@ -174,6 +167,39 @@ function cautaComenzi() {
 }
 
 function afisDetaliiComanda(detaliiComanda) {
+
+	var strArticole = '';
+
+	var swatch = [ '#f2f2f2', '#FFF0F5' ];
+
+	var backStyle = '';
+
+	var listArticole = $('<ul></ul>', {
+
+	}).attr('data-role', 'listview').attr('data-inset', 'true');
+
+	for (var u = 0; u < detaliiComanda.listArticole.length; u++) {
+
+		var articol = $('<li />', {
+			html : afisArticolComanda(detaliiComanda.listArticole[u])
+		});
+
+		$(listArticole).append(articol);
+
+	}
+
+	var dateLivrare = $('<div></div>').append(
+			afisdateLivrareComanda(detaliiComanda.dateLivrare));
+
+	$(dateLivrare).append(listArticole);
+
+	var contentId = '#content' + comandaId;
+
+	$(contentId).html(dateLivrare).enhanceWithin();
+
+}
+
+function afisDetaliiComanda_old(detaliiComanda) {
 
 	var strArticole = '';
 
@@ -209,6 +235,37 @@ function afisDetaliiComanda(detaliiComanda) {
 
 function afisArticolComanda(articol) {
 
+	var articoleTable = $('<table></table>').attr({
+		id : "articoleTable",
+		width : "100%",
+		border : "0"
+
+	}).addClass('dateLivrareTable');
+
+	var row = $('<tr></tr>').appendTo(articoleTable);
+	$('<td></td>').attr('style', 'width:80%').attr('style', 'font-weight:bold')
+			.text(articol.nume).appendTo(row);
+	$('<td></td>').attr('style', 'width:10%').text(articol.cantitate.valoare)
+			.appendTo(row);
+	$('<td></td>').text(articol.cantitate.um).appendTo(row);
+
+	row = $('<tr></tr>').appendTo(articoleTable);
+	$('<td></td>').attr('style', 'width:80%').text(articol.cod).appendTo(row);
+	$('<td></td>').attr('style', 'width:10%').text(articol.pretUnitar)
+			.appendTo(row);
+	$('<td></td>').text('RON').appendTo(row);
+
+	row = $('<tr></tr>').appendTo(articoleTable);
+	$('<td></td>').text(articol.depozit).appendTo(row);
+	$('<td></td>').attr('style', 'width:10%').text(articol.procReducere)
+			.appendTo(row);
+	$('<td></td>').text('RON').appendTo(row);
+
+	return articoleTable;
+}
+
+function afisArticolComanda_old(articol) {
+
 	var content = '<table data-role="table" id="articoleTable" class="ui-responsive" data-mode="reflow" >';
 
 	content += '<tr>';
@@ -236,40 +293,39 @@ function afisArticolComanda(articol) {
 
 function afisdateLivrareComanda(dateLivrare) {
 
-	var content = '<table data-role="table" id="datelivrareTable" class="ui-responsive table" data-mode="reflow" style="width:100%">';
+	var dateLivrTable = $('<table></table>').attr({
+		id : "dateLivrareTable",
+		width : "100%",
+		border : "0"
 
-	content += '<tr>';
-	content += '<th colspan=2>Date livrare</th>';
-	content += '</tr>';
+	}).addClass('dateLivrareTable');
 
-	content += '<tr>';
-	content += '<td style="width:25%">Judet</td>';
-	content += '<td >' + dateLivrare.adresaLivrare.numeJudet + '</td>';
-	content += '</tr>';
+	var row = $('<tr></tr>').appendTo(dateLivrTable);
+	$('<td></td>').attr('colspan', '2').attr('style', 'font-weight:bold').text(
+			'Date livrare').appendTo(row);
 
-	content += '<tr>';
-	content += '<td style="width:25%">Localitate</td>';
-	content += '<td >' + dateLivrare.adresaLivrare.localitate + '</td>';
-	content += '</tr>';
+	row = $('<tr></tr>').appendTo(dateLivrTable);
+	$('<td></td>').attr('style', 'width:5%').text('Judet').appendTo(row);
+	$('<td></td>').text(dateLivrare.adresaLivrare.numeJudet).appendTo(row);
 
-	content += '<tr>';
-	content += '<td style="width:25%">Strada</td>';
-	content += '<td >' + dateLivrare.adresaLivrare.strada + '</td>';
-	content += '</tr>';
+	row = $('<tr></tr>').appendTo(dateLivrTable);
+	$('<td></td>').attr('style', 'width:5%').text('Localitate').appendTo(row);
+	$('<td></td>').text(dateLivrare.adresaLivrare.localitate).appendTo(row);
 
-	content += '<tr>';
-	content += '<td style="width:25%">Pers. contact</td>';
-	content += '<td >' + dateLivrare.persoanaContact + '</td>';
-	content += '</tr>';
+	row = $('<tr></tr>').appendTo(dateLivrTable);
+	$('<td></td>').attr('style', 'width:25%').text('Strada').appendTo(row);
+	$('<td></td>').text(dateLivrare.adresaLivrare.strada).appendTo(row);
 
-	content += '<tr>';
-	content += '<td style="width:25%">Telefon</td>';
-	content += '<td >' + dateLivrare.telPersContact + '</td>';
-	content += '</tr>';
+	row = $('<tr></tr>').appendTo(dateLivrTable);
+	$('<td></td>').attr('style', 'width:25%').text('Pers. contact').appendTo(
+			row);
+	$('<td></td>').text(dateLivrare.persoanaContact).appendTo(row);
 
-	content += '</table>';
+	row = $('<tr></tr>').appendTo(dateLivrTable);
+	$('<td></td>').attr('style', 'width:25%').text('Telefon').appendTo(row);
+	$('<td></td>').text(dateLivrare.telPersContact).appendTo(row);
 
-	return content;
+	return dateLivrTable;
 
 }
 

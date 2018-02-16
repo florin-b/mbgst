@@ -16,12 +16,18 @@
 	href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 <script
 	src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
 
 
 <script src="<c:url value="/resources/scripts/afiseaza_comanda.js" />"></script>
+
+<link rel="stylesheet" href="resources/css/modificare_comanda.css">
 
 
 <style>
@@ -34,7 +40,7 @@
 	overflow: scroll;
 }
 
-#datelivrareTable tbody td, th {
+#datelivrareTable, # tbody td, th {
 	color: #68838B;
 	font-weight: normal;
 }
@@ -82,14 +88,16 @@
 
 		<div data-role="content" class="ui-content">
 
+
+
 			<select name="cmd_modif_select" id="cmd_modif_select">
 
 			</select> <br> <select name="modif_act_select" id="modif_act_select">
-				<option value="0">Selectati o actiune</option>
+				<option value="0">Selectati</option>
 				<option value="1">Adaugare articole</option>
 				<option value="2">Modificare date livrare</option>
 			</select> <br> <br> <br>
-			<div></div>
+
 
 
 			<div id="selectArtModifDiv">
@@ -236,7 +244,7 @@
 
 						<tr>
 							<td colspan=2><br> <input type="button"
-								name="salveazaDateLivrare" id="salveazaDateLivrare"
+								name="saveDateLivr" id="saveDateLivr"
 								value="Salveaza date livrare" /></td>
 						</tr>
 
@@ -272,15 +280,17 @@
 				<b><font color="#008B00">Articole</font></b>
 				<hr>
 				<table data-role="table" style="width: 100%" id="articoleTable"
-					class="ui-responsive" data-mode="reflow">
+					class="ui-responsive " data-mode="reflow">
 					<thead></thead>
 					<tbody>
 					</tbody>
 				</table>
 
+
+
 			</div>
 
-			<br>
+			<br> <br>
 
 
 			<div id="divDateLivrareModif">
@@ -288,112 +298,72 @@
 				<hr>
 
 
-				<div>
+
+				<table data-role="table" style="width: 100%"
+					id="dateLivrareModifTable" class="ui-responsive" data-mode="reflow">
+					<thead></thead>
+					<tbody>
+					</tbody>
+				</table>
 
 
-					<table data-role="table" data-mode="reflow" class="ui-responsive"
-						id="datelivrare_table_modif">
-						<thead>
-							<tr>
-								<td></td>
-							</tr>
-						</thead>
-
-						<tbody>
-							<tr id="rowJudetAfis" style="display: none">
-								<td style="width: 25%">Judet</td>
-								<td><div id="numeJudetAfis"></div></td>
-							</tr>
-
-
-							<tr id="rowLocalitateAfis" style="display: none">
-								<td>Localitate</td>
-								<td><div id="localitateAfis"></div></td>
-							</tr>
-
-							<tr id="rowStradaAfis" style="display: none">
-								<td>Strada</td>
-								<td><div id="stradaAfis"></div></td>
-							</tr>
-
-							<tr id="rowPersContactAfis" style="display: none">
-								<td>Persoana de contact</td>
-								<td><div id="persContactAfis"></div></td>
-							</tr>
-
-							<tr id="rowTelefonAfis" style="display: none">
-								<td>Telefon</td>
-								<td><div id="telPersContactAfis"></div></td>
-							</tr>
-
-							<tr id="rowTipReducereAfis" style="display: none">
-								<td>Tip reducere</td>
-								<td><div id="tipReducereAfis"></div></td>
-							</tr>
-
-							<tr id="rowDocInsotitorAfis" style="display: none">
-								<td>Document insotitor</td>
-								<td><div id="docInsotitorAfis"></div></td>
-							</tr>
-
-
-							<tr id="rowPlataAfis" style="display: none">
-								<td>Plata</td>
-								<td><div id="plataAfis"></div></td>
-							</tr>
-
-							<tr id="rowRespIncasareAfis" style="display: none">
-								<td>Responsabil incasare</td>
-								<td><div id="responsabilAfis"></div></td>
-							</tr>
-
-							<tr id="rowTransportAfis" style="display: none">
-								<td>Transport</td>
-								<td><div id="transportAfis"></div></td>
-							</tr>
-
-
-							<tr id="rowDataLivrareAfis" style="display: none">
-								<td>Data livrare</td>
-								<td><div id="dataLivrareAfis"></div></td>
-							</tr>
-
-							<tr id="rowObsLivrareAfis" style="display: none">
-								<td>Observatii livrare</td>
-								<td><div id="obsLivrareAfis"></div></td>
-							</tr>
-
-
-						</tbody>
-
-					</table>
-
-
-				</div>
 
 
 			</div>
-
-
-			<div class="ui-grid ui-responsive" id="opereazaCmdDiv"
-				style="display: none;">
-
-
-				<a href="#" id="salveazaCmdModif" class="ui-btn ui-corner-all"
-					style="background: #bbefbb;">Salveaza</a>
-			</div>
-
-
-
-
 
 
 		</div>
+
+
+		<div class="ui-grid ui-responsive" id="opereazaCmdDiv"
+			style="display: none;">
+
+			<table style='width: 100%;'>
+				<tr>
+
+					<td style='width: 30%; padding: 20px;'><a href="#"
+						id="stergeCmdModif" class="ui-btn ui-corner-all"
+						style="background: #FFD399;">Sterge comanda</a></td>
+
+					<td style='width: 50%; padding: 20px;'><a href="#"
+						id="salveazaCmdModif" class="ui-btn ui-corner-all"
+						style="background: #99FFD3;">Salveaza comanda</a></td>
+				</tr>
+			</table>
+		</div>
+
+
+
+
+
 	</div>
+
+
+	<div data-role="dialog" id="dialogModificare">
+		<div data-role="header">
+			<h1>
+				<div id="tipAlertM"></div>
+			</h1>
+		</div>
+		<div data-role="content">
+			<div id="textAlertM"></div>
+		</div>
+	</div>
+
+
 
 	<div id="userbean" style="visibility: hidden">${userjson}</div>
 
 	<script
 		src="<c:url value="/resources/scripts/modificare_comanda.js" />"></script>
+
+	<script
+		src="<c:url value="/resources/scripts/modificare_comanda_articole.js" />"></script>
+
+	<script
+		src="<c:url value="/resources/scripts/modificare_comanda_livrare.js" />"></script>
+
+	<script src="<c:url value="/resources/scripts/common_scripts.js" />"></script>
+
 </body>
 </html>

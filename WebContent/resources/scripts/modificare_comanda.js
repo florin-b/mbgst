@@ -1,5 +1,12 @@
 var userObj;
 var globalListArticole = [];
+var comandaCurenta;
+var aprobaSD = false;
+var aprobaDV = false;
+
+$(document).on('pagebeforeshow', '#modifcmd', function() {
+
+});
 
 $(document).on('pageshow', '#modifcmd', function() {
 
@@ -11,26 +18,36 @@ $(document).on('pageshow', '#modifcmd', function() {
 
 $(document).on('pagecreate', '#modifcmd', function() {
 
-	setColapsibleArticoleListener();
+	initDateField();
+
+});
+
+function initDateField() {
+
+	$("#dataLivrare").datepicker({
+
+		dateFormat : "dd-mm-yy"
+
+	});
+
+}
+
+$(document).on('pagecreate', '#modifcmd', function() {
+
+	hidePageSections();
+
+});
+
+function hidePageSections() {
+
 	$('#modif_act_select').parent().hide();
 	$('#antetCmdModif').hide();
 	$('#articoleCmdModif').hide();
 	$('#selectArtModifDiv').hide();
 	$('#selectDateLivrareModifDiv').hide();
+	$('#divDateLivrareModif').hide();
+	$('#opereazaCmdDiv').hide();
 
-});
-
-function setColapsibleArticoleListener() {
-	$('#articoleset').bind('collapsibleexpand', function(data) {
-
-		var contentId = '#' + data.target.id;
-
-		var position = $(contentId).offset().top;
-		$.mobile.silentScroll(position);
-
-		afisDetaliiArticol(contentId);
-
-	});
 }
 
 $('#modif_act_select').on('change', function() {
@@ -48,36 +65,28 @@ $('#modif_act_select').on('change', function() {
 	} else if (selectId == 1) {
 		$('#selectArtModifDiv').show();
 	} else if (selectId == 2) {
+		modificaDateLivrare(comandaCurenta.dateLivrare);
 		$('#selectDateLivrareModifDiv').show();
 
 	}
 
 });
 
-function afisDetaliiArticol(codArticol) {
-
-	var idContCant = '#idCCant' + codArticol;
-
-	var result_style = document.getElementById(idContCant).style;
-	result_style.display = 'table-row';
-
-}
-
 function getComenziModificare() {
 
-	var cautaCmdAprob = new Object();
+	var cautaCmdModif = new Object();
 
-	// cautaCmdAprob.tipAngajat = userObj.tipAngajat;
-	cautaCmdAprob.unitLog = userObj.unitLog;
-	cautaCmdAprob.codDepart = userObj.codDepart;
-	cautaCmdAprob.codAngajat = userObj.codPers;
+	cautaCmdModif.tipAngajat = userObj.tipAngajat;
+	cautaCmdModif.unitLog = userObj.unitLog;
+	cautaCmdModif.codDepart = userObj.codDepart;
+	cautaCmdModif.codAngajat = userObj.codPers;
 
 	$.mobile.loading('show');
 
 	$.ajax({
 		type : 'GET',
-		url : 'getCmdAprob',
-		data : cautaCmdAprob,
+		url : 'getCmdModif',
+		data : cautaCmdModif,
 		success : function(data) {
 			$.mobile.loading('hide');
 			afisComenziModificare(data);
@@ -97,6 +106,8 @@ function getComenziModificare() {
 }
 
 function afisComenziModificare(listComenzi) {
+
+	$('#cmd_modif_select').empty();
 
 	if (listComenzi.length > 0) {
 
@@ -132,12 +143,13 @@ function getDetaliiComandaModif(idComanda) {
 
 	$.ajax({
 		type : 'GET',
-		url : 'getDetCmdAprob',
+		url : 'getDetCmdModif',
 		data : ({
 			idComanda : idComanda
 		}),
 		success : function(data) {
 			afiseazaComandaModif(data);
+
 		},
 		dataType : 'json',
 		contentType : 'application/json',
@@ -154,6 +166,8 @@ function getDetaliiComandaModif(idComanda) {
 
 function afiseazaComandaModif(comanda) {
 
+	comandaCurenta = comanda;
+
 	$('#antetCmdModif').show();
 	$('#articoleCmdModif').show();
 	$('#divDateLivrareModif').show();
@@ -166,29 +180,29 @@ function afiseazaComandaModif(comanda) {
 
 	var row = $('<tr></tr>').appendTo(dateGenTable);
 
-	$('<td></td>').attr('style', 'width:15%').text('Nr. comanda SAP').appendTo(
+	$('<td></td>').attr('style', 'width:30%').text('Nr. comanda SAP').appendTo(
 			row);
 
 	$('<td></td>').text(comanda.idComandaSAP).appendTo(row);
 
 	row = $('<tr></tr>').appendTo(dateGenTable);
-	$('<td></td>').attr('style', 'width:20%').text('Valoare').appendTo(row);
-	$('<td></td>').text(comanda.valoare).appendTo(row);
+	$('<td></td>').attr('style', 'width:30%').text('Valoare').appendTo(row);
+	$('<td></td>').attr('id', 'totalCmdModif').text(comanda.valoare).appendTo(
+			row);
 
 	row = $('<tr></tr>').appendTo(dateGenTable);
-	$('<td></td>').attr('style', 'width:20%').text('Data emirere')
+	$('<td></td>').attr('style', 'width:25%').text('Data emirere')
 			.appendTo(row);
 	$('<td></td>').text(comanda.dataEmitere).appendTo(row);
 
 	row = $('<tr></tr>').appendTo(dateGenTable);
-	$('<td></td>').attr('style', 'width:20%').text('Nume client').appendTo(row);
-	$('<td></td>').text(comanda.numeClient).appendTo(row);
+	$('<td></td>').attr('style', 'width:25%').text('Stare').appendTo(row);
+	$('<td></td>').text(getStareComandaText(comanda.idStareComanda)).appendTo(
+			row);
 
-	row = $('<tr></tr>').appendTo(dateGenTable);
-	$('<td></td>').attr('style', 'width:20%').text('Nume agent').appendTo(row);
-	$('<td></td>').text(comanda.numeAgent).appendTo(row);
-
+	globalListArticole = comanda.listArticole;
 	afiseazaArticoleComanda(comanda.listArticole);
+	afiseazaDateLivrare(comanda.dateLivrare);
 
 }
 
@@ -196,8 +210,10 @@ function afiseazaArticoleComanda(listArticole) {
 
 	$('#articoleTable tbody').remove();
 
-	if (listArticole.length > 0)
+	if (listArticole != null && listArticole.length > 0)
 		$('#opereazaCmdDiv').show();
+	else
+		return;
 
 	for (var i = 0; i < listArticole.length; i++) {
 
@@ -220,8 +236,10 @@ function afiseazaArticoleComanda(listArticole) {
 		$('<td></td>').attr('style', 'width:50%').text(
 				listArticole[i].numeArticol).appendTo(row);
 		$('<td></td>').attr({
-			style : 'align:right'
+			style : 'align:right',
+			id : 'cantArt' + listArticole[i].codArticol
 		}).text(listArticole[i].cantitate).appendTo(row);
+
 		$('<td></td>').attr('style', 'width:5%').text(listArticole[i].um)
 				.appendTo(row);
 
@@ -229,170 +247,209 @@ function afiseazaArticoleComanda(listArticole) {
 		$('<td></td>').attr('style', 'width:3%').appendTo(row);
 		$('<td></td>').attr('style', 'width:50%').text(
 				listArticole[i].codArticol).appendTo(row);
-		$('<td></td>').attr('style', 'width:10%').text(
-				listArticole[i].pretUnitar).appendTo(row);
+
+		$('<td></td>').attr({
+			style : 'width:10%',
+			id : 'pretArt' + listArticole[i].codArticol
+
+		}).text(listArticole[i].pretUnitar).appendTo(row);
 		$('<td></td>').attr('style', 'width:5%').text("RON").appendTo(row);
 
 		row = $('<tr></tr>').appendTo(mytable);
-		$('<td></td>').attr('style', 'width:3%').appendTo(row);
+
+		var btnElimina = $('<img></img>', {
+			src : 'resources/images/bin_blue.png'
+		}).attr('data-role', 'button').bind('click', {
+			articol : listArticole[i]
+		}, function(event) {
+			eliminaArticol(event.data.articol);
+		});
+
+		var tdBtn = $('<td></td>').attr('style', 'text-align:center').attr(
+				'style', 'width:3%');
+
+		$(btnElimina).appendTo(tdBtn);
+
+		$(tdBtn).appendTo(row);
+
 		$('<td></td>').attr('style', 'width:50%').appendTo(row);
-		$('<td></td>').attr('style', 'width:10%').text(
-				listArticole[i].procentReducere).appendTo(row);
+		$('<td></td>').attr({
+			style : 'width:10%',
+			id : 'procArt' + listArticole[i].codArticol
+		}).text(listArticole[i].procentReducere).appendTo(row);
+
 		$('<td></td>').attr('style', 'width:5%').text("%").appendTo(row);
 
 		row = $('<tr></tr>').appendTo(mytable);
 		$('<td></td>').attr('style', 'width:5%').appendTo(row);
 
-		var tdAddCond = $('<td></td>', {
-			style : 'text-align : right'
-		}).appendTo(row);
-
-		var btnAddConditii = $('<button>', {
-			text : 'Conditii'
-		}).bind('click', {
-			articol : listArticole[i]
-		}, function(event) {
-			setConditiiInputVisibility(event.data.articol);
-		});
-
-		$(btnAddConditii).appendTo(tdAddCond);
-
 		row = $('<tr></tr>', {
 			id : 'rowCondCant' + listArticole[i].codArticol,
-			style : 'display:none'
+			style : 'color:red'
 
 		});
 
-		$(row).appendTo(mytable);
+		if (isConditiiCant(listArticole[i]))
+			$(row).appendTo(mytable);
 
 		$('<td></td>').attr('style', 'width:3%').appendTo(row);
-		$('<td></td>').attr('style', 'text-align:right').text('Cantitative')
-				.appendTo(row);
+		$('<td></td>').attr('style', 'text-align:right').text(
+				'Conditii cantitative').appendTo(row);
 
-		var inputCondCant = $('<input>', {
-			id : 'condCant' + listArticole[i].codArticol,
-			maxlength : '6',
-			size : '6',
-			style : 'width:80%'
-		});
-
-		var tdCondCantInput = $('<td></td>').appendTo(row);
-
-		$(inputCondCant).appendTo(tdCondCantInput);
+		$('<td></td>').text(listArticole[i].conditiiCant).appendTo(row);
 
 		$('<td></td>').attr('style', 'width:3%').text(listArticole[i].um)
 				.appendTo(row);
 
 		row = $('<tr></tr>', {
 			id : 'rowCondVal' + listArticole[i].codArticol,
-			style : 'display:none'
+			style : 'color:red'
 
 		});
 
-		$(row).appendTo(mytable);
+		if (isConditiiVal(listArticole[i]))
+			$(row).appendTo(mytable);
 
-		$('<td></td>').attr('style', 'width:3%').appendTo(row);
-		$('<td></td>').attr('style', 'text-align:right').text('Valorice')
-				.appendTo(row);
-
-		var inputCondVal = $('<input>', {
-			id : 'condVal' + listArticole[i].codArticol,
-			maxlength : '6',
-			size : '6',
-			style : 'width:80%'
-		});
-
-		var tdCondValInput = $('<td></td>').appendTo(row);
-		$(inputCondVal).appendTo(tdCondValInput);
-		$('<td></td>').attr('style', 'width:3%').text("RON").appendTo(row);
-
-		row = $('<tr></tr>', {
-			id : 'rowSaveCond' + listArticole[i].codArticol,
-			style : 'display:none'
-
-		});
-
-		$(row).appendTo(mytable);
-		$('<td></td>').attr('style', 'width:3%').appendTo(row);
-
-		var tdSaveCond = $('<td></td>').attr('style', 'text-align:right')
-				.appendTo(row);
-
-		var btnSaveConditii = $('<button>', {
-			text : 'Salveaza conditii',
-		}).bind('click', {
-			articol : listArticole[i]
-		}, function(event) {
-			salveazaConditii(event.data.articol);
-		});
-
-		$(btnSaveConditii).appendTo(tdSaveCond);
-
-		row = $('<tr></tr>', {
-			id : 'rowCondCantImpuse' + listArticole[i].codArticol,
-			style : 'display:none;color:red'
-
-		});
-		$(row).appendTo(mytable);
-		$('<td></td>').attr('style', 'width:3%').appendTo(row);
-		$('<td></td>', {
-			style : 'text-align:right'
-		}).text('Conditii cantitative').appendTo(row);
-
-		$('<td></td>', {
-			id : 'tdCondCant' + listArticole[i].codArticol,
-			style : 'width:10%',
-			text : listArticole[i].conditiiCant
-
-		}).appendTo(row);
-
-		$('<td></td>').attr('style', 'width:5%').text(listArticole[i].um)
-				.appendTo(row);
-
-		row = $('<tr></tr>', {
-			id : 'rowCondValImpuse' + listArticole[i].codArticol,
-			style : 'display:none;color:red'
-
-		});
-		$(row).appendTo(mytable);
 		$('<td></td>').attr('style', 'width:3%').appendTo(row);
 		$('<td></td>').attr('style', 'text-align:right').text(
 				'Conditii valorice').appendTo(row);
 
-		$('<td></td>', {
-			id : 'tdCondVal' + listArticole[i].codArticol,
-			style : 'width:10%',
-			text : listArticole[i].conditiiVal
+		$('<td></td>').text(listArticole[i].conditiiVal).appendTo(row);
 
-		}).appendTo(row);
-		$('<td></td>').attr('style', 'width:5%').text('RON').appendTo(row);
+		$('<td></td>').attr('style', 'width:3%').text("RON").appendTo(row);
+
+		row = $('<tr></tr>', {
+			id : 'rowSaveCond' + listArticole[i].codArticol
+
+		});
+
+		if (isConditiiCant(listArticole[i]) || isConditiiVal(listArticole[i]))
+			$(row).appendTo(mytable);
+
+		$('<td></td>').attr('style', 'width:3%').appendTo(row);
+		$('<td></td>').appendTo(row);
+
+		var tdSaveCond = $('<td></td>').attr('style', 'text-align:center')
+				.attr('colspan', 2);
+
+		/*
+		 * var btnSaveConditii = $('<button>', { text : 'Accepta', class :
+		 * 'ui-btn ui-mini', style : 'width:90%', }).bind('click', { articol :
+		 * listArticole[i] }, function(event) {
+		 * acceptaConditii(event.data.articol); });
+		 */
+
+		var btnSaveConditii = $('<img></img>', {
+			src : 'resources/images/accept_icon.png'
+		}).attr('data-role', 'button').bind('click', {
+			articol : listArticole[i]
+		}, function(event) {
+			acceptaConditii(event.data.articol);
+		});
+
+		$(btnSaveConditii).appendTo(tdSaveCond);
+		tdSaveCond.appendTo(row);
 
 		$(mytable).appendTo('#articoleTable');
+
+		calculeazaTotalCmdModificare();
 
 	}
 
 }
 
-function salveazaConditii(articol) {
+function isConditiiCant(articol) {
+	if (articol.conditiiCant != null && articol.conditiiCant > 0)
+		return true;
+	return false;
+}
 
-	var idInputCondCant = '#condCant' + articol.codArticol;
-	var idInputCondVal = '#condVal' + articol.codArticol;
+function isConditiiVal(articol) {
+	if (articol.conditiiVal != null && articol.conditiiVal > 0)
+		return true;
+	return false;
+}
 
-	if (isFinite($(idInputCondCant).val()) && $(idInputCondCant).val() > 0) {
-		articol.conditiiCant = $(idInputCondCant).val().trim();
+function acceptaConditii(articol) {
 
-	} else {
-		articol.conditiiCant = 0;
+	if (isConditiiCant(articol)) {
+		acceptaConditiiCantitative(articol);
 	}
 
-	if (isFinite($(idInputCondVal).val()) && $(idInputCondVal).val() > 0) {
-		articol.conditiiVal = $(idInputCondVal).val().trim();
-
-	} else {
-		articol.conditiiVal = 0;
+	if (isConditiiVal(articol)) {
+		acceptaConditiiValorice(articol);
 	}
 
-	setConditiiInputVisibility(articol);
+	setConditiiVisibility(false, articol);
+
+}
+
+function setConditiiVisibility(isVisible, articol) {
+
+	if (isVisible) {
+		$('#rowCondCant' + articol.codArticol).show();
+		$('#rowCondVal' + articol.codArticol).show();
+		$('#rowSaveCond' + articol.codArticol).show();
+	} else {
+		$('#rowCondCant' + articol.codArticol).hide();
+		$('#rowCondVal' + articol.codArticol).hide();
+		$('#rowSaveCond' + articol.codArticol).hide();
+	}
+
+}
+
+function acceptaConditiiCantitative(articol) {
+	articol.cantitate = articol.conditiiCant;
+	var idCant = '#cantArt' + articol.codArticol;
+	$(idCant).text(articol.cantitate);
+	articol.conditiiCant = 0;
+
+}
+
+function acceptaConditiiValorice(articol) {
+
+	var pretInit = articol.pretUnitar / (1 - articol.procentReducere / 100);
+
+	var newProcRed = (1 - articol.conditiiVal / pretInit) * 100;
+	articol.procentReducere = newProcRed.toFixed(2);
+
+	var idProc = '#procArt' + articol.codArticol;
+
+	$(idProc).text(articol.procentReducere);
+
+	articol.pretUnitar = articol.conditiiVal;
+	var idPret = '#pretArt' + articol.codArticol;
+	$(idPret).text(articol.pretUnitar);
+	articol.conditiiVal = 0;
+
+}
+
+function eliminaArticol(articol) {
+
+	for (var i = 0; i < globalListArticole.length; i++) {
+
+		if (globalListArticole[i].codArticol == articol.codArticol) {
+			globalListArticole.splice(i, 1);
+			break;
+		}
+	}
+
+	afiseazaArticoleComanda(globalListArticole);
+
+	calculeazaTotalCmdModificare();
+
+}
+
+function calculeazaTotalCmdModificare() {
+
+	var totalComanda = 0;
+	for (var i = 0; i < globalListArticole.length; i++) {
+		totalComanda += globalListArticole[i].pretUnitar
+				* globalListArticole[i].cantitate;
+
+	}
+
+	$('#totalCmdModif').html(totalComanda.toFixed(2));
 
 }
 
@@ -445,48 +502,129 @@ function setConditiiAfisVisibility(articol) {
 
 }
 
-function handlerForSalveazaConditii(articol) {
-	trateazaArticol(articol);
-}
-
-function trateazaArticol(articol) {
-	alert(articol.codArticol);
-}
-
-function afisConditiiLayout(codArticol) {
-
-	var idRowConditii = '#tblCond' + codArticol;
-
-	if ($(idRowConditii).css('display') == 'none')
-		$(idRowConditii).show();
-	else
-		$(idRowConditii).hide();
-
-}
-
-function saveConditiiLayout(index) {
-
-	var idTextCondCant = '#condCant' + globalListArticole[index].codArticol;
-	var idTextCondVal = '#condVal' + globalListArticole[index].codArticol;
-
-	if (isFinite($(idTextCondCant).val()))
-		globalListArticole[index].conditiiCant = $(idTextCondCant).val().trim();
-
-	if (isFinite($(idTextCondVal).val()))
-		globalListArticole[index].conditiiVal = $(idTextCondVal).val().trim();
-
-	var idRowCondCant = '#condCant' + globalListArticole[index].codArticol;
-	var idRowCondVal = '#condVal' + globalListArticole[index].codArticol;
-
-	$(idRowCondCant).show();
-	$(idRowCondVal).show();
-
-}
-
 function isNumeric(val) {
 	return Number(parseFloat(val)) === val;
 }
 
+function setAprobariNecesare() {
+	for (var i = 0; i < globalListArticole.length; i++) {
+		if (globalListArticole[i].procentReducere > 0) {
+			aprobaSD = true;
+			aprobaDV = true;
+		}
+	}
+
+}
+
+function scrollToPageTop() {
+
+	$('html, body').animate({
+		scrollTop : ($('#modifcmd').offset().top)
+	}, 500);
+}
+
+function isConditiiPreluate() {
+
+	var preluareTotala = true;
+
+	for (var i = 0; i < globalListArticole.length; i++) {
+		if (isConditiiCant(globalListArticole[i])
+				|| isConditiiVal(globalListArticole[i])) {
+			preluareTotala = false;
+		}
+	}
+
+	return preluareTotala;
+
+}
+
 $("#salveazaCmdModif").click(function() {
-	alert("Salvare comanda modificata");
+
+	if (!isConditiiPreluate()) {
+		showAlertDialogModif('Atentie!', 'Preluati toate conditiile.');
+		return;
+	}
+
+	setAprobariNecesare();
+
+	var comanda = new Object();
+
+	comanda.codClient = comandaCurenta.codClient;
+	comanda.codAgent = userObj.codPers;
+	comanda.aprobaSD = aprobaSD;
+	comanda.aprobaDV = aprobaDV;
+	comanda.unitLog = comandaCurenta.unitLog;
+	comanda.idCmdSap = comandaCurenta.idComandaSAP;
+	comanda.idCmd = $("#cmd_modif_select option:selected").val();
+	comanda.dateLivrare = getDateLivrareModifCmd(comandaCurenta.dateLivrare);
+	comanda.listArticole = comandaCurenta.listArticole;
+	comanda.totalComanda = $('#totalCmdModif').text();
+
+	$.mobile.loading('show');
+
+	$.ajax({
+		type : 'POST',
+		url : 'salveazaComanda',
+		data : JSON.stringify(comanda),
+		success : function(data) {
+			showAlertStatusModificare(data);
+
+		},
+		dataType : 'json',
+		contentType : 'application/json',
+
+		error : function() {
+
+		}
+
+	});
+
+	$.mobile.loading('hide');
+
 });
+
+$("#stergeCmdModif").click(function() {
+	$.mobile.loading('show');
+
+	$.ajax({
+		type : 'GET',
+		url : 'stergeComanda',
+		data : {
+			idComanda : $("#cmd_modif_select option:selected").val()
+		},
+		success : function(data) {
+			showAlertStatusModificare(data);
+
+		},
+		dataType : 'json',
+		contentType : 'application/json',
+
+		error : function() {
+
+		}
+
+	});
+
+	$.mobile.loading('hide');
+
+});
+
+function showAlertStatusModificare(statusModificare) {
+
+	if (statusModificare.success) {
+		hidePageSections();
+		getComenziModificare();
+		scrollToPageTop();
+	}
+	showAlertDialogModif("Status", statusModificare.message);
+
+}
+
+function showAlertDialogModif(tipAlert, mesajAlert) {
+	$('#tipAlertM').text(tipAlert);
+	$('#textAlertM').text(mesajAlert);
+
+	$.mobile.changePage('#dialogModificare', {
+		transition : "none"
+	});
+}

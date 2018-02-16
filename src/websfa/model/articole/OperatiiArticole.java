@@ -40,7 +40,7 @@ public class OperatiiArticole {
 				art.setNume(rs.getString(1));
 				art.setCod(rs.getString(2));
 				art.setDepart(articol.getDepart());
-			
+
 				listArticole.add(art);
 
 			}
@@ -88,6 +88,7 @@ public class OperatiiArticole {
 	}
 
 	public ArticolStoc getStoc(String codArticol, String filiala, String depozit) {
+
 		ArticolStoc articolStoc = new ArticolStoc();
 
 		try (Connection conn = new DBManager().getTestDataSource().getConnection();

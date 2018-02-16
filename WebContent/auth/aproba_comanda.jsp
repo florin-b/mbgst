@@ -84,12 +84,15 @@
 
 			<select name="cmd_aprob_select" id="cmd_aprob_select">
 
-			</select> <br> <br> <b><font color="#008B00">Date
-					generale</font></b>
-			<hr>
+			</select> <br> <br>
+
+			<div id="divDateGenAprob" style="display: none">
+				<b> <font color="#008B00">Date generale</font></b>
+				<hr>
+			</div>
 
 			<div id="antetCmdAprob">
-			<table data-role="table" style="width: 100%" id="dateGenTable"
+				<table data-role="table" style="width: 100%" id="dateGenTable"
 					class="ui-responsive" data-mode="reflow">
 					<thead></thead>
 					<tbody>
@@ -98,9 +101,13 @@
 			</div>
 
 
-			<br> <br> <b><font color="#008B00">Articole</font></b>
-			<hr>
+			<br> <br>
 
+
+			<div id="divArticoleAprob" style="display: none">
+				<b><font color="#008B00">Articole</font></b>
+				<hr>
+			</div>
 
 			<div id="articoleCmdAprob">
 				<table data-role="table" style="width: 100%" id="articoleTable"
@@ -112,17 +119,19 @@
 
 			</div>
 
-	<br>
+			<br>
 
 			<div class="ui-grid-a ui-responsive" id="opereazaCmdDiv"
 				style="display: none;">
 
 				<div class="ui-block-a">
-					<a href="#" id="aprobaCmd" class="ui-btn ui-corner-all" style="background: #bbefbb;">Aproba</a>
+					<a href="#" id="respingeCmd" class="ui-btn ui-corner-all"
+						style="background: #FFD399;">Respinge</a>
 				</div>
 
 				<div class="ui-block-b">
-					<a href="#" id="respingeCmd" class="ui-btn ui-corner-all" style="background: #f1c0af;">Respinge</a>
+					<a href="#" id="aprobaCmd" class="ui-btn ui-corner-all"
+						style="background: #99FFD3;">Aproba</a>
 				</div>
 			</div>
 
@@ -132,8 +141,24 @@
 
 		</div>
 
-		<div id="userbean" style="visibility: hidden">${userjson}</div>
+	</div>
 
-		<script src="<c:url value="/resources/scripts/aproba_comanda.js" />"></script>
+
+
+	<div data-role="dialog" id="dialogAprobare">
+		<div data-role="header">
+			<h1>
+				<div id="tipAlertM"></div>
+			</h1>
+		</div>
+		<div data-role="content">
+			<div id="textAlertM"></div>
+		</div>
+	</div>
+
+
+	<div id="userbean" style="visibility: hidden">${userjson}</div>
+
+	<script src="<c:url value="/resources/scripts/aproba_comanda.js" />"></script>
 </body>
 </html>

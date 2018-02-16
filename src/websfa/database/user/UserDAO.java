@@ -11,6 +11,7 @@ import websfa.beans.User;
 import websfa.database.connection.DBManager;
 import websfa.helper.user.UserHelper;
 import websfa.queries.user.UserSqlQueries;
+import websfa.utils.Utils;
 
 public class UserDAO {
 
@@ -21,8 +22,7 @@ public class UserDAO {
 		String storedProcedure = "{ call web_pkg.wlogin(?,?,?,?,?,?,?,?,?,?) }";
 		int logonStatus = 0;
 
-		try (Connection conn = new DBManager().getTestDataSource().getConnection();
-				CallableStatement callableStatement = conn.prepareCall(storedProcedure);) {
+		try (Connection conn = new DBManager().getTestDataSource().getConnection(); CallableStatement callableStatement = conn.prepareCall(storedProcedure);) {
 
 			callableStatement.setString(1, login.getUsername());
 			callableStatement.setString(2, login.getPassword());
@@ -52,10 +52,13 @@ public class UserDAO {
 				user.setNume(getNumeAngajat(conn, codAgent));
 				user.setTipAcces(callableStatement.getString(6));
 				user.setUnitLog(UserHelper.getUnitLog(user.getFiliala()));
+				user.setTipAngajat(getTipAngajat(conn, codAgent));
 				String codDepart = UserHelper.getCodDepart(callableStatement.getString(4));
 
 				user.setCodDepart(codDepart);
 				user.setSuccessLogon(true);
+				
+			
 
 			} else {
 				user.setSuccessLogon(false);
@@ -69,9 +72,7 @@ public class UserDAO {
 			return user;
 
 		}
-		
-		
-		
+
 		return user;
 	}
 
@@ -95,6 +96,30 @@ public class UserDAO {
 		}
 
 		return fullName;
+	}
+
+	private static String getTipAngajat(Connection conn, String angajatId) {
+
+		String tipPers = null;
+
+		try (PreparedStatement stmt = conn.prepareStatement(UserSqlQueries.getTipAngajat(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
+
+			stmt.setString(1, angajatId);
+
+			stmt.executeQuery();
+
+			ResultSet rs = stmt.getResultSet();
+
+			while (rs.next()) {
+
+				tipPers = rs.getString("cod");
+			}
+
+		} catch (Exception ex) {
+			System.out.println(Utils.getStackTrace(ex));
+		}
+
+		return tipPers;
 	}
 
 }

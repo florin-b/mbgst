@@ -109,7 +109,7 @@ public class OperatiiClient {
 
 				stareClient.setLimitaCredit(rs.getDouble(2));
 				stareClient.setRestCredit(rs.getDouble(2) - (rs.getDouble(3) + rs.getDouble(4)) - (rs.getDouble(5) + rs.getDouble(6)));
-				stareClient.setStare(rs.getString(7).equals("X") ? "Client blocat" : " ");
+				stareClient.setBlocat(rs.getString(7).equals("X") ? true : false);
 				stareClient.setNumeClient(rs.getString(8));
 
 			}

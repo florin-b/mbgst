@@ -4,7 +4,8 @@ public class StareClient {
 
 	private double limitaCredit;
 	private double restCredit;
-	private String stare;
+	private boolean isBlocat;
+	private String motivBlocat;
 	private String numeClient;
 
 	public double getLimitaCredit() {
@@ -23,12 +24,20 @@ public class StareClient {
 		this.restCredit = restCredit;
 	}
 
-	public String getStare() {
-		return stare;
+	public boolean isBlocat() {
+		return isBlocat;
 	}
 
-	public void setStare(String stare) {
-		this.stare = stare;
+	public void setBlocat(boolean isBlocat) {
+		this.isBlocat = isBlocat;
+	}
+
+	public String getMotivBlocat() {
+		return motivBlocat;
+	}
+
+	public void setMotivBlocat(String motivBlocat) {
+		this.motivBlocat = motivBlocat;
 	}
 
 	public String getNumeClient() {
@@ -41,7 +50,8 @@ public class StareClient {
 
 	@Override
 	public String toString() {
-		return "StareClient [limitaCredit=" + limitaCredit + ", restCredit=" + restCredit + ", stare=" + stare + ", numeClient=" + numeClient + "]";
+		return "StareClient [limitaCredit=" + limitaCredit + ", restCredit=" + restCredit + ", isBlocat=" + isBlocat + ", motivBlocat=" + motivBlocat
+				+ ", numeClient=" + numeClient + "]";
 	}
 
 }
