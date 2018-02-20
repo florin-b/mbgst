@@ -1,5 +1,7 @@
 package websfa.controllers;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,6 +18,8 @@ import com.google.gson.GsonBuilder;
 import websfa.beans.Login;
 import websfa.beans.User;
 import websfa.database.user.UserDAO;
+import websfa.utils.MailOperations;
+import websfa.utils.Utils;
 
 @Controller
 public class MainMenuController {
@@ -36,26 +40,34 @@ public class MainMenuController {
 	@RequestMapping(value = "/auth/login", method = RequestMethod.POST)
 	public ModelAndView executeLogin(HttpServletRequest request, HttpServletResponse response, @ModelAttribute("login") Login login) {
 
-		ModelAndView model;
+		ModelAndView model = null;
 		user = loginService.validateUser(login);
 
-		if (user.isSuccessLogon()) {
-			model = new ModelAndView("mainMenu");
-			model.addObject("user", user);
-		} else {
-			model = new ModelAndView("login");
-			model.addObject("login", login);
-			request.setAttribute("infoMsg", user.getLogonMessage());
+		try {
+
+			if (user.isSuccessLogon()) {
+				model = new ModelAndView("mainMenu");
+				model.addObject("user", user);
+			} else {
+				model = new ModelAndView("login");
+				model.addObject("login", login);
+				request.setAttribute("infoMsg", user.getLogonMessage());
+			}
+		} catch (Exception e) {
+			MailOperations.sendMail(Utils.getStackTrace(e));
 		}
 
 		return model;
 	}
 
 	@RequestMapping(value = "/stocuri", method = RequestMethod.GET)
-	public ModelAndView executeStocuri(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView executeStocuri(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		if (user == null) {
+			response.sendRedirect("exit");
+		}
 
 		ModelAndView model;
-
 		Gson gson = new GsonBuilder().create();
 
 		model = new ModelAndView("stocuri");
@@ -66,10 +78,13 @@ public class MainMenuController {
 	}
 
 	@RequestMapping(value = "/preturi", method = RequestMethod.GET)
-	public ModelAndView executePreturi(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView executePreturi(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		if (user == null) {
+			response.sendRedirect("exit");
+		}
 
 		ModelAndView model;
-
 		Gson gson = new GsonBuilder().create();
 
 		model = new ModelAndView("preturi");
@@ -80,10 +95,13 @@ public class MainMenuController {
 	}
 
 	@RequestMapping(value = "/afiscom", method = RequestMethod.GET)
-	public ModelAndView afiseazaComanda(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView afiseazaComanda(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		if (user == null) {
+			response.sendRedirect("exit");
+		}
 
 		ModelAndView model;
-
 		Gson gson = new GsonBuilder().create();
 
 		model = new ModelAndView("afiseaza_comanda");
@@ -92,13 +110,15 @@ public class MainMenuController {
 
 		return model;
 	}
-	
-	
+
 	@RequestMapping(value = "/aprobacmd", method = RequestMethod.GET)
-	public ModelAndView aprobaComanda(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView aprobaComanda(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		if (user == null) {
+			response.sendRedirect("exit");
+		}
 
 		ModelAndView model;
-
 		Gson gson = new GsonBuilder().create();
 
 		model = new ModelAndView("aproba_comanda");
@@ -107,12 +127,15 @@ public class MainMenuController {
 
 		return model;
 	}
-	
+
 	@RequestMapping(value = "/modifcmd", method = RequestMethod.GET)
-	public ModelAndView modificaComanda(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView modificaComanda(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		if (user == null) {
+			response.sendRedirect("exit");
+		}
 
 		ModelAndView model;
-
 		Gson gson = new GsonBuilder().create();
 
 		model = new ModelAndView("modificare_comanda");
@@ -121,12 +144,15 @@ public class MainMenuController {
 
 		return model;
 	}
-	
+
 	@RequestMapping(value = "/comanda", method = RequestMethod.GET)
-	public ModelAndView creeazaComanda(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView creeazaComanda(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		if (user == null) {
+			response.sendRedirect("exit");
+		}
 
 		ModelAndView model;
-
 		Gson gson = new GsonBuilder().create();
 
 		model = new ModelAndView("creare_comanda");
@@ -134,6 +160,13 @@ public class MainMenuController {
 		model.addObject("userjson", gson.toJson(user));
 
 		return model;
+	}
+
+	@RequestMapping(value = "/exit", method = RequestMethod.GET)
+	public String executeExit(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		user = null;
+		return "redirect:/auth/login";
+
 	}
 
 }

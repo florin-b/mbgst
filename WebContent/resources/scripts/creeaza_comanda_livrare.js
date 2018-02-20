@@ -24,6 +24,9 @@ $('#salveazaDateLivrare').click(
 
 			var dateLivrare = getDateLivrare();
 
+			if (!valideazaDateLivare(dateLivrare))
+				return;
+
 			if (dateLivrare.codJudet != null) {
 				$('#numeJudetAfis').text(dateLivrare.codJudet);
 				$("#rowJudetAfis").show();

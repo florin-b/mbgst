@@ -71,7 +71,7 @@ public class Navigator extends SimpleTagSupport {
 		navigationLinks.add(nd);
 
 		nd = new NavigationDetails();
-		nd.setLink(String.format("%s/exit.jsp", root));
+		nd.setLink(String.format("%s/exit", root));
 		nd.setText("Iesire");
 		nd.setNume(EnumMeniu.EXIT);
 		navigationLinks.add(nd);

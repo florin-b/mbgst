@@ -5,7 +5,7 @@ public class ClientSqlQueries {
 	public static String getClient() {
 		StringBuilder sqlString = new StringBuilder();
 
-		sqlString.append("select nume, cod from clienti where lower(nume) like ? order by nume ");
+		sqlString.append("select nume, cod from clienti where lower(nume) like ? and rownum<30 order by nume ");
 
 		return sqlString.toString();
 	}

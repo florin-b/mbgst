@@ -24,10 +24,14 @@
 	<div data-role="page" id="init" data-url="">
 
 		<div data-role="header" data-theme="a">
-			<h1>WebSFA Test</h1>
+			<h1>WebSFA Moldova</h1>
 		</div>
 
+
 		<div data-role="content" class="ui-content">
+
+
+
 
 			<font color="red">${message}</font>
 			<form:form id="loginForm" method="post" action="login"
@@ -36,10 +40,10 @@
 				<h3>Autentificare</h3>
 
 				<form:label path="username">Utilizator</form:label>
-				<form:input id="username" name="username" path="" value="androsd" />
+				<form:input id="username" name="username" path="" value="androsd"/>
 				<br>
 				<form:label path="username">Parola</form:label>
-				<form:password id="password" name="password" path="" value="112" />
+				<form:password id="password" name="password" path="" value= "112"/>
 				<br>
 				<input type="submit" value="Login" />
 				<br>

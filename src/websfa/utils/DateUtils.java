@@ -209,16 +209,16 @@ public class DateUtils {
 
 	public static String addDaysToDate(int nrDays) {
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyymmdd");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
 		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
 		calendar.add(Calendar.DATE, nrDays);
 
 		Date date = calendar.getTime();
 
 		return dateFormat.format(date);
-	}
 
-	
+	}
 
 }

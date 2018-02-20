@@ -14,7 +14,9 @@ $(document).on('pagebeforeshow', '#afiscomanda', function() {
 
 $(document).on('pageshow', '#afiscomanda', function() {
 
-	getComenziAfisare();
+	userObj = JSON.parse($('#userbean').text());
+
+	$('#inner_optiuni_div').collapsible("expand");
 
 });
 
@@ -45,29 +47,14 @@ function setContentComanda(idComanda) {
 
 }
 
-function getComenziAfisare() {
+function afisListComenzi(listComenzi) {
 
-	userObj = JSON.parse($('#userbean').text());
+	if (listComenzi.length == 0) {
+		showAlertDialogAfisare('Info', 'Nu exista comenzi.');
+		return;
+	}
 
-	$.mobile.loading('show');
-
-	var cautareComanda = new Object();
-
-	cautareComanda.interval = '1';
-	cautareComanda.tipComanda = '1';
-	cautareComanda.codAngajat = userObj.codPers;
-
-	cautaComandaService(cautareComanda);
-
-}
-
-function afiseazaComenziHeader(listComenzi) {
-
-	afiseazaComenziHeaderColapse(listComenzi);
-
-}
-
-function afiseazaComenziHeaderColapse(listComenzi) {
+	$("#comenziset").empty();
 
 	for (var u = 0; u < listComenzi.length; u++) {
 		var content = "<div data-role='collapsible' data-content-theme='a' id='"
@@ -135,6 +122,7 @@ function afisComandaHeader(comanda) {
 }
 
 function cautaComenzi() {
+
 	$('#inner_optiuni_div').collapsible("collapse");
 
 	var cautareComanda = new Object();
@@ -155,7 +143,7 @@ function cautaComandaService(cautareComanda) {
 		url : 'getComAfis',
 		data : cautareComanda,
 		success : function(data) {
-			afiseazaComenziHeader(data);
+			afisListComenzi(data);
 			$.mobile.loading('hide');
 		},
 		error : function(exception) {
@@ -168,11 +156,7 @@ function cautaComandaService(cautareComanda) {
 
 function afisDetaliiComanda(detaliiComanda) {
 
-	var strArticole = '';
-
 	var swatch = [ '#f2f2f2', '#FFF0F5' ];
-
-	var backStyle = '';
 
 	var listArticole = $('<ul></ul>', {
 
@@ -180,16 +164,17 @@ function afisDetaliiComanda(detaliiComanda) {
 
 	for (var u = 0; u < detaliiComanda.listArticole.length; u++) {
 
-		var articol = $('<li />', {
-			html : afisArticolComanda(detaliiComanda.listArticole[u])
-		});
+		var articol = $('<li></li>', {
+			html : afisArticolComanda(detaliiComanda.listArticole[u], u)
+		}).css("background-color", swatch[u / 2]);
 
 		$(listArticole).append(articol);
 
 	}
 
-	var dateLivrare = $('<div></div>').append(
-			afisdateLivrareComanda(detaliiComanda.dateLivrare));
+	var dateLivrare = $('<div></div>').append('<br>');
+
+	$(dateLivrare).append(afisdateLivrareComanda(detaliiComanda.dateLivrare));
 
 	$(dateLivrare).append(listArticole);
 
@@ -199,96 +184,48 @@ function afisDetaliiComanda(detaliiComanda) {
 
 }
 
-function afisDetaliiComanda_old(detaliiComanda) {
-
-	var strArticole = '';
-
-	var swatch = [ '#f2f2f2', '#FFF0F5' ];
-
-	var backStyle = '';
-
-	for (var u = 0; u < detaliiComanda.listArticole.length; u++) {
-
-		backStyle = 'background:' + swatch[u % 2];
-
-		strArticole += '<li data-rowid = ' + detaliiComanda.listArticole[u].cod
-				+ ' style=' + backStyle + '>' + '<div  id ='
-				+ detaliiComanda.listArticole[u].cod + '>'
-				+ afisArticolComanda(detaliiComanda.listArticole[u]) + '</div>'
-				+ '</li>';
-
-	}
-
-	var dateLivrare = '<div>'
-			+ afisdateLivrareComanda(detaliiComanda.dateLivrare) + '</div><br>';
-
-	var articole = '<div><ul data-role="listview"  data-inset="true" class="ui-alt-icon"'
-			+ 'style="overflow: auto;  list-style: none;">'
-			+ strArticole
-			+ '</ul></div><br><br>';
-
-	var contentId = '#content' + comandaId;
-
-	$(contentId).html(dateLivrare + articole).enhanceWithin();
-
-}
-
-function afisArticolComanda(articol) {
+function afisArticolComanda(articol, poz) {
 
 	var articoleTable = $('<table></table>').attr({
-		id : "articoleTable",
+		id : "articoleAfisTable",
 		width : "100%",
 		border : "0"
 
-	}).addClass('dateLivrareTable');
+	}).addClass('articoleAfis');
 
 	var row = $('<tr></tr>').appendTo(articoleTable);
+
+	$('<td></td>').attr('style', 'width:2%').attr({
+		style : 'align:left'
+	}).text((poz + 1) + '').appendTo(row);
+
 	$('<td></td>').attr('style', 'width:80%').attr('style', 'font-weight:bold')
 			.text(articol.nume).appendTo(row);
-	$('<td></td>').attr('style', 'width:10%').text(articol.cantitate.valoare)
+	$('<td></td>').attr({
+		style : 'width:10%;text-align:right;'
+	}).text(articol.cantitate.valoare)
 			.appendTo(row);
 	$('<td></td>').text(articol.cantitate.um).appendTo(row);
 
 	row = $('<tr></tr>').appendTo(articoleTable);
+	$('<td></td>').attr('style', 'width:2%').appendTo(row);
 	$('<td></td>').attr('style', 'width:80%').text(articol.cod).appendTo(row);
-	$('<td></td>').attr('style', 'width:10%').text(articol.pretUnitar)
+	$('<td></td>').attr({
+		style : 'width:10%;text-align:right;'
+	}).text(articol.pretUnitar)
 			.appendTo(row);
 	$('<td></td>').text('RON').appendTo(row);
 
 	row = $('<tr></tr>').appendTo(articoleTable);
+	$('<td></td>').attr('style', 'width:2%').appendTo(row);
 	$('<td></td>').text(articol.depozit).appendTo(row);
-	$('<td></td>').attr('style', 'width:10%').text(articol.procReducere)
+	$('<td></td>').attr({
+		style : 'width:10%;text-align:right;'
+	}).text(articol.procReducere)
 			.appendTo(row);
-	$('<td></td>').text('RON').appendTo(row);
+	$('<td></td>').text('%').appendTo(row);
 
 	return articoleTable;
-}
-
-function afisArticolComanda_old(articol) {
-
-	var content = '<table data-role="table" id="articoleTable" class="ui-responsive" data-mode="reflow" >';
-
-	content += '<tr>';
-	content += '<td style="width:80%"><b>' + articol.nume + '</b></td>';
-	content += '<td style="width:10%">' + articol.cantitate.valoare + '</td>';
-	content += '<td>' + articol.cantitate.um + '</td>';
-	content += '</tr>';
-
-	content += '<tr>';
-	content += '<td>' + articol.cod + '</td>';
-	content += '<td style="width:10%">' + articol.pretUnitar + '</td>';
-	content += '<td>RON</td>';
-	content += '</tr>';
-
-	content += '<tr>';
-	content += '<td>' + articol.depozit + '</td>';
-	content += '<td style="width:10%">' + articol.procReducere + '</td>';
-	content += '<td>%</td>';
-	content += '</tr>';
-
-	content += '</table>';
-
-	return content;
 }
 
 function afisdateLivrareComanda(dateLivrare) {
@@ -298,7 +235,7 @@ function afisdateLivrareComanda(dateLivrare) {
 		width : "100%",
 		border : "0"
 
-	}).addClass('dateLivrareTable');
+	}).addClass('dateLivrareAfis');
 
 	var row = $('<tr></tr>').appendTo(dateLivrTable);
 	$('<td></td>').attr('colspan', '2').attr('style', 'font-weight:bold').text(
@@ -358,12 +295,8 @@ function getStareComanda(intStare) {
 		retVal = "Comanda supusa unor conditii.";
 		break;
 
-	case 5:
-		retVal = "Comanda stearsa.";
-		break;
-
 	case 6:
-		retVal = "Cmd. angaj. in curs de aprobare.";
+		retVal = "Comanda stearsa.";
 		break;
 
 	case 7:
@@ -404,4 +337,13 @@ function getStareComanda(intStare) {
 
 	}
 	return retVal;
+}
+
+function showAlertDialogAfisare(tipAlert, mesajAlert) {
+
+	$('#tipAlertA').text(tipAlert);
+	$('#textAlertA').text(mesajAlert);
+	$.mobile.changePage('#dialogAfisare', {
+		transition : "none"
+	});
 }

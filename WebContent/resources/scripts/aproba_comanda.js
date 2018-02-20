@@ -215,8 +215,8 @@ function afisArtComAprob(listArticole) {
 		$('<td></td>').attr('style', 'width:50%').text(
 				listArticole[i].numeArticol).appendTo(row);
 		$('<td></td>').attr({
-			style : 'align:right'
-		}).attr('style', 'width:10%').text(listArticole[i].cantitate).appendTo(
+			style : 'width:10%;text-align:right;'
+		}).text(listArticole[i].cantitate).appendTo(
 				row);
 		$('<td></td>').attr('style', 'width:5%').text(listArticole[i].um)
 				.appendTo(row);
@@ -225,14 +225,18 @@ function afisArtComAprob(listArticole) {
 		$('<td></td>').attr('style', 'width:3%').appendTo(row);
 		$('<td></td>').attr('style', 'width:50%').text(
 				listArticole[i].codArticol).appendTo(row);
-		$('<td></td>').attr('style', 'width:10%').text(
+		$('<td></td>').attr({
+			style : 'width:10%;text-align:right;'
+		}).text(
 				listArticole[i].pretUnitar).appendTo(row);
 		$('<td></td>').attr('style', 'width:5%').text("RON").appendTo(row);
 
 		row = $('<tr></tr>').appendTo(mytable);
 		$('<td></td>').attr('style', 'width:3%').appendTo(row);
 		$('<td></td>').attr('style', 'width:50%').appendTo(row);
-		$('<td></td>').attr('style', 'width:10%').text(
+		$('<td></td>').attr({
+			style : 'width:10%;text-align:right;'
+		}).text(
 				listArticole[i].procentReducere).appendTo(row);
 		$('<td></td>').attr('style', 'width:5%').text("%").appendTo(row);
 

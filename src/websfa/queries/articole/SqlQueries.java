@@ -6,7 +6,7 @@ public class SqlQueries {
 		StringBuilder sqlString = new StringBuilder();
 
 		sqlString.append(" select nume, decode(length(cod),18,substr(cod,-8),cod) from articole where ");
-		sqlString.append(" lower(decode(length(cod),18,substr(cod,-8),cod)) like lower('" + searchString + "%') and spart =? order by nume");
+		sqlString.append(" lower(decode(length(cod),18,substr(cod,-8),cod)) like lower('" + searchString + "%') and spart =? and rownum<50 order by nume");
 
 		return sqlString.toString();
 	}
@@ -15,7 +15,7 @@ public class SqlQueries {
 		StringBuilder sqlString = new StringBuilder();
 
 		sqlString.append(" select nume, decode(length(cod),18,substr(cod,-8),cod) from articole where ");
-		sqlString.append(" lower(nume) like lower('" + searchString + "%') and spart =? order by nume ");
+		sqlString.append(" lower(nume) like lower('" + searchString + "%') and spart =? and rownum<50 order by nume ");
 
 		return sqlString.toString();
 	}
@@ -49,6 +49,8 @@ public class SqlQueries {
 		sqlString.append(" select -1 * nvl(sum(e.omeng),0), e.meins, e.matnr  from sapprd.vbbe e ");
 		sqlString.append(" where e.mandt = '900' and e.matnr =? and e.werks =? and e.lgort=? ");
 		sqlString.append(" group by e.meins, e.matnr), articole ar where ar.cod = matnr group by meins, ar.sintetic having sum(labst) > 0 ");
+
+		
 
 		return sqlString.toString();
 	}

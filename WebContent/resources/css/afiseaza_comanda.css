@@ -1,10 +1,21 @@
-.dateLivrareTable {
+.dateLivrareAfis {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	border-collapse: collapse;
 	width: 100%;
 }
 
-.dateLivrareTable td, .stocTable th {
+.dateLivrareAfis td {
 	padding: 3px;
-	color: #056E4D;
+	color: #7F2316;
+}
+
+.articoleAfis {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.articoleAfis td {
+	padding: 3px;
+	color: #16727F;
 }

@@ -10,3 +10,15 @@
 	color: #218868;
 }
 
+
+.articoleCreare {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.articoleCreare td {
+	padding: 3px;
+	color: #16727F;
+}
+

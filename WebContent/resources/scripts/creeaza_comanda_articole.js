@@ -310,8 +310,10 @@ function afisPretArticol(codArticol, datePret) {
 
 	row = $('<tr></tr>');
 	$(row).appendTo(pretTable);
+
+	var pretTva = (datePret.pret * 1.18).toFixed(2);
 	$('<td></td>').text('Pret cu tva').attr('style', 'width:25%').appendTo(row);
-	$('<td></td>').text('24.55').appendTo(row);
+	$('<td></td>').text(pretTva).appendTo(row);
 
 	row = $('<tr></tr>');
 	$(row).appendTo(pretTable);
@@ -358,7 +360,7 @@ function trateazaArticol(articolSelectat) {
 	var idTextCant = '#cant' + articolSelectat.cod;
 
 	if (Number($(idTextStoc).text()) < Number($(idTextCant).val())) {
-		alert('Stoc insuficient.');
+		showAlertDialog('Info', 'Stoc insuficient.');
 		return;
 	}
 
@@ -387,76 +389,106 @@ function trateazaArticol(articolSelectat) {
 
 	$('#' + articolSelectat.cod).collapsible("collapse");
 
-	afiseazaListaArticole();
+	adaugaArticol(articolSelectat, listaArticole.length - 1);
 
-	calculeazaTotalCmd();
+}
+
+function adaugaArticol(articolSelectat, poz) {
+
+	var swatch = [ '#f2f2f2', '#FFF0F5' ];
+
+	var ulArticole = $('#listArticoleCreare');
+
+	var articol = $('<li></li>', {
+		html : getTabelaArticolNou(articolSelectat, poz)
+	}).css("background-color", swatch[poz / 2]);
+
+	$(ulArticole).append(articol);
+
+	calculeazaTotalCmdCreare();
 
 }
 
 function afiseazaListaArticole() {
 
-	$("#art_com_table > tbody").html("");
+	$('#listArticoleCreare').empty();
 
 	for (var i = 0; i < listaArticole.length; i++) {
-
-		var extraRowId = 'extra' + listaArticole[i].cod;
-
-		$("#art_com_table")
-				.append(
-						"<tr><td>"
-								+ listaArticole[i].nume
-								+ "</td><td style='text-align:right;'>"
-								+ listaArticole[i].cant
-								+ "</td><td>"
-								+ listaArticole[i].um
-								+ "</td><td style='text-align:right;'>"
-								+ listaArticole[i].pret
-								+ "</td><td style='text-align:right;'>"
-								+ listaArticole[i].procent
-								+ " </td><td style='text-align:right;'><a href='#' onClick='eliminaArticol("
-								+ listaArticole[i].cod
-								+ ");'>Sterge</a></td></tr>").enhanceWithin();
-
-		/*
-		 * <td><a href='#' onClick='showDetArt(" + listaArticole[i].cod +
-		 * ");'>Extra</a></td>
-		 * 
-		 */
-
-		/*
-		 * 
-		 * $("#art_com_table").append( "<tr><td colspan='6'><div id=" +
-		 * extraRowId + " style='display: none;'>Hidden</div></td></tr>")
-		 * .enhanceWithin();
-		 */
-
+		adaugaArticol(listaArticole[i], i);
 	}
 
-}
-
-function showDetArt(codArticol) {
-
-	$("#extra" + codArticol).slideToggle("fast");
+	calculeazaTotalCmdCreare();
 
 }
 
-function eliminaArticol(codArticol) {
+function getTabelaArticolNou(articol, poz) {
+
+	var articoleTable = $('<table></table>').attr({
+		width : "100%",
+		border : "0"
+
+	}).addClass('articoleCreare');
+
+	var row = $('<tr></tr>').appendTo(articoleTable);
+
+	$('<td></td>').attr('style', 'width:3%').attr({
+		style : 'align:left'
+	}).text((poz + 1) + '').appendTo(row);
+
+	$('<td></td>').attr('style', 'width:80%').attr('style', 'font-weight:bold')
+			.text(articol.nume).appendTo(row);
+	$('<td></td>').attr({
+		style : 'width:10%;text-align:right;'
+	}).text(articol.cant).appendTo(row);
+	$('<td></td>').text(articol.um).appendTo(row);
+
+	row = $('<tr></tr>').appendTo(articoleTable);
+	$('<td></td>').attr('style', 'width:3%').appendTo(row);
+	$('<td></td>').attr('style', 'width:80%').text(articol.cod).appendTo(row);
+	$('<td></td>').attr({
+		style : 'width:10%;text-align:right;'
+	}).text(articol.pret).appendTo(row);
+	$('<td></td>').text('RON').appendTo(row);
+
+	var btnEliminaArt = $('<img></img>', {
+		src : 'resources/images/minus.png'
+	}).attr('data-role', 'button').bind('click', {
+		articol : articol
+	}, function(event) {
+		eliminaArticolCreat(event.data.articol);
+	});
+
+	row = $('<tr></tr>').appendTo(articoleTable);
+
+	var tdElimBtn = $('<td></td>').attr('style', 'width:3%');
+
+	$(btnEliminaArt).appendTo(tdElimBtn);
+
+	$(tdElimBtn).appendTo(row);
+	$('<td></td>').text(articol.depozit).appendTo(row);
+	$('<td></td>').attr({
+		style : 'width:10%;text-align:right;'
+	}).text(articol.procent).appendTo(row);
+	$('<td></td>').text('%').appendTo(row);
+
+	return articoleTable;
+}
+
+function eliminaArticolCreat(articol) {
 
 	for (var i = 0; i < listaArticole.length; i++) {
 
-		if (listaArticole[i].cod == codArticol) {
-
+		if (listaArticole[i].codArticol == articol.codArticol) {
 			listaArticole.splice(i, 1);
 			break;
 		}
 	}
 
 	afiseazaListaArticole();
-	calculeazaTotalCmd();
 
 }
 
-function calculeazaTotalCmd() {
+function calculeazaTotalCmdCreare() {
 
 	var totalComanda = 0;
 	for (var i = 0; i < listaArticole.length; i++) {
@@ -526,6 +558,9 @@ $('#salveazaComanda').click(function() {
 	comanda.dateLivrare = getDateLivrare();
 	comanda.listArticole = getArticoleComanda(listaArticole);
 	comanda.totalComanda = $('#divTotalCmd').data('totalCmd');
+
+	if (!valideazaComandaNoua(comanda))
+		return;
 
 	$.mobile.loading('show');
 

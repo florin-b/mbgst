@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import websfa.beans.articole.Articol;
 import websfa.beans.articole.ArticolPret;
@@ -123,11 +124,17 @@ public class OperatiiArticole {
 	public ArticolPret getPret(String codArticol, String filiala, String departament) {
 		ArticolPret artPret = new ArticolPret();
 
-		artPret.setPret(24.99);
+		artPret.setPret(generatePret());
 		artPret.setUm("BUC");
 
 		return artPret;
 
+	}
+
+	public static int generatePret() {
+		Random rand = new Random();
+
+		return rand.nextInt(100) + 10;
 	}
 
 }

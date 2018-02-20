@@ -21,8 +21,7 @@ $(document).on('pagecreate', '#crearecomanda', function() {
 	$('#select_client_div').bind('collapsibleexpand', function(data) {
 
 		$("#alegeClntDiv").hide();
-		// highlight header
-
+		
 	});
 
 });
@@ -212,6 +211,8 @@ function selecteazaClient(client) {
 
 	if ($('#divClient').css('display') == 'none')
 		$('#divClient').show();
+	
+	afisSalveazaCmdButton();
 
 	resetSelectOptions();
 

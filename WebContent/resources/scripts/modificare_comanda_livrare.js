@@ -10,7 +10,7 @@ function afiseazaDateLivrare(dateLivrare) {
 		row = $('<tr></tr>');
 		$(row).appendTo(livrareTable);
 
-		$('<td></td>').text('Judet').attr('style', 'width:30%').appendTo(row);
+		$('<th></th>').text('Judet').attr('style', 'width:30%').appendTo(row);
 		$('<td></td>').text(dateLivrare.codJudet).appendTo(row);
 
 	}
@@ -20,7 +20,7 @@ function afiseazaDateLivrare(dateLivrare) {
 		row = $('<tr></tr>');
 		$(row).appendTo(livrareTable);
 
-		$('<td></td>').text('Localitate').attr('style', 'width:30%').appendTo(
+		$('<th></th>').text('Localitate').attr('style', 'width:30%').appendTo(
 				row);
 		$('<td></td>').text(dateLivrare.localitate).appendTo(row);
 
@@ -31,7 +31,7 @@ function afiseazaDateLivrare(dateLivrare) {
 		row = $('<tr></tr>');
 		$(row).appendTo(livrareTable);
 
-		$('<td></td>').text('Strada').attr('style', 'width:25%').appendTo(row);
+		$('<th></th>').text('Strada').attr('style', 'width:25%').appendTo(row);
 		$('<td></td>').text(dateLivrare.strada).appendTo(row);
 
 	}
@@ -41,7 +41,7 @@ function afiseazaDateLivrare(dateLivrare) {
 		row = $('<tr></tr>');
 		$(row).appendTo(livrareTable);
 
-		$('<td></td>').text('Persoana contact').attr('style', 'width:25%')
+		$('<th></th>').text('Persoana contact').attr('style', 'width:25%')
 				.appendTo(row);
 		$('<td></td>').text(dateLivrare.persContact).appendTo(row);
 
@@ -52,7 +52,7 @@ function afiseazaDateLivrare(dateLivrare) {
 		row = $('<tr></tr>');
 		$(row).appendTo(livrareTable);
 
-		$('<td></td>').text('Telefon').attr('style', 'width:25%').appendTo(row);
+		$('<th></th>').text('Telefon').attr('style', 'width:25%').appendTo(row);
 		$('<td></td>').text(dateLivrare.telPersContact).appendTo(row);
 
 	}
@@ -62,7 +62,7 @@ function afiseazaDateLivrare(dateLivrare) {
 		row = $('<tr></tr>');
 		$(row).appendTo(livrareTable);
 
-		$('<td></td>').text('Tip reducere').attr('style', 'width:25%')
+		$('<th></th>').text('Tip reducere').attr('style', 'width:25%')
 				.appendTo(row);
 		$('<td></td>').text(getTipReducereText(dateLivrare.tipReducere))
 				.appendTo(row);
@@ -74,7 +74,7 @@ function afiseazaDateLivrare(dateLivrare) {
 		row = $('<tr></tr>');
 		$(row).appendTo(livrareTable);
 
-		$('<td></td>').text('Doc. insotitor').attr('style', 'width:25%')
+		$('<th></th>').text('Doc. insotitor').attr('style', 'width:25%')
 				.appendTo(row);
 		$('<td></td>').text(getDocInsotitorText(dateLivrare.documentInsotitor))
 				.appendTo(row);
@@ -86,7 +86,7 @@ function afiseazaDateLivrare(dateLivrare) {
 		row = $('<tr></tr>');
 		$(row).appendTo(livrareTable);
 
-		$('<td></td>').text('Tip plata').attr('style', 'width:25%').appendTo(
+		$('<th></th>').text('Tip plata').attr('style', 'width:25%').appendTo(
 				row);
 		$('<td></td>').text(getTipPlataText(dateLivrare.tipPlata))
 				.appendTo(row);
@@ -98,7 +98,7 @@ function afiseazaDateLivrare(dateLivrare) {
 		row = $('<tr></tr>');
 		$(row).appendTo(livrareTable);
 
-		$('<td></td>').text('Resp. incasare').attr('style', 'width:25%')
+		$('<th></th>').text('Resp. incasare').attr('style', 'width:25%')
 				.appendTo(row);
 		$('<td></td>').text(getRespIncasareText(dateLivrare.respIncasare))
 				.appendTo(row);
@@ -110,7 +110,7 @@ function afiseazaDateLivrare(dateLivrare) {
 		row = $('<tr></tr>');
 		$(row).appendTo(livrareTable);
 
-		$('<td></td>').text('Transport').attr('style', 'width:25%').appendTo(
+		$('<th></th>').text('Transport').attr('style', 'width:25%').appendTo(
 				row);
 		$('<td></td>').text(getTipTranspText(dateLivrare.tipTransp)).appendTo(
 				row);
@@ -122,9 +122,12 @@ function afiseazaDateLivrare(dateLivrare) {
 		row = $('<tr></tr>');
 		$(row).appendTo(livrareTable);
 
-		$('<td></td>').text('Data livrare').attr('style', 'width:25%')
+		$('<th></th>').text('Data livrare').attr('style', 'width:25%')
 				.appendTo(row);
 		$('<td></td>').text(dateLivrare.dataLivrare).appendTo(row);
+
+		
+		
 
 	}
 
@@ -133,7 +136,7 @@ function afiseazaDateLivrare(dateLivrare) {
 		row = $('<tr></tr>');
 		$(row).appendTo(livrareTable);
 
-		$('<td></td>').text('Obs. livrare').attr('style', 'width:25%')
+		$('<th></th>').text('Obs. livrare').attr('style', 'width:25%')
 				.appendTo(row);
 		$('<td></td>').text(dateLivrare.obsLivrare).appendTo(row);
 

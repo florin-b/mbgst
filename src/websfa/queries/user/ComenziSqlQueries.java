@@ -2,12 +2,13 @@ package websfa.queries.user;
 
 public class ComenziSqlQueries {
 
-	public static String getListComenzi() {
+	public static String getListComenziAfisare(String status) {
 		StringBuilder sqlString = new StringBuilder();
 
 		sqlString.append(" select a.id, a.nume_client, to_char(to_date(a.datac,'yyyymmdd')), a.status_aprov, a.valoare, ");
 		sqlString.append(" b.nume from sapprd.zcomhead_tableta a, clienti b where a.cod_agent =? ");
 		sqlString.append(" and a.cod_client = b.cod and a.datac >= ? ");
+		sqlString.append(status);
 		sqlString.append(" and rownum<30 ");
 
 		return sqlString.toString();
@@ -104,7 +105,7 @@ public class ComenziSqlQueries {
 		StringBuilder sqlString = new StringBuilder();
 
 		sqlString.append(" select region, city, adr_livrare, pers_contact, telefon, fact_red, docin, tip_plata, obsplata resp_plata, mt transp, ");
-		sqlString.append(" to_char(to_date(ketdat,'yyyymmdd'))  data_livr, obstra obs_livrare ");
+		sqlString.append(" ketdat data_livr, obstra obs_livrare ");
 		sqlString.append(" from sapprd.zcomhead_tableta where id=? ");
 
 		return sqlString.toString();
@@ -141,7 +142,7 @@ public class ComenziSqlQueries {
 	public static String respingeComanda() {
 		StringBuilder sqlString = new StringBuilder();
 
-		sqlString.append(" update sapprd.zcomhead_tableta set status_aprov=6 where id=? ");
+		sqlString.append(" update sapprd.zcomhead_tableta set status = 6, status_aprov=6 where id=? ");
 
 		return sqlString.toString();
 

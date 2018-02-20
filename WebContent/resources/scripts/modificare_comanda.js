@@ -236,7 +236,7 @@ function afiseazaArticoleComanda(listArticole) {
 		$('<td></td>').attr('style', 'width:50%').text(
 				listArticole[i].numeArticol).appendTo(row);
 		$('<td></td>').attr({
-			style : 'align:right',
+			style : 'align:right;text-align:right;',
 			id : 'cantArt' + listArticole[i].codArticol
 		}).text(listArticole[i].cantitate).appendTo(row);
 
@@ -249,7 +249,7 @@ function afiseazaArticoleComanda(listArticole) {
 				listArticole[i].codArticol).appendTo(row);
 
 		$('<td></td>').attr({
-			style : 'width:10%',
+			style : 'width:10%;text-align:right;',
 			id : 'pretArt' + listArticole[i].codArticol
 
 		}).text(listArticole[i].pretUnitar).appendTo(row);
@@ -258,7 +258,7 @@ function afiseazaArticoleComanda(listArticole) {
 		row = $('<tr></tr>').appendTo(mytable);
 
 		var btnElimina = $('<img></img>', {
-			src : 'resources/images/bin_blue.png'
+			src : 'resources/images/minus.png'
 		}).attr('data-role', 'button').bind('click', {
 			articol : listArticole[i]
 		}, function(event) {
@@ -274,7 +274,7 @@ function afiseazaArticoleComanda(listArticole) {
 
 		$('<td></td>').attr('style', 'width:50%').appendTo(row);
 		$('<td></td>').attr({
-			style : 'width:10%',
+			style : 'width:10%;text-align:right;',
 			id : 'procArt' + listArticole[i].codArticol
 		}).text(listArticole[i].procentReducere).appendTo(row);
 
@@ -296,7 +296,8 @@ function afiseazaArticoleComanda(listArticole) {
 		$('<td></td>').attr('style', 'text-align:right').text(
 				'Conditii cantitative').appendTo(row);
 
-		$('<td></td>').text(listArticole[i].conditiiCant).appendTo(row);
+		$('<td></td>').attr('style', 'text-align:right').text(
+				listArticole[i].conditiiCant).appendTo(row);
 
 		$('<td></td>').attr('style', 'width:3%').text(listArticole[i].um)
 				.appendTo(row);
@@ -314,7 +315,8 @@ function afiseazaArticoleComanda(listArticole) {
 		$('<td></td>').attr('style', 'text-align:right').text(
 				'Conditii valorice').appendTo(row);
 
-		$('<td></td>').text(listArticole[i].conditiiVal).appendTo(row);
+		$('<td></td>').attr('style', 'text-align:right').text(
+				listArticole[i].conditiiVal).appendTo(row);
 
 		$('<td></td>').attr('style', 'width:3%').text("RON").appendTo(row);
 
@@ -332,15 +334,8 @@ function afiseazaArticoleComanda(listArticole) {
 		var tdSaveCond = $('<td></td>').attr('style', 'text-align:center')
 				.attr('colspan', 2);
 
-		/*
-		 * var btnSaveConditii = $('<button>', { text : 'Accepta', class :
-		 * 'ui-btn ui-mini', style : 'width:90%', }).bind('click', { articol :
-		 * listArticole[i] }, function(event) {
-		 * acceptaConditii(event.data.articol); });
-		 */
-
 		var btnSaveConditii = $('<img></img>', {
-			src : 'resources/images/accept_icon.png'
+			src : 'resources/images/accept.png'
 		}).attr('data-role', 'button').bind('click', {
 			articol : listArticole[i]
 		}, function(event) {

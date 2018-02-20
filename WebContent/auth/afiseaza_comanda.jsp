@@ -83,7 +83,7 @@
 			<div class="ui-grid">
 
 				<div data-role="collapsible-set" data-content-theme="d"
-					id="optiuni_div">
+					id="optiuni_div" data-collapsed="true">
 					<div data-role="collapsible" id="inner_optiuni_div"
 						data-content-theme="c">
 						<h4>Optiuni cautare</h4>
@@ -115,18 +115,15 @@
 										</select></td>
 									</tr>
 									<tr>
-										<td colspan='2'><input type="button" name="getComenzi"
-											id="cautaArticol" onClick="cautaComenzi();" value="Cauta" /></td>
+										<td colspan='2'><input type="button"
+											name="getComenziAfis" id="getComenziAfis"
+											onClick="cautaComenzi();" value="Cauta" /></td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
 					</div>
 				</div>
-
-
-
-
 
 
 			</div>
@@ -137,11 +134,16 @@
 			<div data-role="collapsible-set" data-iconpos="right" id="comenziset"></div>
 
 
+		</div>
+	</div>
 
 
-
-
-
+	<div data-role="dialog" id="dialogAfisare">
+		<div data-role="header">
+			<h1 id="tipAlertA"></h1>
+		</div>
+		<div data-role="content">
+			<div id="textAlertA"></div>
 		</div>
 	</div>
 

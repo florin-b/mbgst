@@ -11,6 +11,7 @@ import websfa.beans.User;
 import websfa.database.connection.DBManager;
 import websfa.helper.user.UserHelper;
 import websfa.queries.user.UserSqlQueries;
+import websfa.utils.MailOperations;
 import websfa.utils.Utils;
 
 public class UserDAO {
@@ -57,20 +58,21 @@ public class UserDAO {
 
 				user.setCodDepart(codDepart);
 				user.setSuccessLogon(true);
-				
-			
 
 			} else {
 				user.setSuccessLogon(false);
 				user.setLogonMessage(UserHelper.getLogonStatus(logonStatus));
 			}
 		} catch (SQLException e) {
-			System.out.println(e);
+
+			MailOperations.sendMail(Utils.getStackTrace(e));
 			user.setSuccessLogon(false);
 			user.setLogonMessage(UserHelper.getLogonStatus(logonStatus));
 
 			return user;
 
+		} catch (Exception e) {
+			MailOperations.sendMail(Utils.getStackTrace(e));
 		}
 
 		return user;

@@ -40,8 +40,14 @@ public class OperatiiComenzi {
 
 		List<ComandaHeader> listHeaderComenzi = new ArrayList<>();
 
+		String stareComanda = " and a.status_aprov in (1,2) ";
+		if (cautareComanda.getTipComanda().equals("1"))
+			stareComanda = " and a.status_aprov in (1,2) ";
+		if (cautareComanda.getTipComanda().equals("2"))
+			stareComanda = " and a.status = 6 ";
+
 		try (Connection conn = new DBManager().getTestDataSource().getConnection();
-				PreparedStatement stmt = conn.prepareStatement(ComenziSqlQueries.getListComenzi())) {
+				PreparedStatement stmt = conn.prepareStatement(ComenziSqlQueries.getListComenziAfisare(stareComanda))) {
 
 			String dataCautare = "";
 			if (cautareComanda.getInterval().equals("1"))
@@ -138,6 +144,8 @@ public class OperatiiComenzi {
 
 			detaliiComanda.setListArticole(listArticole);
 			detaliiComanda.setDateLivrare(dateLivrare);
+
+			// TODO Transaction
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -411,7 +419,7 @@ public class OperatiiComenzi {
 				dateLivrare.setTipPlata(rs.getString(8));
 				dateLivrare.setRespIncasare(rs.getString(9));
 				dateLivrare.setTipTransp(rs.getString(10));
-				dateLivrare.setDataLivrare(rs.getString(11));
+				dateLivrare.setDataLivrare(DateUtils.formatDateFromSap(rs.getString(11)));
 				dateLivrare.setObsLivrare(rs.getString(12));
 
 			}

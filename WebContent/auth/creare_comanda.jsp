@@ -62,7 +62,7 @@
 	color: white;
 }
 
-#art_com_table, #datelivrare_table, #clientTable {
+#datelivrare_table, #clientTable {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	border-collapse: collapse;
 	width: 100%;
@@ -72,27 +72,12 @@
 	padding: 8px;
 }
 
-#art_com_table td, #art_com_table th {
-	padding: 8px;
-}
-
 #datelivrare_table td, #datelivrare_table th {
 	padding: 8px;
 }
 
-#art_com_table tr:nth-child(even) {
-	background-color: #f2f2f2;
-}
-
 #datelivrare_table tr:nth-child(even) {
 	background-color: #f2f2f2;
-}
-
-#art_com_table th {
-	padding-top: 12px;
-	padding-bottom: 12px;
-	text-align: left;
-	color: black;
 }
 
 #datelivrare_table th {
@@ -333,21 +318,7 @@ hr {
 				<b><font color="#008B00">Articole</font></b>
 				<hr>
 
-				<table data-role="table" data-mode="reflow" class="ui-responsive"
-					id="art_com_table">
-					<thead>
-						<tr>
-							<th>Articol</th>
-							<th style='text-align: right;'>Cantitate</th>
-							<th>Um</th>
-							<th style='text-align: right;'>Pret</th>
-							<th style='text-align: right;'>Reducere (%)</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody id="art_table_body">
-					</tbody>
-				</table>
+				<ul id='listArticoleCreare' data-role='listview' data-inset='true'></ul>
 
 				<br>
 				<div style="display: inline;">
@@ -376,65 +347,65 @@ hr {
 
 						<tbody>
 							<tr id="rowJudetAfis" style="display: none">
-								<td style="width: 25%">Judet</td>
+								<th style="width: 25%">Judet</th>
 								<td><div id="numeJudetAfis"></div></td>
 							</tr>
 
 
 							<tr id="rowLocalitateAfis" style="display: none">
-								<td>Localitate</td>
+								<th>Localitate</th>
 								<td><div id="localitateAfis"></div></td>
 							</tr>
 
 							<tr id="rowStradaAfis" style="display: none">
-								<td>Strada</td>
+								<th>Strada</th>
 								<td><div id="stradaAfis"></div></td>
 							</tr>
 
 							<tr id="rowPersContactAfis" style="display: none">
-								<td>Persoana de contact</td>
+								<th>Persoana de contact</th>
 								<td><div id="persContactAfis"></div></td>
 							</tr>
 
 							<tr id="rowTelefonAfis" style="display: none">
-								<td>Telefon</td>
+								<th>Telefon</th>
 								<td><div id="telPersContactAfis"></div></td>
 							</tr>
 
 							<tr id="rowTipReducereAfis" style="display: none">
-								<td>Tip reducere</td>
+								<th>Tip reducere</th>
 								<td><div id="tipReducereAfis"></div></td>
 							</tr>
 
 							<tr id="rowDocInsotitorAfis" style="display: none">
-								<td>Document insotitor</td>
+								<th>Document insotitor</th>
 								<td><div id="docInsotitorAfis"></div></td>
 							</tr>
 
 
 							<tr id="rowPlataAfis" style="display: none">
-								<td>Plata</td>
+								<th>Plata</th>
 								<td><div id="plataAfis"></div></td>
 							</tr>
 
 							<tr id="rowRespIncasareAfis" style="display: none">
-								<td>Responsabil incasare</td>
+								<th>Responsabil incasare</th>
 								<td><div id="responsabilAfis"></div></td>
 							</tr>
 
 							<tr id="rowTransportAfis" style="display: none">
-								<td>Transport</td>
+								<th>Transport</th>
 								<td><div id="transportAfis"></div></td>
 							</tr>
 
 
 							<tr id="rowDataLivrareAfis" style="display: none">
-								<td>Data livrare</td>
+								<th>Data livrare</th>
 								<td><div id="dataLivrareAfis"></div></td>
 							</tr>
 
 							<tr id="rowObsLivrareAfis" style="display: none">
-								<td>Observatii livrare</td>
+								<th>Observatii livrare</th>
 								<td><div id="obsLivrareAfis"></div></td>
 							</tr>
 
@@ -492,6 +463,9 @@ hr {
 
 	<script
 		src="<c:url value="/resources/scripts/creeaza_comanda_date.js" />"></script>
+		
+	<script
+		src="<c:url value="/resources/scripts/creeaza_comanda_commons.js" />"></script>		
 
 
 
