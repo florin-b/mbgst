@@ -122,12 +122,25 @@ public class OperatiiArticole {
 	}
 
 	public ArticolPret getPret(String codArticol, String filiala, String departament) {
-		ArticolPret artPret = new ArticolPret();
+		ArticolPret articolPret = new ArticolPret();
 
-		artPret.setPret(generatePret());
-		artPret.setUm("BUC");
+		articolPret.setPret(generatePret());
+		articolPret.setUm("BUC");
+		articolPret.setPermiteDiscount(true);
+		articolPret.setPretLista(generatePret());
+		articolPret.setCantitate(5);
+		articolPret.setConditiiPret("Conditii pret");
+		articolPret.setMultiplu(1);
+		articolPret.setCantUmBaza(1);
+		articolPret.setUmBaza("BUC");
+		articolPret.setImpachetare("PAK");
+		articolPret.setCmp(new HelperArticole().getCmpArticol(filiala, codArticol));
+		articolPret.setPretCuDiscount(articolPret.getPret() / 95);
+		articolPret.setPretLista(articolPret.getPret() * 1.2);
+		articolPret.setProcReducereCmp(new HelperArticole().getProcentRedCmp(codArticol));
+		articolPret.setProcenteDiscount(new HelperArticole().getProcenteDiscount(filiala, departament, codArticol));
 
-		return artPret;
+		return articolPret;
 
 	}
 

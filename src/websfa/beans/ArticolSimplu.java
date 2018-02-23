@@ -1,6 +1,6 @@
 package websfa.beans;
 
-public class ArticolConditii {
+public class ArticolSimplu {
 	private String cod;
 	private double cantitate;
 	private String um;

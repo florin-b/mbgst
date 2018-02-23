@@ -7,7 +7,7 @@ public class ComandaAprobareOperare {
 	private String id;
 	private String nrCmdSap;
 	private String codAngaj;
-	private List<ArticolConditii> listConditii;
+	private List<ArticolSimplu> listConditii;
 	private boolean seAproba;
 
 	public String getId() {
@@ -34,11 +34,11 @@ public class ComandaAprobareOperare {
 		this.codAngaj = codAngaj;
 	}
 
-	public List<ArticolConditii> getListConditii() {
+	public List<ArticolSimplu> getListConditii() {
 		return listConditii;
 	}
 
-	public void setListConditii(List<ArticolConditii> listConditii) {
+	public void setListConditii(List<ArticolSimplu> listConditii) {
 		this.listConditii = listConditii;
 	}
 

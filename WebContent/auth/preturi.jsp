@@ -49,20 +49,12 @@
 	<div data-role="page" id="preturi" data-theme="a" data-url="">
 
 
-		<div data-role="panel" data-display="overlay" data-position="left"
-			id="left-panel" data-theme="a">
-			<ul data-role="listview">
-				<jsp:include page="navbar.jsp">
-					<jsp:param name="tipuser" value="${user.tipAngajat}" />
-					<jsp:param name="numeuser" value="${user.nume}" />
-				</jsp:include>
-			</ul>
-		</div>
+		
 		<div data-role="header" data-theme="a">
 			<h1>Preturi</h1>
-			<a href="#left-panel" data-theme="d" data-icon="arrow-r"
-				data-iconpos="notext" data-shadow="false" data-iconshadow="false"
-				class="ui-icon-nodisc">Meniu</a>
+			<a href="main"  data-theme="d" data-icon="arrow-l"
+				data-iconpos="notext" data-shadow="true" data-iconshadow="true"
+				class="ui-icon-nodisc"></a>
 		</div>
 
 

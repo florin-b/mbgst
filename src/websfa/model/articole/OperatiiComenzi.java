@@ -13,7 +13,7 @@ import java.util.Random;
 import websfa.beans.ArticolCmdAprob;
 import websfa.beans.ArticolCmdModif;
 import websfa.beans.ArticolComanda;
-import websfa.beans.ArticolConditii;
+import websfa.beans.ArticolSimplu;
 import websfa.beans.CautaCmdAprob;
 import websfa.beans.Comanda;
 import websfa.beans.ComandaAprobareAfis;
@@ -565,7 +565,7 @@ public class OperatiiComenzi {
 			int idComanda = stmt.getInt(10);
 
 			int poz = 1;
-			for (ArticolConditii articol : comanda.getListConditii()) {
+			for (ArticolSimplu articol : comanda.getListConditii()) {
 
 				try (PreparedStatement stmtArt = conn.prepareCall(ComenziSqlQueries.salveazaArticoleConditii())) {
 

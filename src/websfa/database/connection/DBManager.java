@@ -13,7 +13,7 @@ public class DBManager {
 		OracleDataSource oracleDS = null;
 		try {
 			oracleDS = new OracleDataSource();
-			oracleDS.setURL("jdbc:oracle:thin:@10.1.3.88:1527:qas");
+			oracleDS.setURL("jdbc:oracle:thin:@10.1.3.89:1527:tes");
 			oracleDS.setUser("WEBSAP");
 			oracleDS.setPassword("2INTER7");
 

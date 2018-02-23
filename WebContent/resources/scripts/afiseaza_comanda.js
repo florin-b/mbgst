@@ -339,6 +339,15 @@ function getStareComanda(intStare) {
 	return retVal;
 }
 
+
+$(document).ready(function() {
+    $('#afisMainLink').click(function() {
+        
+       // return false;
+    });
+});
+
+
 function showAlertDialogAfisare(tipAlert, mesajAlert) {
 
 	$('#tipAlertA').text(tipAlert);
