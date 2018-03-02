@@ -2,6 +2,8 @@ var numeArticolCurent;
 var departArticol;
 var aprobaSD = false;
 var aprobaDV = false;
+var depozitSelectat;
+var listaArticole = [];
 
 var pretInit;
 
@@ -92,6 +94,7 @@ function setColapsibleArticolListener() {
 
 function getDetaliiArticol(codArticol) {
 	var depozit = departArticol + $('#select-depoz').val();
+	depozitSelectat = depozit;
 	getStocArticol(codArticol, depozit);
 
 }
@@ -123,92 +126,50 @@ function getStocArticol(codArticol, depozit) {
 
 function afisStocArticol(codArticol, dateStoc) {
 
-	if (dateStoc.um == null)
-		dateStoc.um = '';
-
 	var contentId = '#articol' + codArticol;
 
-	var stocId = 'stoc' + codArticol;
-
-	var stocTable = $(
-			'<table data-role="table" class="ui-responsive table" data-mode="reflow"></table>',
-			{
-				id : "stocTable" + codArticol
-			}).addClass("detaliiTable");
-
-	var row = $('<tr></tr>');
-	$(row).appendTo(stocTable);
-
-	$('<td></td>').text('Stoc').attr('style', 'width:25%').appendTo(row);
-	$('<td></td>').text(dateStoc.cantitate).attr('style', 'width:30%').attr(
-			'id', stocId).appendTo(row);
-	$('<td></td>').text(dateStoc.um).attr('style', 'width:70%').appendTo(row);
-
-	row = $('<tr></tr>');
-	$(row).appendTo(stocTable);
-
-	$('<td></td>').text('Cantitate').attr('style', 'width:25%').appendTo(row);
-
-	var textCant = $('<input/>', {
-		type : 'text',
-		id : 'cant' + codArticol,
-		value : 1,
-		width : '40%'
-
-	});
-
-	var tdCant = $('<td></td>', {
-		width : '30%'
-	}).appendTo(row);
-	$(textCant).appendTo(tdCant).textinput();
-	$('<td></td>').text(dateStoc.um).attr('style', 'width:10%').appendTo(row);
-
-	row = $('<tr></tr>');
-	$(row).appendTo(stocTable);
-
-	var tdPret = $('<td></td>', {
-		colspan : '3'
-	}).appendTo(row);
-
-	var btnPretArt = $('<input>', {
-		type : 'button',
-		name : 'pret',
-		value : 'Pret',
-		style : 'width:100%'
-	}).bind('click', {
-		articol : codArticol
-	}, function(event) {
-		getPretArticol(event.data.articol);
-	});
-
-	$(btnPretArt).appendTo(tdPret).buttonMarkup();
+	var stocTable = tableStocArticol(codArticol, dateStoc);
 
 	$(contentId).empty();
 
 	$(stocTable).appendTo(contentId);
-
 }
 
 function getPretArticol(codArticol) {
 
+	var cantArticol = $('#cant' + codArticol).val().trim();
+	var umVanz = $('#umVanz' + codArticol).html();
+
+	if (!$.isNumeric(cantArticol)) {
+		showAlertDialog("Atentie!", "Cantitate invalida.");
+		return;
+	}
+
+	var cautaPret = new Object();
+	cautaPret.codArticol = codArticol;
+	cautaPret.filiala = userObj.unitLog;
+	cautaPret.departament = userObj.codDepart;
+	cautaPret.codClient = comandaCurenta.codClient;
+	cautaPret.depozit = depozitSelectat;
+	cautaPret.cantitate = cantArticol;
+	cautaPret.um = umVanz;
+
 	$.mobile.loading('show');
 
 	$.ajax({
-		type : 'GET',
+		type : 'POST',
 		url : 'pret',
-		data : ({
-			codArticol : codArticol,
-			filiala : userObj.unitLog,
-			departament : userObj.codDepart
-		}),
+		data : JSON.stringify(cautaPret),
 		success : function(data) {
 			$.mobile.loading('hide');
 			afisPretArticol(codArticol, data);
 		},
 		error : function(exception) {
-			alert('Exeption:' + JSON.stringify(exception));
+			showAlertDialog("Atentie!", JSON.stringify(exception));
 			$.mobile.loading('hide');
-		}
+		},
+		dataType : 'json',
+		contentType : 'application/json',
 
 	});
 
@@ -217,104 +178,167 @@ function getPretArticol(codArticol) {
 function afisPretArticol(codArticol, datePret) {
 
 	pretInit = datePret.pret;
-
 	var contentId = '#articol' + codArticol;
 
-	$('#pretTable' + codArticol).remove();
-
-	var pretTable = $(
-			'<table data-role="table" class="ui-responsive table" data-mode="reflow"></table>')
-			.attr('id', "pretTable" + codArticol).addClass("detaliiTable");
-
-	var row = $('<tr></tr>');
-	$(row).appendTo(pretTable);
-
-	$('<td></td>').text('Pret').attr('style', 'width:25%').appendTo(row);
-
-	var textPret = $('<input/>', {
-		type : 'text',
-		id : 'pret_art' + codArticol,
-		value : datePret.pret,
-		width : '40%'
-
-	}).keyup(function() {
-		setProcentReducere(codArticol);
-	});
-
-	var tdPret = $('<td></td>', {
-		width : '25%'
-	}).appendTo(row);
-
-	$(textPret).appendTo(tdPret).textinput();
-
-	$('<td></td>').text(datePret.um).appendTo(row);
-
-	$('<td></td>').text('Unitate pret').appendTo(row);
-	$('<td></td>').text('1 BUC').appendTo(row);
-
-	row = $('<tr></tr>');
-	$(row).appendTo(pretTable);
-	$('<td></td>').text('Reducere').attr('style', 'width:25%').appendTo(row);
-
-	var textProcRed = $('<input/>', {
-		type : 'text',
-		id : 'procent_art' + codArticol,
-		value : 0,
-		width : '40%'
-
-	}).keyup(function() {
-		setPretReducere(codArticol);
-	});
-
-	var tdProcRed = $('<td></td>', {
-		width : '30%'
-	}).appendTo(row);
-	$(textProcRed).appendTo(tdProcRed).textinput();
-
-	$('<td></td>').text('%').appendTo(row);
-
-	row = $('<tr></tr>');
-	$(row).appendTo(pretTable);
-	$('<td></td>').text('Pret cu tva').attr('style', 'width:25%').appendTo(row);
-	$('<td></td>').text('24.55').appendTo(row);
-
-	row = $('<tr></tr>');
-	$(row).appendTo(pretTable);
-	$('<td></td>').text('Discount client').attr('style', 'width:25%').appendTo(
-			row);
-	$('<td></td>').text('5').appendTo(row);
-	$('<td></td>').text('%').appendTo(row);
-
-	var articolSelectat = new Object();
-	articolSelectat.numeArticol = numeArticolCurent;
-	articolSelectat.codArticol = codArticol;
-	articolSelectat.um = datePret.um;
-
-	row = $('<tr></tr>');
-	$(row).appendTo(pretTable);
-
-	var tdAdaugaArt = $('<td></td>', {
-		colspan : '5'
-	}).appendTo(row);
-
-	var btnAdaugaArt = $('<input>', {
-		type : 'button',
-		name : 'adauga',
-		value : 'Adauga',
-		style : 'width:100%'
-	}).bind('click', {
-		articol : articolSelectat
-	}, function(event) {
-		trateazaArticol(event.data.articol);
-	});
-
-	$(btnAdaugaArt).appendTo(tdAdaugaArt).buttonMarkup();
+	var pretTable = tablePretArticol(codArticol, datePret);
 
 	$(pretTable).appendTo(contentId);
-
 }
 
 function trateazaArticol(articolSelectat) {
+
+	if ($('#divArticole').css('display') == 'none')
+		$('#divArticole').show();
+
+	var idTextStoc = '#stoc' + articolSelectat.cod;
+	var idTextCant = '#cant' + articolSelectat.cod;
+
+	if (Number($(idTextStoc).text()) < Number($(idTextCant).val())) {
+		showAlertDialog('Info', 'Stoc insuficient.');
+		return;
+	}
+
+	var idTextPret = '#pret_art' + articolSelectat.cod;
+	var idTextProcent = '#procent_art' + articolSelectat.cod;
+
+	if (!$.isNumeric($(idTextPret).val())) {
+		showAlertDialog("Atentie!", "Valoare pret invalida.");
+		return;
+	}
+
+	if (!$.isNumeric($(idTextProcent).val())) {
+		showAlertDialog("Atentie!", "Valoare procent invalida.");
+		return;
+	}
+
+	for (var i = 0; i < listaArticole.length; i++) {
+
+		if (listaArticole[i].cod == articolSelectat.cod) {
+			listaArticole.splice(i, 1);
+			break;
+		}
+	}
+
+	articolSelectat.cantitate = $(idTextCant).val();
+	articolSelectat.pretUnitar = $(idTextPret).val();
+
+	articolSelectat.procentReducere = $(idTextProcent).val().trim() == '' ? '0'
+			: $(idTextProcent).val();
+	articolSelectat.depozit = departArticol + $('#select-depoz').val();
+
+	articolSelectat.procentFact = getProcentFact(articolSelectat);
+	articolSelectat.procentAprob = getProcentAprob(articolSelectat);
+	articolSelectat.valoareArticol = getValoareArticol(articolSelectat);
+
+	if (articolSelectat.procent > 0) {
+		aprobaSD = true;
+		aprobaDV = true;
+	}
+
+	$('#' + articolSelectat.cod).collapsible("collapse");
+
+	eliminaArticolCreat(articolSelectat);
+	globalListArticole.push(articolSelectat);
+	afiseazaListaArticole();
+
+}
+
+function eliminaArticolCreat(articol) {
+
+	for (var i = 0; i < globalListArticole.length; i++) {
+
+		if (globalListArticole[i].cod == articol.cod) {
+			globalListArticole.splice(i, 1);
+
+			break;
+		}
+	}
+
+	// afiseazaListaArticole();
+	// calculeazaTotalCmdCreare();
+
+}
+
+function adaugaArticol(articolSelectat, poz) {
+
+	var swatch = [ '#f2f2f2', '#FFF0F5' ];
+
+	var ulArticole = $('#listArticoleModif');
+
+	var articol = $('<li></li>', {
+		html : getTabelaArticolNou(articolSelectat, poz)
+	}).css("background-color", swatch[poz / 2]);
+
+	$(ulArticole).append(articol);
+
+	// calculeazaTotalCmdCreare();
+
+}
+
+function afiseazaListaArticole() {
+
+	$('#listArticoleModif').empty();
+
+	for (var i = 0; i < globalListArticole.length; i++) {
+		adaugaArticol(globalListArticole[i], i);
+	}
+
+}
+
+function getTabelaArticolNou(articol, poz) {
+
+	var articoleTable = $('<table></table>').attr({
+		width : "100%",
+		border : "0"
+
+	}).addClass('articoleCreare');
+
+	var row = $('<tr></tr>').appendTo(articoleTable);
+
+	$('<td></td>').attr('style', 'width:3%').attr({
+		style : 'align:left'
+	}).text((poz + 1) + '').appendTo(row);
+
+	$('<td></td>').attr('style', 'width:80%').attr('style', 'font-weight:bold')
+			.text(articol.nume).appendTo(row);
+	$('<td></td>').attr({
+		style : 'width:10%;text-align:right;'
+	}).text(articol.cantitate).appendTo(row);
+	$('<td></td>').text(articol.um).appendTo(row);
+
+	row = $('<tr></tr>').appendTo(articoleTable);
+	$('<td></td>').attr('style', 'width:3%').appendTo(row);
+	$('<td></td>').attr('style', 'width:80%').text(articol.cod).appendTo(row);
+	$('<td></td>').attr({
+		style : 'width:10%;text-align:right;'
+	}).text(parseFloat(articol.pretUnitar).toFixed(2)).appendTo(row);
+	$('<td></td>').text('RON').appendTo(row);
+
+	var btnEliminaArt = $('<img></img>', {
+		src : 'resources/images/minus.png'
+	}).attr('data-role', 'button').bind('click', {
+		articol : articol
+	}, function(event) {
+		eliminaArticolCreat(event.data.articol);
+	});
+
+	row = $('<tr></tr>').appendTo(articoleTable);
+
+	var tdElimBtn = $('<td></td>').attr('style', 'width:3%');
+
+	$(btnEliminaArt).appendTo(tdElimBtn);
+
+	$(tdElimBtn).appendTo(row);
+	$('<td></td>').text(articol.depozit).appendTo(row);
+	$('<td></td>').attr({
+		style : 'width:10%;text-align:right;'
+	}).text(articol.procent).appendTo(row);
+	$('<td></td>').text('%').appendTo(row);
+
+	return articoleTable;
+}
+
+function trateazaArticol_old(articolSelectat) {
 
 	if ($('#divArticole').css('display') == 'none')
 		$('#divArticole').show();
@@ -387,8 +411,3 @@ function setPretReducere(codArticol) {
 	$(idTextPret).val(Number(valoarePret).toFixed(2));
 
 }
-
-
-
-
-

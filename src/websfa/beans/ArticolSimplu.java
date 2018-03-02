@@ -1,10 +1,12 @@
 package websfa.beans;
 
+import java.math.BigDecimal;
+
 public class ArticolSimplu {
 	private String cod;
-	private double cantitate;
+	private BigDecimal cantitate;
 	private String um;
-	private double valoare;
+	private BigDecimal valoare;
 
 	public String getCod() {
 		return cod;
@@ -14,11 +16,11 @@ public class ArticolSimplu {
 		this.cod = cod;
 	}
 
-	public double getCantitate() {
+	public BigDecimal getCantitate() {
 		return cantitate;
 	}
 
-	public void setCantitate(double cantitate) {
+	public void setCantitate(BigDecimal cantitate) {
 		this.cantitate = cantitate;
 	}
 
@@ -30,17 +32,17 @@ public class ArticolSimplu {
 		this.um = um;
 	}
 
-	public double getValoare() {
+	public BigDecimal getValoare() {
 		return valoare;
 	}
 
-	public void setValoare(double valoare) {
+	public void setValoare(BigDecimal valoare) {
 		this.valoare = valoare;
 	}
 
 	@Override
 	public String toString() {
-		return "ArticolConditii [cod=" + cod + ", cantitate=" + cantitate + ", um=" + um + ", valoare=" + valoare + "]";
+		return "ArticolSimplu [cod=" + cod + ", cantitate=" + cantitate + ", um=" + um + ", valoare=" + valoare + "]";
 	}
 
 }

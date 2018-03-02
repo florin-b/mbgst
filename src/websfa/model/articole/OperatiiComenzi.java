@@ -1,5 +1,6 @@
 package websfa.model.articole;
 
+import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,6 +32,7 @@ import websfa.beans.articole.ComandaHeader;
 import websfa.beans.articole.DateLivrareAfis;
 import websfa.database.connection.DBManager;
 import websfa.enums.EnumOpereazaComanda;
+import websfa.helpers.HelperComanda;
 import websfa.queries.user.ComenziSqlQueries;
 import websfa.utils.DateUtils;
 
@@ -165,6 +167,8 @@ public class OperatiiComenzi {
 
 	private Status salveazaAntetComanda(Comanda comanda) {
 
+		System.out.println("Comanda: " + comanda);
+
 		int idComanda = 0;
 
 		Status status = new Status();
@@ -175,7 +179,7 @@ public class OperatiiComenzi {
 			stmt.clearParameters();
 			stmt.setString(1, comanda.getCodClient());
 			stmt.setString(2, comanda.getUnitLog());
-			stmt.setString(3, "2");
+			stmt.setString(3, "0");
 			stmt.setString(4, comanda.isAprobaSD() ? "1" : "0");
 			stmt.setString(5, DateUtils.getCurrentDate());
 			stmt.setString(6, comanda.getCodAgent());
@@ -185,24 +189,28 @@ public class OperatiiComenzi {
 			stmt.setString(10, comanda.getDateLivrare().getStrada());
 			stmt.setDouble(11, comanda.getTotalComanda());
 			stmt.setString(12, comanda.getDateLivrare().getTipTransp());
-			stmt.setString(13, generateCmdSap());
+			stmt.setString(13, " ");
 			stmt.setString(14, comanda.isAprobaSD() ? "X" : " ");
 			stmt.setString(15, comanda.isAprobaDV() ? "X" : " ");
-			stmt.setString(16, comanda.getDateLivrare().getTipReducere());
+			stmt.setString(16, HelperComanda.getTipReducere(comanda.getDateLivrare().getTipReducere()));
 			stmt.setString(17, comanda.getDateLivrare().getLocalitate());
 			stmt.setString(18, comanda.getDateLivrare().getCodJudet());
 			stmt.setString(19, comanda.getDateLivrare().getObsLivrare());
 			stmt.setString(20, DateUtils.formatDateSap(comanda.getDateLivrare().getDataLivrare()));
 			stmt.setString(21, comanda.getDateLivrare().getDocumentInsotitor());
 			stmt.setString(22, comanda.getDateLivrare().getRespIncasare());
+			stmt.setString(23, comanda.getCodDepart());
+			stmt.setString(24, comanda.getCodAgent());
+			stmt.setString(25, DateUtils.getCurrentTime());
+			stmt.setString(26, comanda.getTipUser());
 
-			stmt.registerOutParameter(23, Types.INTEGER);
+			stmt.registerOutParameter(27, Types.INTEGER);
 
 			stmt.executeQuery();
 
-			idComanda = stmt.getInt(23);
+			idComanda = stmt.getInt(27);
 
-			status = salveazaArticoleComanda(conn, comanda.getListArticole(), idComanda);
+			status = salveazaArticoleComanda(conn, comanda.getListArticole(), idComanda, comanda.getUnitLog());
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -219,7 +227,7 @@ public class OperatiiComenzi {
 		return String.valueOf(rand.nextInt(1000000) + 100000);
 	}
 
-	private Status salveazaArticoleComanda(Connection conn, List<ArticolComanda> listArticole, int idComanda) {
+	private Status salveazaArticoleComanda(Connection conn, List<ArticolComanda> listArticole, int idComanda, String unitLog) {
 
 		Status status = new Status();
 		status.setSuccess(true);
@@ -238,7 +246,7 @@ public class OperatiiComenzi {
 				stmt.setString(2, String.valueOf(poz));
 				stmt.setString(3, "0");
 
-				codArticol = articol.getCodArticol();
+				codArticol = articol.getCod();
 				if (codArticol.length() == 8)
 					codArticol = "0000000000" + codArticol;
 
@@ -248,7 +256,19 @@ public class OperatiiComenzi {
 				stmt.setString(7, articol.getDepozit());
 				stmt.setDouble(8, articol.getProcentReducere());
 				stmt.setString(9, articol.getUm());
-				stmt.setDouble(10, articol.getPretUnitar() * articol.getCantitate());
+
+				BigDecimal valoarePozitie = BigDecimal.valueOf(articol.getPretUnitar()).divide(BigDecimal.valueOf(articol.getMultiplu()))
+						.multiply(BigDecimal.valueOf(articol.getCantitate()));
+
+				stmt.setDouble(10, valoarePozitie.doubleValue());
+				stmt.setDouble(11, articol.getProcentFact().doubleValue());
+				stmt.setDouble(12, articol.getDiscountClient().doubleValue());
+				stmt.setDouble(13, articol.getProcentAprob().doubleValue());
+				stmt.setString(14, articol.getInfoArticol());
+				stmt.setDouble(15, articol.getMultiplu());
+				stmt.setDouble(16, articol.getCantUmBaza().doubleValue());
+				stmt.setString(17, articol.getUmBaza());
+				stmt.setString(18, unitLog);
 
 				stmt.executeQuery();
 
@@ -362,8 +382,8 @@ public class OperatiiComenzi {
 		return comandaModificare;
 	}
 
-	public List<ArticolCmdModif> getArticoleComandaModificare(Connection conn, String idComanda) {
-		List<ArticolCmdModif> listArticole = new ArrayList<>();
+	public List<ArticolComanda> getArticoleComandaModificare(Connection conn, String idComanda) {
+		List<ArticolComanda> listArticole = new ArrayList<>();
 
 		try (CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.getArticoleComandaAprob())) {
 
@@ -375,14 +395,27 @@ public class OperatiiComenzi {
 
 			while (rs.next()) {
 
-				ArticolCmdModif articol = new ArticolCmdModif();
-				articol.setCodArticol(rs.getString(1));
+				ArticolComanda articol = new ArticolComanda();
+				articol.setCod(rs.getString(1));
 				articol.setCantitate(rs.getDouble(2));
 				articol.setPretUnitar(rs.getDouble(3));
 				articol.setDepozit(rs.getString(4));
 				articol.setUm(rs.getString(5));
 				articol.setProcentReducere(rs.getDouble(7));
-				articol.setNumeArticol(rs.getString(8));
+				articol.setNume(rs.getString(8));
+				articol.setMultiplu(rs.getInt(9));
+
+				BigDecimal valoarePozitie = BigDecimal.valueOf(articol.getPretUnitar()).divide(BigDecimal.valueOf(articol.getMultiplu()))
+						.multiply(BigDecimal.valueOf(articol.getCantitate()));
+
+				articol.setValoarePoz(valoarePozitie);
+
+				articol.setInfoArticol(rs.getString(10));
+				articol.setProcentFact(BigDecimal.valueOf(rs.getDouble(11)));
+				articol.setProcentAprob(BigDecimal.valueOf(rs.getDouble(12)));
+				articol.setCantUmBaza(BigDecimal.valueOf(rs.getDouble(13)));
+				articol.setUmBaza(rs.getString(14));
+				articol.setUlStoc(rs.getString(15));
 
 				listArticole.add(articol);
 
@@ -432,7 +465,7 @@ public class OperatiiComenzi {
 		return dateLivrare;
 	}
 
-	private void getConditiiArticoleComanda(Connection conn, String idComanda, List<ArticolCmdModif> listArticole) {
+	private void getConditiiArticoleComanda(Connection conn, String idComanda, List<ArticolComanda> listArticole) {
 
 		try (PreparedStatement stmt = conn.prepareStatement(ComenziSqlQueries.getConditiiArticole())) {
 
@@ -444,8 +477,8 @@ public class OperatiiComenzi {
 
 			while (rs.next()) {
 
-				for (ArticolCmdModif articol : listArticole) {
-					if (articol.getCodArticol().equals(rs.getString(1))) {
+				for (ArticolComanda articol : listArticole) {
+					if (articol.getCod().equals(rs.getString(1))) {
 						articol.setConditiiCant(rs.getDouble(2));
 						articol.setConditiiVal(rs.getDouble(3));
 						break;
@@ -577,9 +610,9 @@ public class OperatiiComenzi {
 					codArticol = codArticol.length() == 8 ? "0000000000" + codArticol : codArticol;
 
 					stmtArt.setString(3, codArticol);
-					stmtArt.setDouble(4, articol.getCantitate());
+					stmtArt.setDouble(4, articol.getCantitate().doubleValue());
 					stmtArt.setString(5, articol.getUm());
-					stmtArt.setDouble(6, articol.getValoare());
+					stmtArt.setDouble(6, articol.getValoare().doubleValue());
 
 					stmtArt.executeQuery();
 

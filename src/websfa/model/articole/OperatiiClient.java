@@ -13,7 +13,7 @@ import websfa.beans.DetaliiClient;
 import websfa.beans.StareClient;
 import websfa.beans.articole.Adresa;
 import websfa.database.connection.DBManager;
-import websfa.enums.EnumJudete;
+import websfa.enums.EnumRegiuniBG;
 import websfa.queries.user.ClientSqlQueries;
 
 public class OperatiiClient {
@@ -81,7 +81,7 @@ public class OperatiiClient {
 			while (rs.next()) {
 				adresa.setLocalitate(rs.getString("city1"));
 				adresa.setStrada(rs.getString("street") + " " + rs.getString("house_num1"));
-				adresa.setNumeJudet(EnumJudete.getNumeJudet(Integer.valueOf(rs.getString("region"))));
+				adresa.setNumeJudet(EnumRegiuniBG.getNumeJudet(Integer.valueOf(rs.getString("region"))));
 				adresa.setCodJudet(rs.getString("region"));
 
 			}

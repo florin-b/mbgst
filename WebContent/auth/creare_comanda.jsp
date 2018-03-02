@@ -1,11 +1,10 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@page language="java" contentType="text/html; " pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Afisare comanda</title>
 
 
@@ -104,7 +103,7 @@ hr {
 
 		<div data-role="header" data-theme="a">
 			<h1>Creare comanda</h1>
-			<a href="main"  data-theme="d" data-icon="arrow-l"
+			<a href="main" data-theme="d" data-icon="arrow-l"
 				data-iconpos="notext" data-shadow="true" data-iconshadow="true"
 				class="ui-icon-nodisc"></a>
 		</div>
@@ -123,7 +122,7 @@ hr {
 
 				<div class="ui-grid-a ui-responsive" id='divCautaClient'>
 					<div class="ui-block-a" style='padding-right: 50px;'>
-						<input id="numeClient" data-type="search">
+						<input id="numeClient" data-type="search" value="ДЕМАТ ООД">
 					</div>
 
 					<div class="ui-block-b" style='padding-left: 50px;'>
@@ -132,6 +131,7 @@ hr {
 					</div>
 				</div>
 
+				<br>
 				<div data-role="collapsible-set" data-iconpos="right"
 					id="clientiset"></div>
 			</div>
@@ -165,7 +165,7 @@ hr {
 
 				<div class="ui-grid-a">
 					<div class="ui-block-a" style='padding-right: 50px;'>
-						<input id="codArticol" data-type="search">
+						<input id="codArticol" data-type="search" >
 					</div>
 					<div class="ui-block-b" style='padding-left: 50px;'>
 
@@ -201,7 +201,38 @@ hr {
 					<tbody>
 						<tr>
 							<td style="width: 25%">Judet</td>
-							<td><input id="numeJudet" data-type="text"></td>
+							<td><select id='codJudet'>
+									<option value='00'>Selectati un judet</option>
+									<option value='01'>БЛАГОЕВГРАДСКА</option>
+									<option value='02'>БУРГАСКА</option>
+									<option value='03'>ДОБРИЧСКА</option>
+									<option value='04'>ГАБРОВСКА</option>
+									<option value='05'>ХАСКОВСКА</option>
+									<option value='06'>КЪРДЖАЛИЙСКА</option>
+									<option value='07'>КЮСТЕНДИЛСКА</option>
+									<option value='08'>ЛОВЕШКА</option>
+									<option value='09'>МОНТАНАНСКА</option>
+									<option value='10'>ПАЗАРДЖИШКА</option>
+									<option value='11'>ПЕРНИШКА</option>
+									<option value='12'>ПЛЕВЕНСКА</option>
+									<option value='13'>ПЛОВДИВСКА</option>
+									<option value='14'>РАЗГРАДСКА</option>
+									<option value='15'>РУСЕНСКА</option>
+									<option value='16'>ШУМЕНСКА</option>
+									<option value='17'>СИЛИСТРЕНСКА</option>
+									<option value='18'>СЛИВЕНСКА</option>
+									<option value='19'>СМОЛЯНСКА</option>
+									<option value='20'>СОФИЯ</option>
+									<option value='21'>СОФИЙСКА</option>
+									<option value='22'>СТАРОЗАГОРСКА</option>
+									<option value='23'>ТЪРГОВИШКА</option>
+									<option value='24'>ВАРНЕНСКА</option>
+									<option value='25'>ВЕЛИКОТЪРНОВСКА</option>
+									<option value='26'>ВИДИНСКА</option>
+									<option value='27'>ВРАЧАНСКА</option>
+									<option value='28'>ЯМБОЛСКА</option>
+							</select></td>
+
 						</tr>
 
 
@@ -458,6 +489,11 @@ hr {
 
 	<script
 		src="<c:url value="/resources/scripts/creeaza_comanda_commons.js" />"></script>
+
+	<script
+		src="<c:url value="/resources/helper_scritps/helper_articole.js" />"></script>
+
+
 
 
 

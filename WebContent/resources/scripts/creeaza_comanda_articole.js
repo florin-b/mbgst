@@ -1,22 +1,18 @@
 var userObj;
 var numeArtSel;
 var comandaId;
-var globalDetaliiClient;
 var pretInit;
 var numeArticolCurent;
 var listaArticole = [];
 var departArticol;
 var aprobaSD = false;
 var aprobaDV = false;
+var depozitSelectat;
+
+var colorGroup1 = '#7A8FF0';
+var colorGroup2 = '#5EB87B';
 
 $(document).on('pagebeforeshow', '#crearecomanda', function() {
-
-	// $('#select_articole_div').parent().css('margin-left', '10px');
-	// $('#select_articole_div').parent().css('margin-right', '20px');
-
-	// $('#select_articole_div').css('max-height', '800px');
-
-	// $('#select_articole_div').css('overflow', 'auto');
 
 });
 
@@ -55,11 +51,11 @@ $('#cautaArticol').click(function() {
 		url : 'cautaArticol',
 		data : articol,
 		success : function(data) {
-			afiseazaListArticole(data);
 			$.mobile.loading('hide');
+			afiseazaListArticole(data);
 		},
 		error : function(exception) {
-			alert('Exeption:' + JSON.stringify(exception));
+			showAlertDialog("Atentie!", JSON.stringify(exception));
 			$.mobile.loading('hide');
 		}
 
@@ -126,7 +122,7 @@ function setColapsibleSelectArticolListener() {
 
 function getDetaliiArticol(codArticol) {
 	var depozit = departArticol + $('#select-depoz').val();
-
+	depozitSelectat = depozit;
 	getStocArticol(codArticol, depozit);
 
 }
@@ -148,8 +144,8 @@ function getStocArticol(codArticol, depozit) {
 			afisStocArticol(codArticol, data);
 		},
 		error : function(exception) {
-			alert('Exeption:' + JSON.stringify(exception));
 			$.mobile.loading('hide');
+			showAlertDialog("Atentie!", JSON.stringify(exception));
 		}
 
 	});
@@ -169,34 +165,45 @@ function afisStocArticol(codArticol, dateStoc) {
 			'<table data-role="table" class="ui-responsive table" data-mode="reflow"></table>',
 			{
 				id : "stocTable" + codArticol
-			}).addClass("detaliiTable");
+			}).addClass("stocArtTable");
 
 	var row = $('<tr></tr>');
 	$(row).appendTo(stocTable);
 
-	$('<td></td>').text('Stoc').attr('style', 'width:25%').appendTo(row);
-	$('<td></td>').text(dateStoc.cantitate).attr('style', 'width:30%').attr(
-			'id', stocId).appendTo(row);
-	$('<td></td>').text(dateStoc.um).attr('style', 'width:70%').appendTo(row);
+	$('<td></td>').text('Stoc').attr('style', 'width:30%').appendTo(row);
+
+	$('<td></td>', {
+		text : dateStoc.cantitate,
+		id : stocId,
+		style : 'width:25%;text-align:right;'
+	}).appendTo(row);
+
+	$('<td></td>').text(dateStoc.um).attr('style', 'width:40%').appendTo(row);
 
 	row = $('<tr></tr>');
 	$(row).appendTo(stocTable);
 
-	$('<td></td>').text('Cantitate').attr('style', 'width:25%').appendTo(row);
+	$('<td></td>').text('Cantitate').attr('style', 'width:30%').appendTo(row);
 
 	var textCant = $('<input/>', {
 		type : 'text',
 		id : 'cant' + codArticol,
 		value : 1,
-		width : '40%'
+		width : '40%',
+		style : 'text-align:right;'
 
 	});
 
 	var tdCant = $('<td></td>', {
-		width : '30%'
+		width : '25%'
 	}).appendTo(row);
 	$(textCant).appendTo(tdCant).textinput();
-	$('<td></td>').text(dateStoc.um).attr('style', 'width:10%').appendTo(row);
+
+	$('<td></td>', {
+		text : dateStoc.um,
+		style : 'width:10%',
+		id : 'umVanz' + codArticol,
+	}).appendTo(row);
 
 	row = $('<tr></tr>');
 	$(row).appendTo(stocTable);
@@ -226,24 +233,39 @@ function afisStocArticol(codArticol, dateStoc) {
 
 function getPretArticol(codArticol) {
 
+	var cantArticol = $('#cant' + codArticol).val().trim();
+	var umVanz = $('#umVanz' + codArticol).html();
+
+	if (!$.isNumeric(cantArticol)) {
+		showAlertDialog("Atentie!", "Cantitate invalida.");
+		return;
+	}
+
+	var cautaPret = new Object();
+	cautaPret.codArticol = codArticol;
+	cautaPret.filiala = userObj.unitLog;
+	cautaPret.departament = userObj.codDepart;
+	cautaPret.codClient = globalDetaliiClient.cod;
+	cautaPret.depozit = depozitSelectat;
+	cautaPret.cantitate = cantArticol;
+	cautaPret.um = umVanz;
+
 	$.mobile.loading('show');
 
 	$.ajax({
-		type : 'GET',
+		type : 'POST',
 		url : 'pret',
-		data : ({
-			codArticol : codArticol,
-			filiala : userObj.unitLog,
-			departament : userObj.codDepart
-		}),
+		data : JSON.stringify(cautaPret),
 		success : function(data) {
 			$.mobile.loading('hide');
 			afisPretArticol(codArticol, data);
 		},
 		error : function(exception) {
-			alert('Exeption:' + JSON.stringify(exception));
+			showAlertDialog("Atentie!", JSON.stringify(exception));
 			$.mobile.loading('hide');
-		}
+		},
+		dataType : 'json',
+		contentType : 'application/json',
 
 	});
 
@@ -259,73 +281,129 @@ function afisPretArticol(codArticol, datePret) {
 
 	var pretTable = $(
 			'<table data-role="table" class="ui-responsive table" data-mode="reflow"></table>')
-			.attr('id', "pretTable" + codArticol).addClass("detaliiTable");
+			.attr('id', "pretTable" + codArticol).addClass("pretArtTable");
 
 	var row = $('<tr></tr>');
 	$(row).appendTo(pretTable);
 
-	$('<td></td>').text('Pret').attr('style', 'width:25%').appendTo(row);
+	$('<td></td>').text('Pret').attr('style', 'width:30%').appendTo(row);
 
 	var textPret = $('<input/>', {
 		type : 'text',
 		id : 'pret_art' + codArticol,
 		value : datePret.pret,
-		width : '40%'
+		width : '40%',
+		maxlength : 10,
+		style : 'text-align:right;'
 
 	}).keyup(function() {
-		setProcentReducere(codArticol);
+		setProcentReducere(codArticol, datePret);
 	});
 
 	var tdPret = $('<td></td>', {
-		width : '25%'
+
 	}).appendTo(row);
 
 	$(textPret).appendTo(tdPret).textinput();
 
-	$('<td></td>').text(datePret.um).appendTo(row);
+	var infoPret = datePret.moneda + ' / ' + datePret.multiplu + ' '
+			+ datePret.um;
 
-	$('<td></td>').text('Unitate pret').appendTo(row);
-	$('<td></td>').text('1 BUC').appendTo(row);
+	$('<td></td>', {
+		style : 'width:40%'
+	}).text(infoPret).appendTo(row);
 
 	row = $('<tr></tr>');
 	$(row).appendTo(pretTable);
-	$('<td></td>').text('Reducere').attr('style', 'width:25%').appendTo(row);
+	$('<td></td>').text('Reducere').attr('style', 'width:30%').appendTo(row);
 
 	var textProcRed = $('<input/>', {
 		type : 'text',
 		id : 'procent_art' + codArticol,
 		value : 0,
-		width : '40%'
+		width : '40%',
+		maxlength : 3,
+		style : 'text-align:right;'
 
 	}).keyup(function() {
-		setPretReducere(codArticol);
+		setPretReducere(codArticol, datePret);
 	});
 
 	var tdProcRed = $('<td></td>', {
-		width : '30%'
+		width : '25%'
 	}).appendTo(row);
 	$(textProcRed).appendTo(tdProcRed).textinput();
 
 	$('<td></td>').text('%').appendTo(row);
 
 	row = $('<tr></tr>');
+	$('<td></td>').html('<br>').appendTo(row);
 	$(row).appendTo(pretTable);
-
-	var pretTva = (datePret.pret * 1.18).toFixed(2);
-	$('<td></td>').text('Pret cu tva').attr('style', 'width:25%').appendTo(row);
-	$('<td></td>').text(pretTva).appendTo(row);
 
 	row = $('<tr></tr>');
 	$(row).appendTo(pretTable);
-	$('<td></td>').text('Discount client').attr('style', 'width:25%').appendTo(
-			row);
-	$('<td></td>').text('5').appendTo(row);
-	$('<td></td>').text('%').appendTo(row);
+
+	var valTVA = getTVAFormula(datePret);
+
+	var pretCuTva = parseFloat(datePret.pret) + parseFloat(valTVA);
+
+	$('<td></td>').text('Pret cu tva').attr('style', 'width:30%').css('color',
+			colorGroup1).appendTo(row);
+	$('<td></td>', {
+		id : 'prettva' + codArticol,
+		style : 'text-align:right;'
+	}).text(pretCuTva.toFixed(2)).css('color', colorGroup1).appendTo(row);
+
+	row = $('<tr></tr>');
+	$(row).appendTo(pretTable);
+	$('<td></td>').text('Discount client').attr('style', 'width:30%').css(
+			'color', colorGroup1).appendTo(row);
+
+	var procentReducereClient = (100 - (datePret.pret / datePret.pretLista) * 100)
+			.toFixed(2);
+
+	$('<td></td>', {
+		text : procentReducereClient,
+		style : 'text-align:right;'
+	}).css('color', colorGroup1).appendTo(row);
+	$('<td></td>').text('%').css('color', colorGroup1).appendTo(row);
+
+	row = $('<tr></tr>');
+	$('<td></td>').html('<br>').appendTo(row);
+	$(row).appendTo(pretTable);
+
+	for (var u = 0; u < datePret.infoArticolDesc.length; u++) {
+
+		row = $('<tr></tr>');
+		$(row).appendTo(pretTable);
+
+		var tokDesc = datePret.infoArticolDesc[u].split('#');
+
+		$('<td></td>').text(tokDesc[0]).css('color', colorGroup2).appendTo(row);
+		$('<td></td>', {
+			text : tokDesc[1],
+			style : 'text-align:right;'
+		}).css('color', colorGroup2).appendTo(row);
+		$('<td></td>').text(tokDesc[2]).css('color', colorGroup2).appendTo(row);
+
+	}
 
 	var articolSelectat = new Object();
 	articolSelectat.nume = numeArticolCurent;
 	articolSelectat.cod = codArticol;
 	articolSelectat.um = datePret.um;
+	articolSelectat.discountClient = procentReducereClient;
+	articolSelectat.multiplu = datePret.multiplu;
+	articolSelectat.pretLista = datePret.pretLista;
+	articolSelectat.moneda = datePret.moneda;
+	articolSelectat.cantUmBaza = datePret.cantUmBaza;
+	articolSelectat.umBaza = datePret.umBaza;
+	articolSelectat.infoArticol = datePret.infoArticol;
+	articolSelectat.discountClient = procentReducereClient;
+
+	row = $('<tr></tr>');
+	$('<td></td>').html('<br>').appendTo(row);
+	$(row).appendTo(pretTable);
 
 	row = $('<tr></tr>');
 	$(row).appendTo(pretTable);
@@ -364,6 +442,19 @@ function trateazaArticol(articolSelectat) {
 		return;
 	}
 
+	var idTextPret = '#pret_art' + articolSelectat.cod;
+	var idTextProcent = '#procent_art' + articolSelectat.cod;
+
+	if (!$.isNumeric($(idTextPret).val())) {
+		showAlertDialog("Atentie!", "Valoare pret invalida.");
+		return;
+	}
+
+	if (!$.isNumeric($(idTextProcent).val())) {
+		showAlertDialog("Atentie!", "Valoare procent invalida.");
+		return;
+	}
+
 	for (var i = 0; i < listaArticole.length; i++) {
 
 		if (listaArticole[i].cod == articolSelectat.cod) {
@@ -372,15 +463,16 @@ function trateazaArticol(articolSelectat) {
 		}
 	}
 
-	var idTextPret = '#pret_art' + articolSelectat.cod;
-	var idTextProcent = '#procent_art' + articolSelectat.cod;
+	articolSelectat.cantitate = $(idTextCant).val();
+	articolSelectat.pretUnitar = $(idTextPret).val();
 
-	articolSelectat.cant = $(idTextCant).val();
-	articolSelectat.pret = $(idTextPret).val();
-	articolSelectat.procent = $(idTextProcent).val();
+	articolSelectat.procentReducere = $(idTextProcent).val().trim() == '' ? '0' : $(
+			idTextProcent).val();
 	articolSelectat.depozit = departArticol + $('#select-depoz').val();
 
-	listaArticole.push(articolSelectat);
+	articolSelectat.procentFact = getProcentFact(articolSelectat);
+	articolSelectat.procentAprob = getProcentAprob(articolSelectat);
+	articolSelectat.valoareArticol = getValoareArticol(articolSelectat);
 
 	if (articolSelectat.procent > 0) {
 		aprobaSD = true;
@@ -389,6 +481,8 @@ function trateazaArticol(articolSelectat) {
 
 	$('#' + articolSelectat.cod).collapsible("collapse");
 
+	eliminaArticolCreat(articolSelectat);
+	listaArticole.push(articolSelectat);
 	adaugaArticol(articolSelectat, listaArticole.length - 1);
 
 }
@@ -409,6 +503,22 @@ function adaugaArticol(articolSelectat, poz) {
 
 }
 
+function eliminaArticolCreat(articol) {
+
+	for (var i = 0; i < listaArticole.length; i++) {
+
+		if (listaArticole[i].cod == articol.cod) {
+			listaArticole.splice(i, 1);
+
+			break;
+		}
+	}
+
+	afiseazaListaArticole();
+	calculeazaTotalCmdCreare();
+
+}
+
 function afiseazaListaArticole() {
 
 	$('#listArticoleCreare').empty();
@@ -416,8 +526,6 @@ function afiseazaListaArticole() {
 	for (var i = 0; i < listaArticole.length; i++) {
 		adaugaArticol(listaArticole[i], i);
 	}
-
-	calculeazaTotalCmdCreare();
 
 }
 
@@ -439,7 +547,7 @@ function getTabelaArticolNou(articol, poz) {
 			.text(articol.nume).appendTo(row);
 	$('<td></td>').attr({
 		style : 'width:10%;text-align:right;'
-	}).text(articol.cant).appendTo(row);
+	}).text(articol.cantitate).appendTo(row);
 	$('<td></td>').text(articol.um).appendTo(row);
 
 	row = $('<tr></tr>').appendTo(articoleTable);
@@ -447,7 +555,7 @@ function getTabelaArticolNou(articol, poz) {
 	$('<td></td>').attr('style', 'width:80%').text(articol.cod).appendTo(row);
 	$('<td></td>').attr({
 		style : 'width:10%;text-align:right;'
-	}).text(articol.pret).appendTo(row);
+	}).text(parseFloat(articol.pretUnitar).toFixed(2)).appendTo(row);
 	$('<td></td>').text('RON').appendTo(row);
 
 	var btnEliminaArt = $('<img></img>', {
@@ -468,55 +576,49 @@ function getTabelaArticolNou(articol, poz) {
 	$('<td></td>').text(articol.depozit).appendTo(row);
 	$('<td></td>').attr({
 		style : 'width:10%;text-align:right;'
-	}).text(articol.procent).appendTo(row);
+	}).text(articol.procentReducere).appendTo(row);
 	$('<td></td>').text('%').appendTo(row);
 
 	return articoleTable;
-}
-
-function eliminaArticolCreat(articol) {
-
-	for (var i = 0; i < listaArticole.length; i++) {
-
-		if (listaArticole[i].codArticol == articol.codArticol) {
-			listaArticole.splice(i, 1);
-			break;
-		}
-	}
-
-	afiseazaListaArticole();
-
 }
 
 function calculeazaTotalCmdCreare() {
 
 	var totalComanda = 0;
 	for (var i = 0; i < listaArticole.length; i++) {
-		totalComanda += listaArticole[i].pret * listaArticole[i].cant;
+		totalComanda += listaArticole[i].pretUnitar * listaArticole[i].cantitate;
 
 	}
 
-	$('#divTotalCmd').html(totalComanda).css({
+	$('#divTotalCmd').html(totalComanda.toFixed(2)).css({
 		'font-weight' : 'bold'
-	}).data("totalCmd", totalComanda);
+	}).data("totalCmd", totalComanda.toFixed(2));
 
 }
 
-function setProcentReducere(codArticol) {
+function setProcentReducere(codArticol, datePret) {
 
 	var idTextPret = '#pret_art' + codArticol;
 
 	var idTextProcent = '#procent_art' + codArticol;
 
-	var pretSchimbat = $(idTextPret).val();
+	var idTextPretCuTva = '#prettva' + codArticol;
 
-	var procentReducere = (1 - Number(pretSchimbat / pretInit)) * 100;
+	var pretClient = $(idTextPret).val();
+
+	var procentReducere = (1 - Number(pretClient / pretInit)) * 100;
 
 	$(idTextProcent).val(Number(procentReducere).toFixed(2));
 
+	var valTVA = getTVAFormula(datePret);
+
+	var pretCuTva = parseFloat($(idTextPret).val()) + parseFloat(valTVA);
+
+	$(idTextPretCuTva).text(pretCuTva.toFixed(2));
+
 }
 
-function setPretReducere(codArticol) {
+function setPretReducere(codArticol, datePret) {
 
 	var idTextPret = '#pret_art' + codArticol;
 
@@ -525,8 +627,15 @@ function setPretReducere(codArticol) {
 	var procent = $(idTextProcent).val();
 
 	var valoarePret = pretInit - (procent / 100) * pretInit;
-
 	$(idTextPret).val(Number(valoarePret).toFixed(2));
+
+	var idTextPretCuTva = '#prettva' + codArticol;
+
+	var valTVA = getTVAFormula(datePret);
+
+	var pretCuTva = parseFloat($(idTextPret).val()) + parseFloat(valTVA);
+
+	$(idTextPretCuTva).text(pretCuTva.toFixed(2));
 
 }
 
@@ -555,6 +664,8 @@ $('#salveazaComanda').click(function() {
 	comanda.aprobaSD = aprobaSD;
 	comanda.aprobaDV = aprobaDV;
 	comanda.unitLog = userObj.unitLog;
+	comanda.codDepart = userObj.codDepart;
+	comanda.tipUser = userObj.tipAngajat;
 	comanda.dateLivrare = getDateLivrare();
 	comanda.listArticole = getArticoleComanda(listaArticole);
 	comanda.totalComanda = $('#divTotalCmd').data('totalCmd');
@@ -593,6 +704,16 @@ function showAlertStatus(statusCreare) {
 	}
 
 	showAlertDialog("Status", statusCreare.message);
+
+}
+
+function clearScreenArticole(e) {
+
+	e.preventDefault();
+
+	$('#codArticol').val('');
+	listaArticole = [];
+	$("#articoleset").empty();
 
 }
 

@@ -11,7 +11,7 @@ function afiseazaDateLivrare(dateLivrare) {
 		$(row).appendTo(livrareTable);
 
 		$('<th></th>').text('Judet').attr('style', 'width:30%').appendTo(row);
-		$('<td></td>').text(dateLivrare.codJudet).appendTo(row);
+		$('<td></td>').text(getNumeJudet(dateLivrare.codJudet)).appendTo(row);
 
 	}
 

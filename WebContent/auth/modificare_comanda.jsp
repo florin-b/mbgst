@@ -1,11 +1,10 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@page language="java" contentType="text/html; " pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Afisare comanda</title>
 
 
@@ -28,6 +27,7 @@
 <script src="<c:url value="/resources/scripts/afiseaza_comanda.js" />"></script>
 
 <link rel="stylesheet" href="resources/css/modificare_comanda.css">
+<link rel="stylesheet" href="resources/css/creare_comanda.css">
 
 
 <style>
@@ -69,10 +69,10 @@
 	<div data-role="page" id="modifcmd" data-theme="a" data-url="">
 
 
-		
+
 		<div data-role="header" data-theme="a">
 			<h1>Modificare comanda</h1>
-			<a href="main"  data-theme="d" data-icon="arrow-l"
+			<a href="main" data-theme="d" data-icon="arrow-l"
 				data-iconpos="notext" data-shadow="true" data-iconshadow="true"
 				class="ui-icon-nodisc"></a>
 		</div>
@@ -254,7 +254,8 @@
 
 
 			<div id="antetCmdModif">
-				<b><font color="#008B00">Date generale</font></b>
+				<div id="headerDateGen"></div>
+
 				<hr>
 				<table data-role="table" style="width: 100%" id="dateGenTable"
 					class="ui-responsive" data-mode="reflow">
@@ -277,7 +278,8 @@
 					<tbody>
 					</tbody>
 				</table>
-
+				<br>
+				<ul id='listArticoleModif' data-role='listview' data-inset='true'></ul>
 
 
 			</div>
@@ -286,10 +288,9 @@
 
 
 			<div id="divDateLivrareModif">
-				<b><font color="#008B00">Date livrare</font></b>
+
+				<div id="headerDateLivrare"></div>
 				<hr>
-
-
 
 				<table data-role="table" style="width: 100%"
 					id="dateLivrareModifTable" class="ui-responsive" data-mode="reflow">
@@ -356,6 +357,17 @@
 		src="<c:url value="/resources/scripts/modificare_comanda_livrare.js" />"></script>
 
 	<script src="<c:url value="/resources/scripts/common_scripts.js" />"></script>
+
+	<script
+		src="<c:url value="/resources/helper_scritps/helper_livrare.js" />"></script>
+
+	<script
+		src="<c:url value="/resources/common_scripts/articole_common.js" />"></script>
+
+	<script
+		src="<c:url value="/resources/helper_scritps/helper_articole.js" />"></script>
+
+
 
 </body>
 </html>

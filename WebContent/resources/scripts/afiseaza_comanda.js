@@ -243,7 +243,7 @@ function afisdateLivrareComanda(dateLivrare) {
 
 	row = $('<tr></tr>').appendTo(dateLivrTable);
 	$('<td></td>').attr('style', 'width:5%').text('Judet').appendTo(row);
-	$('<td></td>').text(dateLivrare.adresaLivrare.numeJudet).appendTo(row);
+	$('<td></td>').text(getNumeJudet(dateLivrare.adresaLivrare.numeJudet)).appendTo(row);
 
 	row = $('<tr></tr>').appendTo(dateLivrTable);
 	$('<td></td>').attr('style', 'width:5%').text('Localitate').appendTo(row);

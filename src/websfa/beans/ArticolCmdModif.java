@@ -2,8 +2,8 @@ package websfa.beans;
 
 public class ArticolCmdModif {
 
-	private String codArticol;
-	private String numeArticol;
+	private String cod;
+	private String nume;
 	private String depozit;
 	private double cantitate;
 	private String um;
@@ -12,20 +12,20 @@ public class ArticolCmdModif {
 	private double conditiiCant;
 	private double conditiiVal;
 
-	public String getCodArticol() {
-		return codArticol;
+	public String getCod() {
+		return cod;
 	}
 
-	public void setCodArticol(String codArticol) {
-		this.codArticol = codArticol;
+	public void setCod(String cod) {
+		this.cod = cod;
 	}
 
-	public String getNumeArticol() {
-		return numeArticol;
+	public String getNume() {
+		return nume;
 	}
 
-	public void setNumeArticol(String numeArticol) {
-		this.numeArticol = numeArticol;
+	public void setNume(String nume) {
+		this.nume = nume;
 	}
 
 	public String getDepozit() {

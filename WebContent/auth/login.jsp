@@ -1,10 +1,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html;" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>WebSFA Login</title>
 
 
@@ -36,10 +35,10 @@
 				<h3>Autentificare</h3>
 
 				<form:label path="username">Utilizator</form:label>
-				<form:input id="username" name="username" path="" value="androsd" />
+				<form:input id="username" name="username" path="" value="LSTAVREV" />
 				<br>
 				<form:label path="username">Parola</form:label>
-				<form:password id="password" name="password" path="" value="112" />
+				<form:password id="password" name="password" path="" value="yPY4wC" />
 				<br>
 				<input type="submit" value="Login" />
 				<br>

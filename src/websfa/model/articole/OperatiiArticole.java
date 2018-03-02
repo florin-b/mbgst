@@ -8,12 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import websfa.beans.CautaPret;
+import websfa.beans.Discount;
 import websfa.beans.articole.Articol;
 import websfa.beans.articole.ArticolPret;
 import websfa.beans.articole.ArticolStoc;
 import websfa.database.connection.DBManager;
-import websfa.helper.articole.ArticoleHelper;
+import websfa.helpers.HelperArticole;
 import websfa.queries.articole.SqlQueries;
+import websfa.soap.model.SapServices;
 
 public class OperatiiArticole {
 
@@ -59,10 +62,10 @@ public class OperatiiArticole {
 		try (Connection conn = new DBManager().getTestDataSource().getConnection(); PreparedStatement stmt = conn.prepareStatement(SqlQueries.getStoc())) {
 
 			stmt.clearParameters();
-			stmt.setString(1, ArticoleHelper.formatCodArt(codArticol));
+			stmt.setString(1, HelperArticole.formatCodArt(codArticol));
 			stmt.setString(2, filiala);
 			stmt.setString(3, filiala);
-			stmt.setString(4, ArticoleHelper.formatCodArt(codArticol));
+			stmt.setString(4, HelperArticole.formatCodArt(codArticol));
 			stmt.setString(5, filiala);
 			stmt.setString(6, filiala);
 
@@ -96,10 +99,10 @@ public class OperatiiArticole {
 				PreparedStatement stmt = conn.prepareStatement(SqlQueries.getStocDepozit())) {
 
 			stmt.clearParameters();
-			stmt.setString(1, ArticoleHelper.formatCodArt(codArticol));
+			stmt.setString(1, HelperArticole.formatCodArt(codArticol));
 			stmt.setString(2, filiala);
 			stmt.setString(3, depozit);
-			stmt.setString(4, ArticoleHelper.formatCodArt(codArticol));
+			stmt.setString(4, HelperArticole.formatCodArt(codArticol));
 			stmt.setString(5, filiala);
 			stmt.setString(6, depozit);
 			stmt.executeQuery();
@@ -124,24 +127,42 @@ public class OperatiiArticole {
 	public ArticolPret getPret(String codArticol, String filiala, String departament) {
 		ArticolPret articolPret = new ArticolPret();
 
-		articolPret.setPret(generatePret());
-		articolPret.setUm("BUC");
-		articolPret.setPermiteDiscount(true);
-		articolPret.setPretLista(generatePret());
-		articolPret.setCantitate(5);
-		articolPret.setConditiiPret("Conditii pret");
-		articolPret.setMultiplu(1);
-		articolPret.setCantUmBaza(1);
-		articolPret.setUmBaza("BUC");
-		articolPret.setImpachetare("PAK");
-		articolPret.setCmp(new HelperArticole().getCmpArticol(filiala, codArticol));
-		articolPret.setPretCuDiscount(articolPret.getPret() / 95);
-		articolPret.setPretLista(articolPret.getPret() * 1.2);
-		articolPret.setProcReducereCmp(new HelperArticole().getProcentRedCmp(codArticol));
-		articolPret.setProcenteDiscount(new HelperArticole().getProcenteDiscount(filiala, departament, codArticol));
-
+		/*
+		 * articolPret.setPret(generatePret()); articolPret.setUm("BUC");
+		 * articolPret.setPermiteDiscount(true);
+		 * articolPret.setPretLista(generatePret());
+		 * articolPret.setCantitate(5); articolPret.setConditiiPret(
+		 * "Conditii pret"); articolPret.setMultiplu(1);
+		 * articolPret.setCantUmBaza(1); articolPret.setUmBaza("BUC");
+		 * articolPret.setImpachetare("PAK"); articolPret.setCmp(new
+		 * HelperArticole().getCmpArticol(filiala, codArticol));
+		 * articolPret.setPretCuDiscount(articolPret.getPret() / 95);
+		 * articolPret.setPretLista(articolPret.getPret() * 1.2);
+		 * articolPret.setProcReducereCmp(new
+		 * HelperArticole().getProcentRedCmp(codArticol));
+		 * articolPret.setProcenteDiscount(new
+		 * HelperArticole().getProcenteDiscount(filiala, departament,
+		 * codArticol));
+		 */
 		return articolPret;
 
+	}
+
+	public ArticolPret getPret(CautaPret cautaPret) {
+
+		ArticolPret articolPret;
+
+		articolPret = new SapServices().getPretArticol(cautaPret);
+
+		articolPret.setCmp(new HelperArticole().getCmpArticol(cautaPret.getCodArticol(), cautaPret.getFiliala()));
+		articolPret.setProcReducereCmp(new HelperArticole().getProcentRedCmp(cautaPret.getCodArticol()));
+		articolPret.setInfoArticolDesc(new HelperArticole().getInfoArticolText(articolPret.getInfoArticol()));
+
+		Discount discount = new HelperArticole().getProcenteDiscount(cautaPret.getFiliala(), cautaPret.getDepartament(), cautaPret.getCodArticol());
+
+		articolPret.setProcenteDiscount(discount);
+
+		return articolPret;
 	}
 
 	public static int generatePret() {

@@ -140,5 +140,10 @@
 	</div>
 
 	<div id="userbean" style="visibility: hidden">${userjson}</div>
+
+
+	<script
+		src="<c:url value="/resources/helper_scritps/helper_livrare.js" />"></script>
+
 </body>
 </html>

@@ -62,7 +62,6 @@ public class MainMenuController {
 		return model;
 	}
 
-	
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
 	public ModelAndView executeMainMenu(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -79,8 +78,7 @@ public class MainMenuController {
 
 		return model;
 	}
-	
-	
+
 	@RequestMapping(value = "/stocuri", method = RequestMethod.GET)
 	public ModelAndView executeStocuri(HttpServletRequest request, HttpServletResponse response) throws IOException {
 

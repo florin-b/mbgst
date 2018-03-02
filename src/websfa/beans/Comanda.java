@@ -12,6 +12,8 @@ public class Comanda {
 	private double totalComanda;
 	private String idCmd;
 	private String idCmdSap;
+	private String codDepart;
+	private String tipUser;
 	private DateLivrare dateLivrare;
 	List<ArticolComanda> listArticole;
 
@@ -95,11 +97,27 @@ public class Comanda {
 		this.idCmd = idCmd;
 	}
 
+	public String getCodDepart() {
+		return codDepart;
+	}
+
+	public void setCodDepart(String codDepart) {
+		this.codDepart = codDepart;
+	}
+
+	public String getTipUser() {
+		return tipUser;
+	}
+
+	public void setTipUser(String tipUser) {
+		this.tipUser = tipUser;
+	}
+
 	@Override
 	public String toString() {
 		return "Comanda [codClient=" + codClient + ", codAgent=" + codAgent + ", unitLog=" + unitLog + ", aprobaSD=" + aprobaSD + ", aprobaDV=" + aprobaDV
-				+ ", totalComanda=" + totalComanda + ", idCmd=" + idCmd + ", idCmdSap=" + idCmdSap + ", dateLivrare=" + dateLivrare + ", listArticole="
-				+ listArticole + "]";
+				+ ", totalComanda=" + totalComanda + ", idCmd=" + idCmd + ", idCmdSap=" + idCmdSap + ", codDepart=" + codDepart + ", tipUser=" + tipUser
+				+ ", dateLivrare=" + dateLivrare + ", listArticole=" + listArticole + "]";
 	}
 
 }

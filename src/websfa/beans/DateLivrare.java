@@ -104,6 +104,10 @@ public class DateLivrare {
 	}
 
 	public String getObsLivrare() {
+
+		if (obsLivrare == null || obsLivrare.isEmpty())
+			return " ";
+		
 		return obsLivrare;
 	}
 

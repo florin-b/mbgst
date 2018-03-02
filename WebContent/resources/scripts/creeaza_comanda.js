@@ -5,9 +5,6 @@ var globalDetaliiClient;
 
 $(document).on('pagebeforeshow', '#crearecomanda', function() {
 
-	// $('#select_client_div').css('margin-left', '10px');
-	// $('#select_client_div').css('margin-right', '20px');
-
 });
 
 $(document).on('pageshow', '#crearecomanda', function() {
@@ -21,8 +18,10 @@ $(document).on('pagecreate', '#crearecomanda', function() {
 	$('#select_client_div').bind('collapsibleexpand', function(data) {
 
 		$("#alegeClntDiv").hide();
-		
+
 	});
+
+	$("#selectArticoleDiv").on("onShowArticoleDiv", clearScreenArticole);
 
 });
 
@@ -135,7 +134,7 @@ function afisDetaliiClient(detaliiClient) {
 		width : "100%",
 		border : "0",
 
-	}).addClass("detaliiTable");
+	}).addClass("clientDetTable");
 
 	$('#clientTable tbody').remove();
 
@@ -195,8 +194,6 @@ function afisDetaliiClient(detaliiClient) {
 
 	globalDetaliiClient = detaliiClient;
 
-	$('#client' + detaliiClient.cod).css('background-color', '#FFFFF2');
-
 	$(clientTable).appendTo($('#client' + detaliiClient.cod));
 
 }
@@ -211,7 +208,7 @@ function selecteazaClient(client) {
 
 	if ($('#divClient').css('display') == 'none')
 		$('#divClient').show();
-	
+
 	afisSalveazaCmdButton();
 
 	resetSelectOptions();
@@ -233,6 +230,7 @@ $('#creare_comanda_select').on('change', function() {
 		$('#selectClientDiv').show();
 
 	} else if (selectId == 2) {
+		$("#selectArticoleDiv").trigger("onShowArticoleDiv");
 		$('#selectArticoleDiv').show();
 
 	} else if (selectId == 3) {
@@ -258,7 +256,7 @@ function resetCmdData() {
 	listaArticole = "";
 	$("#art_table_body").empty();
 
-	$('#numeJudet').val("");
+	$('#codJudet').val("00").change();
 	$('#localitate').val("");
 	$('#strada').val("");
 	$('#persContact').val("");

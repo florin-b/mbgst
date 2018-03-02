@@ -1,14 +1,17 @@
-package websfa.model.articole;
+package websfa.helpers;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import websfa.beans.Discount;
 import websfa.database.connection.DBManager;
 import websfa.queries.articole.SqlQueries;
+import websfa.utils.ArticoleUtils;
 
 public class HelperArticole {
 
@@ -41,14 +44,14 @@ public class HelperArticole {
 		return discount;
 	}
 
-	public double getCmpArticol(String codArticol, String filiala) {
+	public BigDecimal getCmpArticol(String codArticol, String filiala) {
 		double cmp = 0;
 
 		try (Connection conn = new DBManager().getTestDataSource().getConnection();
 				PreparedStatement stmt = conn.prepareStatement(SqlQueries.getCmpArticol())) {
 
 			stmt.clearParameters();
-			stmt.setString(1, codArticol);
+			stmt.setString(1, ArticoleUtils.formatCodArticol(codArticol));
 			stmt.setString(2, filiala);
 
 			stmt.executeQuery();
@@ -63,7 +66,7 @@ public class HelperArticole {
 			e.printStackTrace();
 		}
 
-		return cmp;
+		return BigDecimal.valueOf(cmp);
 	}
 
 	public double getPretMediu(String codArticol, String filiala) {
@@ -99,7 +102,7 @@ public class HelperArticole {
 		return pretMediu.doubleValue();
 	}
 
-	public double getProcentRedCmp(String codArticol) {
+	public BigDecimal getProcentRedCmp(String codArticol) {
 		double procentReducere = 0;
 
 		try (Connection conn = new DBManager().getTestDataSource().getConnection();
@@ -124,7 +127,51 @@ public class HelperArticole {
 			e.printStackTrace();
 		}
 
-		return procentReducere;
+		return BigDecimal.valueOf(procentReducere);
+	}
+
+	public List<String> getInfoArticolText(String infoArticolCod) {
+
+		List<String> infoArticolList = new ArrayList<>();
+
+		String[] artZone = infoArticolCod.split(";");
+
+		for (int i = 0; i < artZone.length; i++) {
+			String[] artToken = artZone[i].split(":");
+
+			try (Connection conn = new DBManager().getTestDataSource().getConnection();
+					PreparedStatement stmt = conn.prepareStatement(SqlQueries.getInfoArticolDesc())) {
+
+				stmt.clearParameters();
+				stmt.setString(1, artToken[0]);
+				stmt.executeQuery();
+
+				ResultSet rs = stmt.getResultSet();
+
+				while (rs.next()) {
+
+					String infoArt = rs.getString(1) + "#" + artToken[1] + "#" + artToken[2];
+					infoArticolList.add(infoArt);
+
+				}
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+
+		}
+
+		return infoArticolList;
+	}
+
+	public static String formatCodArt(String codArt) {
+
+		if (codArt.length() == 8)
+			return "0000000000" + codArt;
+
+		return codArt;
+
 	}
 
 }

@@ -1,6 +1,12 @@
-package websfa.helper.user;
+package websfa.helpers;
 
-public class UserHelper {
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import websfa.queries.user.UserSqlQueries;
+
+public class HelperUser {
 
 	public static String getLogonStatus(int msgId) {
 
@@ -137,5 +143,30 @@ public class UserHelper {
 		return fl;
 
 	}
+	
+	
+	public static String getDepartAngajat(Connection conn, String angajatId) {
+
+		String codDepart = null;
+
+		try (PreparedStatement stmt = conn.prepareStatement(UserSqlQueries.getCodDepart())) {
+
+			stmt.setString(1, angajatId);
+			stmt.executeQuery();
+
+			ResultSet rs = stmt.getResultSet();
+
+			while (rs.next()) {
+				codDepart = rs.getString("divizie");
+			}
+
+		} catch (Exception ex) {
+			System.out.println(ex.toString());
+		}
+
+		return codDepart;
+	}
+	
+	
 
 }

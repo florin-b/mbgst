@@ -12,6 +12,9 @@ $(document).on('pageshow', '#modifcmd', function() {
 
 	userObj = JSON.parse($('#userbean').text());
 
+	initHeaderDateGen();
+	initHeaderDateLivrare();
+
 	getComenziModificare();
 
 });
@@ -208,7 +211,13 @@ function afiseazaComandaModif(comanda) {
 
 function afiseazaArticoleComanda(listArticole) {
 
+	var swatch = [ '#f2f2f2', '#FFF0F5' ];
+
 	$('#articoleTable tbody').remove();
+
+	$('#listArticoleModif').empty();
+
+	var ulArticole = $('#listArticoleModif');
 
 	if (listArticole != null && listArticole.length > 0)
 		$('#opereazaCmdDiv').show();
@@ -223,7 +232,7 @@ function afiseazaArticoleComanda(listArticole) {
 			bgColor = '#f2f2f2';
 
 		var mytable = $('<table></table>').attr({
-			id : "rowTable" + listArticole[i].codArticol,
+			id : "rowTable" + listArticole[i].cod,
 			width : "100%",
 			border : "0",
 			bgcolor : bgColor
@@ -233,11 +242,11 @@ function afiseazaArticoleComanda(listArticole) {
 		var row = $('<tr></tr>').appendTo(mytable);
 		$('<td></td>').attr('style', 'width:3%').text((i + 1) + '').appendTo(
 				row);
-		$('<td></td>').attr('style', 'width:50%').text(
-				listArticole[i].numeArticol).appendTo(row);
+		$('<td></td>').attr('style', 'width:50%').text(listArticole[i].nume)
+				.appendTo(row);
 		$('<td></td>').attr({
 			style : 'align:right;text-align:right;',
-			id : 'cantArt' + listArticole[i].codArticol
+			id : 'cantArt' + listArticole[i].cod
 		}).text(listArticole[i].cantitate).appendTo(row);
 
 		$('<td></td>').attr('style', 'width:5%').text(listArticole[i].um)
@@ -245,12 +254,12 @@ function afiseazaArticoleComanda(listArticole) {
 
 		row = $('<tr></tr>').appendTo(mytable);
 		$('<td></td>').attr('style', 'width:3%').appendTo(row);
-		$('<td></td>').attr('style', 'width:50%').text(
-				listArticole[i].codArticol).appendTo(row);
+		$('<td></td>').attr('style', 'width:50%').text(listArticole[i].cod)
+				.appendTo(row);
 
 		$('<td></td>').attr({
 			style : 'width:10%;text-align:right;',
-			id : 'pretArt' + listArticole[i].codArticol
+			id : 'pretArt' + listArticole[i].cod
 
 		}).text(listArticole[i].pretUnitar).appendTo(row);
 		$('<td></td>').attr('style', 'width:5%').text("RON").appendTo(row);
@@ -275,7 +284,7 @@ function afiseazaArticoleComanda(listArticole) {
 		$('<td></td>').attr('style', 'width:50%').appendTo(row);
 		$('<td></td>').attr({
 			style : 'width:10%;text-align:right;',
-			id : 'procArt' + listArticole[i].codArticol
+			id : 'procArt' + listArticole[i].cod
 		}).text(listArticole[i].procentReducere).appendTo(row);
 
 		$('<td></td>').attr('style', 'width:5%').text("%").appendTo(row);
@@ -284,7 +293,7 @@ function afiseazaArticoleComanda(listArticole) {
 		$('<td></td>').attr('style', 'width:5%').appendTo(row);
 
 		row = $('<tr></tr>', {
-			id : 'rowCondCant' + listArticole[i].codArticol,
+			id : 'rowCondCant' + listArticole[i].cod,
 			style : 'color:red'
 
 		});
@@ -303,7 +312,7 @@ function afiseazaArticoleComanda(listArticole) {
 				.appendTo(row);
 
 		row = $('<tr></tr>', {
-			id : 'rowCondVal' + listArticole[i].codArticol,
+			id : 'rowCondVal' + listArticole[i].cod,
 			style : 'color:red'
 
 		});
@@ -321,7 +330,7 @@ function afiseazaArticoleComanda(listArticole) {
 		$('<td></td>').attr('style', 'width:3%').text("RON").appendTo(row);
 
 		row = $('<tr></tr>', {
-			id : 'rowSaveCond' + listArticole[i].codArticol
+			id : 'rowSaveCond' + listArticole[i].cod
 
 		});
 
@@ -345,7 +354,13 @@ function afiseazaArticoleComanda(listArticole) {
 		$(btnSaveConditii).appendTo(tdSaveCond);
 		tdSaveCond.appendTo(row);
 
-		$(mytable).appendTo('#articoleTable');
+		// $(mytable).appendTo('#articoleTable');
+
+		var articol = $('<li></li>', {
+			html : mytable
+		}).css("background-color", swatch[i / 2]);
+
+		$(ulArticole).append(articol);
 
 		calculeazaTotalCmdModificare();
 
@@ -382,20 +397,20 @@ function acceptaConditii(articol) {
 function setConditiiVisibility(isVisible, articol) {
 
 	if (isVisible) {
-		$('#rowCondCant' + articol.codArticol).show();
-		$('#rowCondVal' + articol.codArticol).show();
-		$('#rowSaveCond' + articol.codArticol).show();
+		$('#rowCondCant' + articol.cod).show();
+		$('#rowCondVal' + articol.cod).show();
+		$('#rowSaveCond' + articol.cod).show();
 	} else {
-		$('#rowCondCant' + articol.codArticol).hide();
-		$('#rowCondVal' + articol.codArticol).hide();
-		$('#rowSaveCond' + articol.codArticol).hide();
+		$('#rowCondCant' + articol.cod).hide();
+		$('#rowCondVal' + articol.cod).hide();
+		$('#rowSaveCond' + articol.cod).hide();
 	}
 
 }
 
 function acceptaConditiiCantitative(articol) {
 	articol.cantitate = articol.conditiiCant;
-	var idCant = '#cantArt' + articol.codArticol;
+	var idCant = '#cantArt' + articol.cod;
 	$(idCant).text(articol.cantitate);
 	articol.conditiiCant = 0;
 
@@ -408,12 +423,12 @@ function acceptaConditiiValorice(articol) {
 	var newProcRed = (1 - articol.conditiiVal / pretInit) * 100;
 	articol.procentReducere = newProcRed.toFixed(2);
 
-	var idProc = '#procArt' + articol.codArticol;
+	var idProc = '#procArt' + articol.cod;
 
 	$(idProc).text(articol.procentReducere);
 
 	articol.pretUnitar = articol.conditiiVal;
-	var idPret = '#pretArt' + articol.codArticol;
+	var idPret = '#pretArt' + articol.cod;
 	$(idPret).text(articol.pretUnitar);
 	articol.conditiiVal = 0;
 
@@ -423,7 +438,7 @@ function eliminaArticol(articol) {
 
 	for (var i = 0; i < globalListArticole.length; i++) {
 
-		if (globalListArticole[i].codArticol == articol.codArticol) {
+		if (globalListArticole[i].cod == articol.cod) {
 			globalListArticole.splice(i, 1);
 			break;
 		}
@@ -450,16 +465,16 @@ function calculeazaTotalCmdModificare() {
 
 function setConditiiInputVisibility(articol) {
 
-	var rowCondCant = '#rowCondCant' + articol.codArticol;
-	var rowCondVal = '#rowCondVal' + articol.codArticol;
-	var rowSaveCond = '#rowSaveCond' + articol.codArticol;
+	var rowCondCant = '#rowCondCant' + articol.cod;
+	var rowCondVal = '#rowCondVal' + articol.cod;
+	var rowSaveCond = '#rowSaveCond' + articol.cod;
 
 	if ($(rowCondCant).css('display') == 'none') {
 		$(rowCondCant).show();
 		$(rowCondVal).show();
 		$(rowSaveCond).show();
-		$('#rowCondCantImpuse' + articol.codArticol).hide();
-		$('#rowCondValImpuse' + articol.codArticol).hide();
+		$('#rowCondCantImpuse' + articol.cod).hide();
+		$('#rowCondValImpuse' + articol.cod).hide();
 	} else {
 		$(rowCondCant).hide();
 		$(rowCondVal).hide();
@@ -475,24 +490,24 @@ function setConditiiAfisVisibility(articol) {
 
 	if (isFinite(articol.conditiiCant) && articol.conditiiCant > 0) {
 
-		$('#tdCondCant' + articol.codArticol).text(articol.conditiiCant);
-		$('#rowCondCantImpuse' + articol.codArticol).show();
+		$('#tdCondCant' + articol.cod).text(articol.conditiiCant);
+		$('#rowCondCantImpuse' + articol.cod).show();
 
 	} else {
 		articol.conditiiCant = 0;
-		$('#tdCondCant' + articol.codArticol).text('');
-		$('#rowCondCantImpuse' + articol.codArticol).hide();
+		$('#tdCondCant' + articol.cod).text('');
+		$('#rowCondCantImpuse' + articol.cod).hide();
 	}
 
 	if (isFinite(articol.conditiiVal) && articol.conditiiVal > 0) {
 
-		$('#tdCondVal' + articol.codArticol).text(articol.conditiiVal);
-		$('#rowCondValImpuse' + articol.codArticol).show();
+		$('#tdCondVal' + articol.cod).text(articol.conditiiVal);
+		$('#rowCondValImpuse' + articol.cod).show();
 
 	} else {
 		articol.conditiiVal = 0;
-		$('#tdCondVal' + articol.codArticol).text('');
-		$('#rowCondValImpuse' + articol.codArticol).hide();
+		$('#tdCondVal' + articol.cod).text('');
+		$('#rowCondValImpuse' + articol.cod).hide();
 	}
 
 }
@@ -550,6 +565,8 @@ $("#salveazaCmdModif").click(function() {
 	comanda.aprobaDV = aprobaDV;
 	comanda.unitLog = comandaCurenta.unitLog;
 	comanda.idCmdSap = comandaCurenta.idComandaSAP;
+	comanda.codDepart = userObj.codDepart;
+	comanda.tipUser = userObj.tipAngajat;
 	comanda.idCmd = $("#cmd_modif_select option:selected").val();
 	comanda.dateLivrare = getDateLivrareModifCmd(comandaCurenta.dateLivrare);
 	comanda.listArticole = comandaCurenta.listArticole;
@@ -603,6 +620,99 @@ $("#stergeCmdModif").click(function() {
 	$.mobile.loading('hide');
 
 });
+
+function initHeaderDateGen() {
+
+	$('#dateGenTable').hide();
+
+	var dateGenTable = $('<table></table>').attr({
+		width : "100%",
+		border : "0"
+
+	})
+
+	var row = $('<tr></tr>').appendTo(dateGenTable);
+
+	$('<td></td>').attr('style', 'width:3%').attr({
+		style : 'align:left;'
+		
+	}).text('Date generale').css('color', '#008B00').css("font-weight","bold").appendTo(row);
+
+	var tdBtn = $('<td></td>').attr('style', 'width:3%').attr({
+		style : 'text-align:right'
+	}).appendTo(row);
+
+	var btnToogleDateGen = $('<img></img>', {
+		id : 'toggleDateGenBtn',
+		src : 'resources/images/plus_black.png'
+	}).attr('data-role', 'button').bind('click', {
+
+	}, function() {
+		toggleDateGen();
+	});
+
+	$(btnToogleDateGen).appendTo(tdBtn);
+
+	$(dateGenTable).appendTo($('#headerDateGen'));
+
+}
+
+function toggleDateGen() {
+	$('#dateGenTable').toggle();
+
+	if ($("#dateGenTable").is(":hidden"))
+		$('#toggleDateGenBtn').attr("src", "resources/images/plus_black.png");
+	else
+		$('#toggleDateGenBtn').attr("src", "resources/images/minus_black.png");
+
+}
+
+
+function initHeaderDateLivrare() {
+
+	$('#dateLivrareModifTable').hide();
+
+	var dateLivrTable = $('<table></table>').attr({
+		width : "100%",
+		border : "0"
+
+	})
+
+	var row = $('<tr></tr>').appendTo(dateLivrTable);
+
+	$('<td></td>').attr('style', 'width:3%').attr({
+		style : 'align:left;'
+		
+	}).text('Date livrare').css('color', '#008B00').css("font-weight","bold").appendTo(row);
+
+	var tdBtn = $('<td></td>').attr('style', 'width:3%').attr({
+		style : 'text-align:right'
+	}).appendTo(row);
+
+	var btnToogleDateLivr = $('<img></img>', {
+		id : 'toggleDateLivrBtn',
+		src : 'resources/images/plus_black.png'
+	}).attr('data-role', 'button').bind('click', {
+
+	}, function() {
+		toggleDateLivrare();
+	});
+
+	$(btnToogleDateLivr).appendTo(tdBtn);
+
+	$(dateLivrTable).appendTo($('#headerDateLivrare'));
+
+}
+
+function toggleDateLivrare() {
+	$('#dateLivrareModifTable').toggle();
+
+	if ($("#dateLivrareModifTable").is(":hidden"))
+		$('#toggleDateLivrBtn').attr("src", "resources/images/plus_black.png");
+	else
+		$('#toggleDateLivrBtn').attr("src", "resources/images/minus_black.png");
+
+}
 
 function showAlertStatusModificare(statusModificare) {
 

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import websfa.beans.Login;
 import websfa.beans.User;
 import websfa.database.connection.DBManager;
-import websfa.helper.user.UserHelper;
+import websfa.helpers.HelperUser;
 import websfa.queries.user.UserSqlQueries;
 import websfa.utils.MailOperations;
 import websfa.utils.Utils;
@@ -43,6 +43,7 @@ public class UserDAO {
 			if (logonStatus == 3) {
 
 				user.setFiliala(callableStatement.getString(5));
+				
 				String codAgent = callableStatement.getString(8);
 
 				for (int i = 0; i < 8 - callableStatement.getString(8).length(); i++) {
@@ -52,22 +53,25 @@ public class UserDAO {
 				user.setCodPers(codAgent);
 				user.setNume(getNumeAngajat(conn, codAgent));
 				user.setTipAcces(callableStatement.getString(6));
-				user.setUnitLog(UserHelper.getUnitLog(user.getFiliala()));
-				user.setTipAngajat(getTipAngajat(conn, codAgent));
-				String codDepart = UserHelper.getCodDepart(callableStatement.getString(4));
+				user.setUnitLog(callableStatement.getString(5));
+				//user.setTipAngajat(getTipAngajat(conn, codAgent));
+				user.setTipAngajat("AV");
+				String codDepart = HelperUser.getDepartAngajat(conn, codAgent);
 
 				user.setCodDepart(codDepart);
 				user.setSuccessLogon(true);
 
+				
+				
 			} else {
 				user.setSuccessLogon(false);
-				user.setLogonMessage(UserHelper.getLogonStatus(logonStatus));
+				user.setLogonMessage(HelperUser.getLogonStatus(logonStatus));
 			}
 		} catch (SQLException e) {
 
 			MailOperations.sendMail(Utils.getStackTrace(e));
 			user.setSuccessLogon(false);
-			user.setLogonMessage(UserHelper.getLogonStatus(logonStatus));
+			user.setLogonMessage(HelperUser.getLogonStatus(logonStatus));
 
 			return user;
 

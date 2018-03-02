@@ -9,7 +9,7 @@ public class ComandaModificareDetalii {
 	private double valoare;
 	private String numeClient;
 	private String dataEmitere;
-	private List<ArticolCmdModif> listArticole;
+	private List<ArticolComanda> listArticole;
 	private DateLivrare dateLivrare;
 	private String codClient;
 	private String unitLog;
@@ -55,11 +55,11 @@ public class ComandaModificareDetalii {
 		this.dataEmitere = dataEmitere;
 	}
 
-	public List<ArticolCmdModif> getListArticole() {
+	public List<ArticolComanda> getListArticole() {
 		return listArticole;
 	}
 
-	public void setListArticole(List<ArticolCmdModif> listArticole) {
+	public void setListArticole(List<ArticolComanda> listArticole) {
 		this.listArticole = listArticole;
 	}
 
