@@ -466,15 +466,15 @@ function trateazaArticol(articolSelectat) {
 	articolSelectat.cantitate = $(idTextCant).val();
 	articolSelectat.pretUnitar = $(idTextPret).val();
 
-	articolSelectat.procentReducere = $(idTextProcent).val().trim() == '' ? '0' : $(
-			idTextProcent).val();
+	articolSelectat.procentReducere = $(idTextProcent).val().trim() == '' ? '0'
+			: $(idTextProcent).val();
 	articolSelectat.depozit = departArticol + $('#select-depoz').val();
 
 	articolSelectat.procentFact = getProcentFact(articolSelectat);
 	articolSelectat.procentAprob = getProcentAprob(articolSelectat);
 	articolSelectat.valoareArticol = getValoareArticol(articolSelectat);
 
-	if (articolSelectat.procent > 0) {
+	if (articolSelectat.procentReducere > 0) {
 		aprobaSD = true;
 		aprobaDV = true;
 	}
@@ -500,6 +500,7 @@ function adaugaArticol(articolSelectat, poz) {
 	$(ulArticole).append(articol);
 
 	calculeazaTotalCmdCreare();
+	afisSalveazaCmdButton();
 
 }
 
@@ -586,7 +587,8 @@ function calculeazaTotalCmdCreare() {
 
 	var totalComanda = 0;
 	for (var i = 0; i < listaArticole.length; i++) {
-		totalComanda += listaArticole[i].pretUnitar * listaArticole[i].cantitate;
+		totalComanda += listaArticole[i].pretUnitar
+				* listaArticole[i].cantitate;
 
 	}
 
@@ -650,7 +652,7 @@ function afisSalveazaCmdButton() {
 function hidePageSections() {
 	$('#divClient').hide();
 	$('#divArticole').hide();
-	$('#divDateLivrare').hide()
+	$('#divDateLivrare').hide();
 	$('#divSalveazaComanda').hide();
 	$("#creare_comanda_select").val(0).change();
 }
@@ -658,6 +660,8 @@ function hidePageSections() {
 $('#salveazaComanda').click(function() {
 
 	var comanda = new Object();
+
+	$.mobile.loading('show');
 
 	comanda.codClient = globalDetaliiClient.cod;
 	comanda.codAgent = userObj.codPers;
@@ -670,10 +674,10 @@ $('#salveazaComanda').click(function() {
 	comanda.listArticole = getArticoleComanda(listaArticole);
 	comanda.totalComanda = $('#divTotalCmd').data('totalCmd');
 
-	if (!valideazaComandaNoua(comanda))
+	if (!valideazaComandaNoua(comanda)) {
+		$.mobile.loading('hide');
 		return;
-
-	$.mobile.loading('show');
+	}
 
 	$.ajax({
 		type : 'POST',
@@ -685,10 +689,6 @@ $('#salveazaComanda').click(function() {
 		},
 		dataType : 'json',
 		contentType : 'application/json',
-
-		error : function() {
-
-		}
 
 	});
 

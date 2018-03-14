@@ -1,5 +1,7 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ page language="java" contentType="text/html;" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@page language="java" contentType="text/html; " pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,6 +18,7 @@
 
 <script
 	src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
 
 </head>
 <body>
@@ -43,12 +46,28 @@
 				<input type="submit" value="Login" />
 				<br>
 				<div id='logStatus'>${infoMsg}</div>
+
+				<div id="redirectUrl">${redirectUrl}</div>
+
+				<script type="text/javascript">
+					var redirect = '${redirectUrl}';
+
+					if (redirect) {
+						window.location.replace(window.location.origin
+								+ window.location.pathname.substr(0,
+										window.location.pathname
+												.lastIndexOf('/')) + redirect);
+					}
+				</script>
+
 			</form:form>
 		</div>
 	</div>
+
+
+	<script src="<c:url value="/resources/scripts/login.js" />"></script>
+
 </body>
-
-
 
 
 

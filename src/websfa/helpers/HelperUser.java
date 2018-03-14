@@ -4,9 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import websfa.queries.user.UserSqlQueries;
+import websfa.utils.Utils;
 
 public class HelperUser {
+
+	private static final Logger logger = LogManager.getLogger(HelperUser.class);
 
 	public static String getLogonStatus(int msgId) {
 
@@ -88,63 +94,6 @@ public class HelperUser {
 
 	}
 
-	public static String getUnitLog(String numeFiliala) {
-		String fl = "NN10";
-
-		if (numeFiliala.equals("BACAU"))
-			fl = "BC10";
-		else if (numeFiliala.equals("BUZAU"))
-			fl = "BZ10";
-		else if (numeFiliala.equals("GALATI"))
-			fl = "GL10";
-		else if (numeFiliala.equals("PITESTI"))
-			fl = "AG10";
-		else if (numeFiliala.equals("TIMISOARA"))
-			fl = "TM10";
-		else if (numeFiliala.equals("ORADEA"))
-			fl = "BH10";
-		else if (numeFiliala.equals("FOCSANI"))
-			fl = "VN10";
-		else if (numeFiliala.equals("GLINA"))
-			fl = "BU10";
-		else if (numeFiliala.equals("ANDRONACHE"))
-			fl = "BU13";
-		else if (numeFiliala.equals("OTOPENI"))
-			fl = "BU12";
-		else if (numeFiliala.equals("CLUJ"))
-			fl = "CJ10";
-		else if (numeFiliala.equals("BAIA"))
-			fl = "MM10";
-		else if (numeFiliala.equals("MILITARI"))
-			fl = "BU11";
-		else if (numeFiliala.equals("CONSTANTA"))
-			fl = "CT10";
-		else if (numeFiliala.equals("BRASOV"))
-			fl = "BV10";
-		else if (numeFiliala.equals("PLOIESTI"))
-			fl = "PH10";
-		else if (numeFiliala.equals("PIATRA"))
-			fl = "NT10";
-		else if (numeFiliala.equals("MURES"))
-			fl = "MS10";
-		else if (numeFiliala.equals("IASI"))
-			fl = "IS10";
-		else if (numeFiliala.equals("CRAIOVA"))
-			fl = "DJ10";
-		else if (numeFiliala.equals("SIBIU"))
-			fl = "SB10";
-		else if (numeFiliala.equals("DEVA"))
-			fl = "HD10";
-		else if (numeFiliala.equals("GL_CENTRAL"))
-			fl = "GL90";
-		else if (numeFiliala.equals("TOATE"))
-			fl = "BU90";
-
-		return fl;
-
-	}
-	
-	
 	public static String getDepartAngajat(Connection conn, String angajatId) {
 
 		String codDepart = null;
@@ -161,12 +110,10 @@ public class HelperUser {
 			}
 
 		} catch (Exception ex) {
-			System.out.println(ex.toString());
+			logger.error(Utils.getStackTrace(ex));
 		}
 
 		return codDepart;
 	}
-	
-	
 
 }

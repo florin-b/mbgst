@@ -511,6 +511,7 @@ $("#aprobaCmd").click(
 
 			comandaCurenta.listConditii = listConditii;
 			comandaCurenta.seAproba = true;
+			comandaCurenta.codAngajat = userObj.codPers;
 
 			callService(comandaCurenta);
 
@@ -519,6 +520,7 @@ $("#aprobaCmd").click(
 $("#respingeCmd").click(function() {
 	comandaCurenta.listConditii = [];
 	comandaCurenta.seAproba = false;
+	comandaCurenta.codAngajat = userObj.codPers;
 	callService(comandaCurenta);
 });
 

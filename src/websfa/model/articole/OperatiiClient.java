@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import websfa.beans.CautareClient;
 import websfa.beans.ClientLite;
 import websfa.beans.DetaliiClient;
@@ -15,9 +18,12 @@ import websfa.beans.articole.Adresa;
 import websfa.database.connection.DBManager;
 import websfa.enums.EnumRegiuniBG;
 import websfa.queries.user.ClientSqlQueries;
+import websfa.utils.Utils;
 
 public class OperatiiClient {
 
+	private static final Logger logger = LogManager.getLogger(OperatiiClient.class);
+	
 	public List<ClientLite> getClient(CautareClient cautareClient) {
 
 		List<ClientLite> listClienti = new ArrayList<>();
@@ -41,8 +47,7 @@ public class OperatiiClient {
 			}
 
 		} catch (SQLException e) {
-
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return listClienti;
@@ -58,8 +63,7 @@ public class OperatiiClient {
 			detaliiClient.setStareClient(getStareClient(conn, codClient));
 
 		} catch (SQLException e) {
-
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return detaliiClient;
@@ -86,7 +90,7 @@ public class OperatiiClient {
 
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return adresa;
@@ -114,7 +118,7 @@ public class OperatiiClient {
 
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return stareClient;

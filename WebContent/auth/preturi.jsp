@@ -52,7 +52,7 @@
 		
 		<div data-role="header" data-theme="a">
 			<h1>Preturi</h1>
-			<a href="main"  data-theme="d" data-icon="arrow-l"
+			<a href="main" data-ajax="false" data-theme="d" data-icon="arrow-l"
 				data-iconpos="notext" data-shadow="true" data-iconshadow="true"
 				class="ui-icon-nodisc"></a>
 		</div>

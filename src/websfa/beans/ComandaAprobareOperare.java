@@ -6,7 +6,7 @@ public class ComandaAprobareOperare {
 
 	private String id;
 	private String nrCmdSap;
-	private String codAngaj;
+	private String codAngajat;
 	private List<ArticolSimplu> listConditii;
 	private boolean seAproba;
 
@@ -26,14 +26,6 @@ public class ComandaAprobareOperare {
 		this.nrCmdSap = nrCmdSap;
 	}
 
-	public String getCodAngaj() {
-		return codAngaj;
-	}
-
-	public void setCodAngaj(String codAngaj) {
-		this.codAngaj = codAngaj;
-	}
-
 	public List<ArticolSimplu> getListConditii() {
 		return listConditii;
 	}
@@ -50,12 +42,18 @@ public class ComandaAprobareOperare {
 		this.seAproba = seAproba;
 	}
 
-	@Override
-	public String toString() {
-		return "ComandaAprobareOperare [id=" + id + ", nrCmdSap=" + nrCmdSap + ", codAngaj=" + codAngaj + ", listConditii=" + listConditii + ", seAproba="
-				+ seAproba + "]";
+	public String getCodAngajat() {
+		return codAngajat;
 	}
 
-	
+	public void setCodAngajat(String codAngajat) {
+		this.codAngajat = codAngajat;
+	}
+
+	@Override
+	public String toString() {
+		return "ComandaAprobareOperare [id=" + id + ", nrCmdSap=" + nrCmdSap + ", codAngajat=" + codAngajat + ", listConditii=" + listConditii + ", seAproba="
+				+ seAproba + "]";
+	}
 
 }

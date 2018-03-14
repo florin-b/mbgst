@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -19,6 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
+ *         &lt;element name="ErrorCode" type="{http://www.w3.org/2001/XMLSchema}unsignedByte"/&gt;
  *         &lt;element name="GvCant" type="{urn:sap-com:document:sap:rfc:functions}quantum13.3"/&gt;
  *         &lt;element name="GvCantFree" type="{urn:sap-com:document:sap:rfc:functions}quantum13.3"/&gt;
  *         &lt;element name="GvCond" type="{urn:sap-com:document:sap:rfc:functions}char200"/&gt;
@@ -30,9 +32,13 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="GvNoDisc" type="{urn:sap-com:document:sap:rfc:functions}char1"/&gt;
  *         &lt;element name="GvVrkme" type="{urn:sap-com:document:sap:rfc:functions}unit3"/&gt;
  *         &lt;element name="GvVrkmeFree" type="{urn:sap-com:document:sap:rfc:functions}unit3"/&gt;
+ *         &lt;element name="Impachet" type="{urn:sap-com:document:sap:soap:functions:mc-style}string"/&gt;
  *         &lt;element name="Multiplu" type="{urn:sap-com:document:sap:rfc:functions}quantum13.3"/&gt;
  *         &lt;element name="OutCantUmb" type="{urn:sap-com:document:sap:rfc:functions}quantum13.3"/&gt;
  *         &lt;element name="OutUmb" type="{urn:sap-com:document:sap:rfc:functions}unit3"/&gt;
+ *         &lt;element name="ProcTrap" type="{urn:sap-com:document:sap:soap:functions:mc-style}decimal5.2"/&gt;
+ *         &lt;element name="VMess" type="{urn:sap-com:document:sap:soap:functions:mc-style}char100"/&gt;
+ *         &lt;element name="ValTrap" type="{urn:sap-com:document:sap:rfc:functions}curr15.2"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -43,6 +49,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
+    "errorCode",
     "gvCant",
     "gvCantFree",
     "gvCond",
@@ -54,13 +61,20 @@ import javax.xml.bind.annotation.XmlType;
     "gvNoDisc",
     "gvVrkme",
     "gvVrkmeFree",
+    "impachet",
     "multiplu",
     "outCantUmb",
-    "outUmb"
+    "outUmb",
+    "procTrap",
+    "vMess",
+    "valTrap"
 })
 @XmlRootElement(name = "ZgetPriceResponse")
 public class ZgetPriceResponse {
 
+    @XmlElement(name = "ErrorCode")
+    @XmlSchemaType(name = "unsignedByte")
+    protected short errorCode;
     @XmlElement(name = "GvCant", required = true)
     protected BigDecimal gvCant;
     @XmlElement(name = "GvCantFree", required = true)
@@ -83,12 +97,36 @@ public class ZgetPriceResponse {
     protected String gvVrkme;
     @XmlElement(name = "GvVrkmeFree", required = true)
     protected String gvVrkmeFree;
+    @XmlElement(name = "Impachet", required = true)
+    protected String impachet;
     @XmlElement(name = "Multiplu", required = true)
     protected BigDecimal multiplu;
     @XmlElement(name = "OutCantUmb", required = true)
     protected BigDecimal outCantUmb;
     @XmlElement(name = "OutUmb", required = true)
     protected String outUmb;
+    @XmlElement(name = "ProcTrap", required = true)
+    protected BigDecimal procTrap;
+    @XmlElement(name = "VMess", required = true)
+    protected String vMess;
+    @XmlElement(name = "ValTrap", required = true)
+    protected BigDecimal valTrap;
+
+    /**
+     * Gets the value of the errorCode property.
+     * 
+     */
+    public short getErrorCode() {
+        return errorCode;
+    }
+
+    /**
+     * Sets the value of the errorCode property.
+     * 
+     */
+    public void setErrorCode(short value) {
+        this.errorCode = value;
+    }
 
     /**
      * Gets the value of the gvCant property.
@@ -355,6 +393,30 @@ public class ZgetPriceResponse {
     }
 
     /**
+     * Gets the value of the impachet property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getImpachet() {
+        return impachet;
+    }
+
+    /**
+     * Sets the value of the impachet property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setImpachet(String value) {
+        this.impachet = value;
+    }
+
+    /**
      * Gets the value of the multiplu property.
      * 
      * @return
@@ -424,6 +486,78 @@ public class ZgetPriceResponse {
      */
     public void setOutUmb(String value) {
         this.outUmb = value;
+    }
+
+    /**
+     * Gets the value of the procTrap property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BigDecimal }
+     *     
+     */
+    public BigDecimal getProcTrap() {
+        return procTrap;
+    }
+
+    /**
+     * Sets the value of the procTrap property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BigDecimal }
+     *     
+     */
+    public void setProcTrap(BigDecimal value) {
+        this.procTrap = value;
+    }
+
+    /**
+     * Gets the value of the vMess property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getVMess() {
+        return vMess;
+    }
+
+    /**
+     * Sets the value of the vMess property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setVMess(String value) {
+        this.vMess = value;
+    }
+
+    /**
+     * Gets the value of the valTrap property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BigDecimal }
+     *     
+     */
+    public BigDecimal getValTrap() {
+        return valTrap;
+    }
+
+    /**
+     * Sets the value of the valTrap property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BigDecimal }
+     *     
+     */
+    public void setValTrap(BigDecimal value) {
+        this.valTrap = value;
     }
 
 }

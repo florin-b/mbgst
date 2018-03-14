@@ -174,6 +174,8 @@ function afisDetaliiComanda(detaliiComanda) {
 
 	var dateLivrare = $('<div></div>').append('<br>');
 
+	$(dateLivrare).append(afisdateGeneraleComanda(detaliiComanda.dateGenerale));
+
 	$(dateLivrare).append(afisdateLivrareComanda(detaliiComanda.dateLivrare));
 
 	$(dateLivrare).append(listArticole);
@@ -203,8 +205,7 @@ function afisArticolComanda(articol, poz) {
 			.text(articol.nume).appendTo(row);
 	$('<td></td>').attr({
 		style : 'width:10%;text-align:right;'
-	}).text(articol.cantitate.valoare)
-			.appendTo(row);
+	}).text(articol.cantitate.valoare).appendTo(row);
 	$('<td></td>').text(articol.cantitate.um).appendTo(row);
 
 	row = $('<tr></tr>').appendTo(articoleTable);
@@ -212,8 +213,7 @@ function afisArticolComanda(articol, poz) {
 	$('<td></td>').attr('style', 'width:80%').text(articol.cod).appendTo(row);
 	$('<td></td>').attr({
 		style : 'width:10%;text-align:right;'
-	}).text(articol.pretUnitar)
-			.appendTo(row);
+	}).text(articol.pretUnitar).appendTo(row);
 	$('<td></td>').text('RON').appendTo(row);
 
 	row = $('<tr></tr>').appendTo(articoleTable);
@@ -221,11 +221,35 @@ function afisArticolComanda(articol, poz) {
 	$('<td></td>').text(articol.depozit).appendTo(row);
 	$('<td></td>').attr({
 		style : 'width:10%;text-align:right;'
-	}).text(articol.procReducere)
-			.appendTo(row);
+	}).text(articol.procReducere).appendTo(row);
 	$('<td></td>').text('%').appendTo(row);
 
 	return articoleTable;
+}
+
+function afisdateGeneraleComanda(dateGenerale) {
+
+	var dateGeneraleTable = $('<table></table>').attr({
+		id : "dateLivrareTable",
+		width : "100%",
+		border : "0"
+
+	}).addClass('dateLivrareAfis');
+
+	var row = $('<tr></tr>').appendTo(dateGeneraleTable);
+	$('<td></td>').attr('colspan', '2').attr('style', 'font-weight:bold').text(
+			'Date generale').appendTo(row);
+
+	row = $('<tr></tr>').appendTo(dateGeneraleTable);
+	$('<td></td>').attr('style', 'width:25%').text('Comanda SAP').appendTo(row);
+	$('<td></td>').text(dateGenerale.nrComandaSap).appendTo(row);
+	
+	row = $('<tr></tr>').appendTo(dateGeneraleTable);
+	$('<td></td>').html('<br>').appendTo(row);
+	
+
+	return dateGeneraleTable;
+
 }
 
 function afisdateLivrareComanda(dateLivrare) {
@@ -243,7 +267,8 @@ function afisdateLivrareComanda(dateLivrare) {
 
 	row = $('<tr></tr>').appendTo(dateLivrTable);
 	$('<td></td>').attr('style', 'width:5%').text('Judet').appendTo(row);
-	$('<td></td>').text(getNumeJudet(dateLivrare.adresaLivrare.numeJudet)).appendTo(row);
+	$('<td></td>').text(getNumeJudet(dateLivrare.adresaLivrare.numeJudet))
+			.appendTo(row);
 
 	row = $('<tr></tr>').appendTo(dateLivrTable);
 	$('<td></td>').attr('style', 'width:5%').text('Localitate').appendTo(row);
@@ -339,14 +364,12 @@ function getStareComanda(intStare) {
 	return retVal;
 }
 
-
 $(document).ready(function() {
-    $('#afisMainLink').click(function() {
-        
-       // return false;
-    });
-});
+	$('#afisMainLink').click(function() {
 
+		// return false;
+	});
+});
 
 function showAlertDialogAfisare(tipAlert, mesajAlert) {
 

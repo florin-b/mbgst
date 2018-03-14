@@ -105,16 +105,21 @@ function setColapsibleArticolListenerPret() {
 
 function getPret(codArticol) {
 
+	var cautaPret = new Object();
+	cautaPret.codArticol = codArticol;
+	cautaPret.filiala = userObj.unitLog;
+	cautaPret.departament = userObj.codDepart;
+	cautaPret.codClient = "4110006325"// trebuie schimbat cu unul generic;
+	cautaPret.depozit = " ";
+	cautaPret.cantitate = "1";
+	cautaPret.um = " ";
+
 	$.mobile.loading('show');
 
 	$.ajax({
-		type : 'GET',
+		type : 'POST',
 		url : 'pret',
-		data : ({
-			codArticol : codArticol,
-			filiala : userObj.unitLog,
-			departament : userObj.codDepart
-		}),
+		data : JSON.stringify(cautaPret),
 		success : function(data) {
 			afiseazaPret(codArticol, data);
 			$.mobile.loading('hide');
@@ -122,7 +127,9 @@ function getPret(codArticol) {
 		error : function(exception) {
 			alert('Exeption:' + JSON.stringify(exception));
 			$.mobile.loading('hide');
-		}
+		},
+		dataType : 'json',
+		contentType : 'application/json',
 
 	});
 
@@ -131,7 +138,7 @@ function getPret(codArticol) {
 function afiseazaPret(articolCod, articolPret) {
 
 	var contentId = '#articol' + articolCod;
-	
+
 	$(contentId).html('');
 
 	var pretTable = $('<table></table>').attr({
@@ -149,8 +156,7 @@ function afiseazaPret(articolCod, articolPret) {
 	row = $('<tr></tr>').appendTo(pretTable);
 	$('<td></td>').attr('style', 'width:25%').text(articolPret.pret).appendTo(
 			row);
-	$('<td></td>').text(articolPret.um)
-			.appendTo(row);
+	$('<td></td>').text(articolPret.um).appendTo(row);
 
 	$('<br>').appendTo($(contentId));
 	$(pretTable).appendTo($(contentId));

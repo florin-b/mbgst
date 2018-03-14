@@ -30,7 +30,7 @@
 	overflow: scroll;
 }
 
-#datelivrareTable tbody td, th {
+#datelivrareTable, #dategeneraleTable tbody td, th {
 	color: #68838B;
 	font-weight: normal;
 }
@@ -62,7 +62,7 @@
 
 		<div data-role="header" data-theme="a">
 			<h1>Afisare comanda</h1>
-			<a href="main" id="afisMainLink" data-theme="d" data-icon="arrow-l"
+			<a href="main" data-ajax="false" id="afisMainLink" data-theme="d" data-icon="arrow-l"
 				data-iconpos="notext" data-shadow="true" data-iconshadow="true"
 				class="ui-icon-nodisc"></a>
 		</div>

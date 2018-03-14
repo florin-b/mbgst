@@ -21,6 +21,7 @@
 	<import resource="user-beans.xml" />
 
 	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:default-servlet-handler />
 	<mvc:annotation-driven />
 
 </beans>

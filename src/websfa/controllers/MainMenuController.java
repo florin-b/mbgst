@@ -29,7 +29,7 @@ public class MainMenuController {
 
 	private User user;
 
-	@RequestMapping(value = "/auth/login", method = RequestMethod.GET)
+	@RequestMapping(value = { "/auth/login", "login", "/" }, method = RequestMethod.GET)
 	public ModelAndView displayLogin(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("login");
 		Login login = new Login();
@@ -37,19 +37,18 @@ public class MainMenuController {
 		return model;
 	}
 
-	@RequestMapping(value = "/auth/login", method = RequestMethod.POST)
+	@RequestMapping(value = { "/auth/login", "login", "/" }, method = RequestMethod.POST)
 	public ModelAndView executeLogin(HttpServletRequest request, HttpServletResponse response, @ModelAttribute("login") Login login) {
 
 		ModelAndView model = null;
 		user = loginService.validateUser(login);
-		Gson gson = new GsonBuilder().create();
 
 		try {
 
 			if (user.isSuccessLogon()) {
-				model = new ModelAndView("mainMenu");
-				model.addObject("user", user);
-				model.addObject("userjson", gson.toJson(user));
+				model = new ModelAndView("login");
+				model.addObject("redirectUrl", "/main");
+
 			} else {
 				model = new ModelAndView("login");
 				model.addObject("login", login);
@@ -62,7 +61,7 @@ public class MainMenuController {
 		return model;
 	}
 
-	@RequestMapping(value = "/main", method = RequestMethod.GET)
+	@RequestMapping(value = { "/main" }, method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView executeMainMenu(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		if (user == null) {
@@ -184,7 +183,7 @@ public class MainMenuController {
 	@RequestMapping(value = "/exit", method = RequestMethod.GET)
 	public String executeExit(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		user = null;
-		return "redirect:/auth/login";
+		return "redirect:/login";
 
 	}
 

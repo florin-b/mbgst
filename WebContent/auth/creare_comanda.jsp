@@ -103,7 +103,7 @@ hr {
 
 		<div data-role="header" data-theme="a">
 			<h1>Creare comanda</h1>
-			<a href="main" data-theme="d" data-icon="arrow-l"
+			<a href="main" data-ajax="false" data-theme="d" data-icon="arrow-l"
 				data-iconpos="notext" data-shadow="true" data-iconshadow="true"
 				class="ui-icon-nodisc"></a>
 		</div>
@@ -165,7 +165,7 @@ hr {
 
 				<div class="ui-grid-a">
 					<div class="ui-block-a" style='padding-right: 50px;'>
-						<input id="codArticol" data-type="search" >
+						<input id="codArticol" data-type="search">
 					</div>
 					<div class="ui-block-b" style='padding-left: 50px;'>
 
@@ -277,10 +277,10 @@ hr {
 						<tr>
 							<td>Plata</td>
 							<td><select id="selectPlata">
-									<option value="B">Bilet la ordin</option>
-									<option value="C">Cec</option>
+
 									<option value="E">Plata in numerar</option>
 									<option value="O">Ordin de plata</option>
+									<option value="Z">Incasare ulterioara</option>
 							</select></td>
 						</tr>
 
@@ -296,9 +296,7 @@ hr {
 						<tr>
 							<td>Transport</td>
 							<td><select id="selectTransport">
-									<option value="TRAP">Arabesque</option>
 									<option value="TCLI">Client</option>
-									<option value="TFRN">Furnizor</option>
 							</select></td>
 						</tr>
 
@@ -344,12 +342,14 @@ hr {
 				<ul id='listArticoleCreare' data-role='listview' data-inset='true'></ul>
 
 				<br>
-				<div style="display: inline;">
-					<b>Total comanda </b>
-				</div>
-				<div style="display: inline;" id='divTotalCmd'>
+				<div style="display: inline; float: right;" id='divTotalCmd'>
 					<b>0.00 RON</b>
 				</div>
+
+				<div style="display: inline; float: right; padding-right: 10px">
+					<b>Total comanda </b>
+				</div>
+
 			</div>
 
 			<br> <br>
@@ -476,19 +476,20 @@ hr {
 
 	<div id="userbean" style="visibility: hidden">${userjson}</div>
 
-	<script src="<c:url value="/resources/scripts/creeaza_comanda.js" />"></script>
+	<script
+		src="<c:url value="/resources/scripts/creare_comanda/creeaza_comanda.js" />"></script>
 
 	<script
-		src="<c:url value="/resources/scripts/creeaza_comanda_articole.js" />"></script>
+		src="<c:url value="/resources/scripts/creare_comanda/creeaza_comanda_articole.js" />"></script>
 
 	<script
-		src="<c:url value="/resources/scripts/creeaza_comanda_livrare.js" />"></script>
+		src="<c:url value="/resources/scripts/creare_comanda/creeaza_comanda_livrare.js" />"></script>
 
 	<script
-		src="<c:url value="/resources/scripts/creeaza_comanda_date.js" />"></script>
+		src="<c:url value="/resources/scripts/creare_comanda/creeaza_comanda_date.js" />"></script>
 
 	<script
-		src="<c:url value="/resources/scripts/creeaza_comanda_commons.js" />"></script>
+		src="<c:url value="/resources/scripts/creare_comanda/creeaza_comanda_commons.js" />"></script>
 
 	<script
 		src="<c:url value="/resources/helper_scritps/helper_articole.js" />"></script>

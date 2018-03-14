@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import websfa.beans.CautaPret;
 import websfa.beans.Discount;
 import websfa.beans.articole.Articol;
@@ -17,8 +20,11 @@ import websfa.database.connection.DBManager;
 import websfa.helpers.HelperArticole;
 import websfa.queries.articole.SqlQueries;
 import websfa.soap.model.SapServices;
+import websfa.utils.Utils;
 
 public class OperatiiArticole {
+	
+	private static final Logger logger = LogManager.getLogger(OperatiiArticole.class);
 
 	public List<Articol> cautaArticole(Articol articol) {
 		List<Articol> listArticole = new ArrayList<>();
@@ -50,7 +56,7 @@ public class OperatiiArticole {
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.toString());
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return listArticole;
@@ -85,7 +91,7 @@ public class OperatiiArticole {
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.toString());
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return listArticole;
@@ -118,7 +124,7 @@ public class OperatiiArticole {
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.toString());
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return articolStoc;

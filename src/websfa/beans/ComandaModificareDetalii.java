@@ -14,6 +14,7 @@ public class ComandaModificareDetalii {
 	private String codClient;
 	private String unitLog;
 	private String idStareComanda;
+	private ConditiiComanda conditii;
 
 	public String getIdComanda() {
 		return idComanda;
@@ -94,7 +95,13 @@ public class ComandaModificareDetalii {
 	public void setIdStareComanda(String idStareComanda) {
 		this.idStareComanda = idStareComanda;
 	}
-	
-	
+
+	public ConditiiComanda getConditii() {
+		return conditii;
+	}
+
+	public void setConditii(ConditiiComanda conditii) {
+		this.conditii = conditii;
+	}
 
 }

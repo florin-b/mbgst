@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
+ *         &lt;element name="VMesaj" type="{urn:sap-com:document:sap:soap:functions:mc-style}char100"/&gt;
  *         &lt;element name="VOk" type="{urn:sap-com:document:sap:rfc:functions}char2"/&gt;
  *         &lt;element name="VTrans" type="{urn:sap-com:document:sap:rfc:functions}curr15.2"/&gt;
  *       &lt;/sequence&gt;
@@ -31,16 +32,43 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
+    "vMesaj",
     "vOk",
     "vTrans"
 })
 @XmlRootElement(name = "ZcreazaComandaResponse")
 public class ZcreazaComandaResponse {
 
+    @XmlElement(name = "VMesaj", required = true)
+    protected String vMesaj;
     @XmlElement(name = "VOk", required = true)
     protected String vOk;
     @XmlElement(name = "VTrans", required = true)
     protected BigDecimal vTrans;
+
+    /**
+     * Gets the value of the vMesaj property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getVMesaj() {
+        return vMesaj;
+    }
+
+    /**
+     * Sets the value of the vMesaj property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setVMesaj(String value) {
+        this.vMesaj = value;
+    }
 
     /**
      * Gets the value of the vOk property.

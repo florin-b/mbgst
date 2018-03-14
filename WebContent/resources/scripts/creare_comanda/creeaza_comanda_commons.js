@@ -23,6 +23,18 @@ function valideazaDateLivare(dateLivrare) {
 		dateLivrareValide = false;
 	}
 
+	if (dateLivrare.persContact == null || dateLivrare.persContact.length == 0) {
+		showAlertDialog('Atentie!', 'Completati persoana de contact.');
+		dateLivrareValide = false;
+	}
+
+	if (dateLivrare.telPersContact == null
+			|| dateLivrare.telPersContact.length == 0) {
+		showAlertDialog('Atentie!',
+				'Completati telefonul persoanei de contact.');
+		dateLivrareValide = false;
+	}
+
 	if (dateLivrare.dataLivrare == null || dateLivrare.dataLivrare.length == 0) {
 		showAlertDialog('Atentie!', 'Completati data de livrare.');
 		dateLivrareValide = false;

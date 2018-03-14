@@ -108,4 +108,21 @@ public class SqlQueries {
 		return sqlString.toString();
 	}
 
+	public static String getConditiiHeader() {
+		StringBuilder sqlString = new StringBuilder();
+
+		sqlString.append(" select id, condcalit, nrfact, nvl(observatii,' ') observatii from sapdev.zcondheadtableta where ");
+		sqlString.append(" cmdref = ? ");
+
+		return sqlString.toString();
+	}
+
+	public static String updateConditieID() {
+		StringBuilder sqlString = new StringBuilder();
+
+		sqlString.append("update sapdev.zcondheadtableta set cmdmodif = ? where id = ?");
+
+		return sqlString.toString();
+	}
+
 }

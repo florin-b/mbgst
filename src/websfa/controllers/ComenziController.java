@@ -88,11 +88,11 @@ public class ComenziController {
 
 	}
 
-	@RequestMapping(value = "/stergeComanda", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/stergeComanda", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public Status stergeComanda(String idComanda) {
+	public Status stergeComanda(@RequestBody ComandaAprobareOperare comanda) {
 
-		return new OperatiiComenzi().modificaStareComanda(idComanda, EnumOpereazaComanda.RESPINGERE);
+		return new OperatiiComenzi().opereazaComanda(comanda);
 
 	}
 

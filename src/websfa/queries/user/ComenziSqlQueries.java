@@ -27,7 +27,7 @@ public class ComenziSqlQueries {
 	public static String getDateLivrareAfis() {
 		StringBuilder sqlString = new StringBuilder();
 
-		sqlString.append(" select  pers_contact, telefon, adr_livrare, city, region from sapdev.zcomhead_tableta where id=? ");
+		sqlString.append(" select  pers_contact, telefon, adr_livrare, city, region, nrcmdsap from sapdev.zcomhead_tableta where id=? ");
 
 		return sqlString.toString();
 	}
@@ -37,10 +37,11 @@ public class ComenziSqlQueries {
 
 		sqlString.append(" begin insert into sapdev.zcomhead_tableta(mandt,id,cod_client,ul,status,status_aprov ,datac, cod_agent,tip_plata, ");
 		sqlString.append(" pers_contact,telefon,adr_livrare,valoare,mt,nrcmdsap,accept1,accept2,  fact_red, city, region,  obstra, ketdat, docin, obsplata,");
-		sqlString.append(" depart, cantar, cod_init, timpc, tip_pers, com_referinta ) ");
+		sqlString.append(" depart, cantar, cod_init, timpc, tip_pers, com_referinta, ora_accept1 ) ");
 		sqlString.append(" values ('900', pk_key.nextval, :codCl,:ul,:status,:status_aprov, ");
 		sqlString.append(" :datac, :agent,:plata,:perscont,:tel,:adr,:valoare,:transp,:comsap,:accept1,:accept2, ");
-		sqlString.append(" :factred,:city,:region,:obslivr, :dataLivrare, :docInsot, :obsPlata, :depart, '0', :cod_init, :timpc, :tip_pers, '-1'  ) ");
+		sqlString.append(
+				" :factred,:city,:region,:obslivr, :dataLivrare, :docInsot, :obsPlata, :depart, '0', :cod_init, :timpc, :tip_pers, :comref,:oraAccept1  ) ");
 		sqlString.append(" returning id into ?; end; ");
 
 		return sqlString.toString();
@@ -72,7 +73,7 @@ public class ComenziSqlQueries {
 		StringBuilder sqlString = new StringBuilder();
 
 		sqlString.append(" select a.id, a.valoare, b.nume from sapdev.zcomhead_tableta a, clienti b where ");
-		sqlString.append(" a.cod_agent in (select p.cod from personal p where p.filiala=? and p.departament =? ) ");
+		sqlString.append(" a.cod_agent in (select p.cod from agenti p where p.filiala=? and p.divizie =? ) ");
 		sqlString.append(" and a.status in ('2','11') and a.status_aprov in ('1') and b.cod = a.cod_client order by a.id ");
 
 		return sqlString.toString();
@@ -96,21 +97,15 @@ public class ComenziSqlQueries {
 		return sqlString.toString();
 	}
 
-	
 	public static String getArticoleComandaAprob() {
 		StringBuilder sqlString = new StringBuilder();
 		sqlString.append(" select decode(length(a.cod),18,substr(a.cod,-8),a.cod), a.cantitate, a.valoare, a.depoz, a.um, a.disclient, a.procent, b.nume, ");
 		sqlString.append(" multiplu, inf_pret, procent_fc, procent_aprob, cant_umb, umb, ul_stoc ");
 		sqlString.append(" from sapdev.zcomdet_tableta a, articole b where a.id=? and b.cod = a.cod order by a.poz ");
 
-		
-		
-		
-		
-		
 		return sqlString.toString();
-	}	
-	
+	}
+
 	public static String getArticoleComandaModificare() {
 		StringBuilder sqlString = new StringBuilder();
 		sqlString.append(" select decode(length(a.cod),18,substr(a.cod,-8),a.cod), a.cantitate, a.valoare, a.depoz, a.um, a.disclient, a.procent, b.nume ");
@@ -183,6 +178,15 @@ public class ComenziSqlQueries {
 		sqlString.append(" values ('900',:idCmd,:pozArt, :codArt, :cant, :um, :valoare) ");
 
 		return sqlString.toString();
+	}
+
+	public static String setStatusComandaConditii() {
+		StringBuilder sqlString = new StringBuilder();
+
+		sqlString.append("update sapdev.zcomhead_tableta set status_aprov = '4' where id=?");
+
+		return sqlString.toString();
+
 	}
 
 }

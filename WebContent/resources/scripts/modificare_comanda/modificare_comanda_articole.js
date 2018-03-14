@@ -238,8 +238,11 @@ function trateazaArticol(articolSelectat) {
 	$('#' + articolSelectat.cod).collapsible("collapse");
 
 	eliminaArticolCreat(articolSelectat);
+
 	globalListArticole.push(articolSelectat);
-	afiseazaListaArticole();
+	afiseazaArticoleComanda(globalListArticole);
+
+	calculeazaTotalCmdModificare();
 
 }
 
@@ -253,9 +256,6 @@ function eliminaArticolCreat(articol) {
 			break;
 		}
 	}
-
-	// afiseazaListaArticole();
-	// calculeazaTotalCmdCreare();
 
 }
 
@@ -271,7 +271,7 @@ function adaugaArticol(articolSelectat, poz) {
 
 	$(ulArticole).append(articol);
 
-	// calculeazaTotalCmdCreare();
+	calculeazaTotalCmdModificare();
 
 }
 

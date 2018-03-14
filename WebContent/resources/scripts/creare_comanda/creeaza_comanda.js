@@ -192,13 +192,13 @@ function afisDetaliiClient(detaliiClient) {
 		btnSelectClient.appendTo(tdSelectClient).buttonMarkup();
 	}
 
-	globalDetaliiClient = detaliiClient;
-
 	$(clientTable).appendTo($('#client' + detaliiClient.cod));
 
 }
 
 function selecteazaClient(client) {
+
+	globalDetaliiClient = client;
 
 	$("#clientiset").empty();
 	$('#numeClient').val('');
@@ -230,6 +230,12 @@ $('#creare_comanda_select').on('change', function() {
 		$('#selectClientDiv').show();
 
 	} else if (selectId == 2) {
+
+		if (globalDetaliiClient == null) {
+			showAlertDialog("Atentie!", "Selectati mai intai clientul");
+			return;
+		}
+
 		$("#selectArticoleDiv").trigger("onShowArticoleDiv");
 		$('#selectArticoleDiv').show();
 

@@ -354,8 +354,6 @@ function afiseazaArticoleComanda(listArticole) {
 		$(btnSaveConditii).appendTo(tdSaveCond);
 		tdSaveCond.appendTo(row);
 
-		// $(mytable).appendTo('#articoleTable');
-
 		var articol = $('<li></li>', {
 			html : mytable
 		}).css("background-color", swatch[i / 2]);
@@ -596,14 +594,19 @@ $("#salveazaCmdModif").click(function() {
 });
 
 $("#stergeCmdModif").click(function() {
+
+	var comanda = new Object();
+	comanda.id = $("#cmd_modif_select option:selected").val();
+	comanda.listConditii = [];
+	comanda.codAngajat = userObj.codPers;
+	comanda.seAproba = false;
+
 	$.mobile.loading('show');
 
 	$.ajax({
-		type : 'GET',
+		type : 'POST',
 		url : 'stergeComanda',
-		data : {
-			idComanda : $("#cmd_modif_select option:selected").val()
-		},
+		data : JSON.stringify(comanda),
 		success : function(data) {
 			showAlertStatusModificare(data);
 
@@ -625,6 +628,8 @@ function initHeaderDateGen() {
 
 	$('#dateGenTable').hide();
 
+	$('#headerDateGen').empty();
+
 	var dateGenTable = $('<table></table>').attr({
 		width : "100%",
 		border : "0"
@@ -635,8 +640,9 @@ function initHeaderDateGen() {
 
 	$('<td></td>').attr('style', 'width:3%').attr({
 		style : 'align:left;'
-		
-	}).text('Date generale').css('color', '#008B00').css("font-weight","bold").appendTo(row);
+
+	}).text('Date generale').css('color', '#008B00').css("font-weight", "bold")
+			.appendTo(row);
 
 	var tdBtn = $('<td></td>').attr('style', 'width:3%').attr({
 		style : 'text-align:right'
@@ -667,10 +673,11 @@ function toggleDateGen() {
 
 }
 
-
 function initHeaderDateLivrare() {
 
 	$('#dateLivrareModifTable').hide();
+
+	$('#headerDateLivrare').empty();
 
 	var dateLivrTable = $('<table></table>').attr({
 		width : "100%",
@@ -682,8 +689,9 @@ function initHeaderDateLivrare() {
 
 	$('<td></td>').attr('style', 'width:3%').attr({
 		style : 'align:left;'
-		
-	}).text('Date livrare').css('color', '#008B00').css("font-weight","bold").appendTo(row);
+
+	}).text('Date livrare').css('color', '#008B00').css("font-weight", "bold")
+			.appendTo(row);
 
 	var tdBtn = $('<td></td>').attr('style', 'width:3%').attr({
 		style : 'text-align:right'

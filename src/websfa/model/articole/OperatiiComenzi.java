@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import websfa.beans.ArticolCmdAprob;
-import websfa.beans.ArticolCmdModif;
 import websfa.beans.ArticolComanda;
 import websfa.beans.ArticolSimplu;
 import websfa.beans.CautaCmdAprob;
@@ -21,6 +23,7 @@ import websfa.beans.ComandaAprobareAfis;
 import websfa.beans.ComandaAprobareDetalii;
 import websfa.beans.ComandaAprobareOperare;
 import websfa.beans.ComandaModificareDetalii;
+import websfa.beans.DateGeneraleAfis;
 import websfa.beans.DateLivrare;
 import websfa.beans.Status;
 import websfa.beans.articole.Adresa;
@@ -34,17 +37,21 @@ import websfa.database.connection.DBManager;
 import websfa.enums.EnumOpereazaComanda;
 import websfa.helpers.HelperComanda;
 import websfa.queries.user.ComenziSqlQueries;
+import websfa.soap.model.SapServices;
 import websfa.utils.DateUtils;
+import websfa.utils.Utils;
 
 public class OperatiiComenzi {
+
+	private static final Logger logger = LogManager.getLogger(OperatiiComenzi.class);
 
 	public List<ComandaHeader> getComenziAfisare(CautareComanda cautareComanda) {
 
 		List<ComandaHeader> listHeaderComenzi = new ArrayList<>();
 
-		String stareComanda = " and a.status_aprov in (1,2) ";
+		String stareComanda = " and a.status_aprov in (0,1,2,4) ";
 		if (cautareComanda.getTipComanda().equals("1"))
-			stareComanda = " and a.status_aprov in (1,2) ";
+			stareComanda = " and a.status_aprov in (0,1,2,4) ";
 		if (cautareComanda.getTipComanda().equals("2"))
 			stareComanda = " and a.status = 6 ";
 
@@ -81,7 +88,7 @@ public class OperatiiComenzi {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return listHeaderComenzi;
@@ -91,6 +98,7 @@ public class OperatiiComenzi {
 	public ComandaDetalii getDetaliiComanda(String idComanda) {
 		ComandaDetalii detaliiComanda = new ComandaDetalii();
 		DateLivrareAfis dateLivrare = new DateLivrareAfis();
+		DateGeneraleAfis dateGenerale = new DateGeneraleAfis();
 
 		List<ArticolAfis> listArticole = new ArrayList<>();
 
@@ -140,17 +148,20 @@ public class OperatiiComenzi {
 					adresa.setNumeJudet(rs.getString(5));
 					dateLivrare.setAdresaLivrare(adresa);
 
+					dateGenerale.setNrComandaSap(rs.getString(6));
+
 				}
 
 			}
 
 			detaliiComanda.setListArticole(listArticole);
 			detaliiComanda.setDateLivrare(dateLivrare);
+			detaliiComanda.setDateGenerale(dateGenerale);
 
 			// TODO Transaction
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return detaliiComanda;
@@ -158,23 +169,20 @@ public class OperatiiComenzi {
 
 	public Status salveazaComanda(Comanda comanda) {
 
-		if (comanda.getIdCmdSap() != null)
-			modificaStareComanda(comanda.getIdCmd(), EnumOpereazaComanda.RESPINGERE);
-
 		return salveazaAntetComanda(comanda);
 
 	}
 
 	private Status salveazaAntetComanda(Comanda comanda) {
 
-		System.out.println("Comanda: " + comanda);
-
-		int idComanda = 0;
+		long idComanda = 0;
 
 		Status status = new Status();
 
 		try (Connection conn = new DBManager().getTestDataSource().getConnection();
 				CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.salveazaAntetComanda())) {
+
+			conn.setAutoCommit(false);
 
 			stmt.clearParameters();
 			stmt.setString(1, comanda.getCodClient());
@@ -203,17 +211,24 @@ public class OperatiiComenzi {
 			stmt.setString(24, comanda.getCodAgent());
 			stmt.setString(25, DateUtils.getCurrentTime());
 			stmt.setString(26, comanda.getTipUser());
+			stmt.setString(27, comanda.getIdCmdSap() == null ? "-1" : comanda.getIdCmdSap());
+			stmt.setString(28, DateUtils.getCurrentTime());
 
-			stmt.registerOutParameter(27, Types.INTEGER);
+			stmt.registerOutParameter(29, Types.NUMERIC);
 
 			stmt.executeQuery();
 
-			idComanda = stmt.getInt(27);
+			idComanda = stmt.getLong(29);
 
 			status = salveazaArticoleComanda(conn, comanda.getListArticole(), idComanda, comanda.getUnitLog());
 
+			conn.commit();
+
+			if (status.isSuccess())
+				status = SapServices.creeazaComanda(idComanda);
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 			status.setSuccess(false);
 			status.setMessage("Eroare salvare date comanda");
 		}
@@ -221,13 +236,7 @@ public class OperatiiComenzi {
 		return status;
 	}
 
-	public static String generateCmdSap() {
-		Random rand = new Random();
-
-		return String.valueOf(rand.nextInt(1000000) + 100000);
-	}
-
-	private Status salveazaArticoleComanda(Connection conn, List<ArticolComanda> listArticole, int idComanda, String unitLog) {
+	private Status salveazaArticoleComanda(Connection conn, List<ArticolComanda> listArticole, long idComanda, String unitLog) {
 
 		Status status = new Status();
 		status.setSuccess(true);
@@ -242,7 +251,7 @@ public class OperatiiComenzi {
 			try (CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.salveazaArticoleComanda())) {
 
 				stmt.clearParameters();
-				stmt.setInt(1, idComanda);
+				stmt.setLong(1, idComanda);
 				stmt.setString(2, String.valueOf(poz));
 				stmt.setString(3, "0");
 
@@ -275,7 +284,7 @@ public class OperatiiComenzi {
 				poz += 10;
 
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(Utils.getStackTrace(e));
 				status.setSuccess(false);
 				status.setMessage("Eroare salvare articole comanda");
 			}
@@ -312,7 +321,7 @@ public class OperatiiComenzi {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return comenzi;
@@ -343,7 +352,7 @@ public class OperatiiComenzi {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return comenzi;
@@ -374,9 +383,10 @@ public class OperatiiComenzi {
 
 			comandaModificare.setListArticole(getArticoleComandaModificare(conn, idComanda));
 			comandaModificare.setDateLivrare(getDateLivrareComandaModificare(conn, idComanda));
+			comandaModificare.setConditii(new OperatiiConditii().getConditiiComanda(conn, idComanda));
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return comandaModificare;
@@ -401,6 +411,7 @@ public class OperatiiComenzi {
 				articol.setPretUnitar(rs.getDouble(3));
 				articol.setDepozit(rs.getString(4));
 				articol.setUm(rs.getString(5));
+				articol.setDiscountClient(BigDecimal.valueOf(rs.getDouble(6)));
 				articol.setProcentReducere(rs.getDouble(7));
 				articol.setNume(rs.getString(8));
 				articol.setMultiplu(rs.getInt(9));
@@ -424,7 +435,7 @@ public class OperatiiComenzi {
 			getConditiiArticoleComanda(conn, idComanda, listArticole);
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return listArticole;
@@ -447,7 +458,7 @@ public class OperatiiComenzi {
 				dateLivrare.setStrada(rs.getString(3));
 				dateLivrare.setPersContact(rs.getString(4));
 				dateLivrare.setTelPersContact(rs.getString(5));
-				dateLivrare.setTipReducere(rs.getString(6));
+				dateLivrare.setTipReducere(HelperComanda.getTipReducereFromDB(rs.getString(6)));
 				dateLivrare.setDocumentInsotitor(rs.getString(7));
 				dateLivrare.setTipPlata(rs.getString(8));
 				dateLivrare.setRespIncasare(rs.getString(9));
@@ -458,8 +469,7 @@ public class OperatiiComenzi {
 			}
 
 		} catch (SQLException e) {
-
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return dateLivrare;
@@ -488,7 +498,7 @@ public class OperatiiComenzi {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 	}
@@ -517,7 +527,7 @@ public class OperatiiComenzi {
 			comandaAprobare.setListArticole(getArticoleComandaAprobare(conn, idComanda));
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return comandaAprobare;
@@ -552,7 +562,7 @@ public class OperatiiComenzi {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return listArticole;
@@ -560,6 +570,7 @@ public class OperatiiComenzi {
 
 	public Status opereazaComanda(ComandaAprobareOperare comanda) {
 
+		Status status;
 		EnumOpereazaComanda stareComanda;
 
 		if (comanda.isSeAproba())
@@ -568,20 +579,22 @@ public class OperatiiComenzi {
 			stareComanda = EnumOpereazaComanda.RESPINGERE;
 
 		if (!comanda.getListConditii().isEmpty() && comanda.isSeAproba()) {
-			stareComanda = EnumOpereazaComanda.CONDITIONARE;
-			salveazaConditiiComanda(comanda);
-		}
+			status = salveazaConditiiComanda(comanda);
+		} else
+			status = modificaStareComanda(comanda, stareComanda);
 
-		return modificaStareComanda(comanda.getId(), stareComanda);
+		return status;
 	}
 
-	public void salveazaConditiiComanda(ComandaAprobareOperare comanda) {
+	public Status salveazaConditiiComanda(ComandaAprobareOperare comanda) {
+
+		Status status = new Status();
 
 		try (Connection conn = new DBManager().getTestDataSource().getConnection();
 				CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.salveazaAntetConditii())) {
 
 			stmt.clearParameters();
-			stmt.setString(1, comanda.getCodAngaj());
+			stmt.setString(1, comanda.getCodAngajat());
 			stmt.setString(2, DateUtils.getCurrentDate());
 			stmt.setString(3, DateUtils.getCurrentTime());
 			stmt.setString(4, comanda.getId());
@@ -622,14 +635,47 @@ public class OperatiiComenzi {
 
 			}
 
+			setStatusComandaConditii(conn, comanda.getId());
+
+			status.setSuccess(true);
+			status.setMessage("Conditii salvate.");
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
+			status.setSuccess(false);
+			status.setMessage("Eroare salvare conditii comanda.");
 
 		}
 
+		return status;
+
 	}
 
-	public Status modificaStareComanda(String idComanda, EnumOpereazaComanda stareComanda) {
+	private void setStatusComandaConditii(Connection conn, String idComanda) {
+
+		try (CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.setStatusComandaConditii())) {
+
+			stmt.clearParameters();
+			stmt.setInt(1, Integer.valueOf(idComanda));
+			stmt.executeQuery();
+
+		} catch (SQLException e) {
+			logger.error(Utils.getStackTrace(e));
+		}
+	}
+
+	public Status modificaStareComanda(ComandaAprobareOperare comanda, EnumOpereazaComanda stareComanda) {
+		Status status = new Status();
+
+		if (stareComanda == EnumOpereazaComanda.APROBARE || stareComanda == EnumOpereazaComanda.RESPINGERE) {
+			status = SapServices.opereazaComanda(comanda.getId(), comanda.getCodAngajat(), stareComanda.getCodStare());
+
+		}
+
+		return status;
+	}
+
+	public Status modificaStareComanda_old(ComandaAprobareOperare comanda, EnumOpereazaComanda stareComanda) {
 		Status status = new Status();
 
 		String sqlString = ComenziSqlQueries.respingeComanda();
@@ -644,14 +690,14 @@ public class OperatiiComenzi {
 		try (Connection conn = new DBManager().getTestDataSource().getConnection(); PreparedStatement stmt = conn.prepareCall(sqlString)) {
 
 			stmt.clearParameters();
-			stmt.setString(1, idComanda);
+			stmt.setString(1, comanda.getId());
 
 			stmt.executeQuery();
 
 			status.setSuccess(true);
 			status.setMessage("Operatie reusita");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 			status.setSuccess(false);
 			status.setMessage("Eroare modificare stare");
 		}

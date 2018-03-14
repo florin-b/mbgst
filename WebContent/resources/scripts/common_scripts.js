@@ -76,6 +76,8 @@ function getTipTranspText(tipTransp) {
 function getStareComandaText(idStareComanda) {
 	var textStare;
 
+	
+	
 	if (idStareComanda == 1) {
 		textStare = 'Comanda in curs de aprobare';
 	} else if (idStareComanda == 4) {

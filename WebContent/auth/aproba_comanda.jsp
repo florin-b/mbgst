@@ -66,7 +66,7 @@
 		
 		<div data-role="header" data-theme="a">
 			<h1>Aprobare comanda</h1>
-			<a href="main" data-theme="d" data-icon="arrow-l"
+			<a href="main" data-ajax="false" data-theme="d" data-icon="arrow-l"
 				data-iconpos="notext" data-shadow="false" data-iconshadow="false"
 				class="ui-icon-nodisc"></a>
 		</div>

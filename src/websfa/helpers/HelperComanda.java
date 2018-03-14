@@ -22,5 +22,30 @@ public class HelperComanda {
 
 		return tipReducere;
 	}
+	
+	
+	
+	public static String getTipReducereFromDB(String codReducere) {
+		String tipReducere;
+
+		switch (codReducere) {
+		case " ":
+			tipReducere = "1";
+			break;
+		case "X":
+			tipReducere = "2";
+			break;
+		case "R":
+			tipReducere = "3";
+			break;
+		default:
+			tipReducere = "-1";
+			break;
+		}
+
+		return tipReducere;
+	}
+	
+	
 
 }

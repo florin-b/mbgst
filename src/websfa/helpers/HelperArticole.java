@@ -8,12 +8,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import websfa.beans.Discount;
 import websfa.database.connection.DBManager;
 import websfa.queries.articole.SqlQueries;
 import websfa.utils.ArticoleUtils;
+import websfa.utils.Utils;
 
 public class HelperArticole {
+	
+	private static final Logger logger = LogManager.getLogger(HelperArticole.class);
 
 	public Discount getProcenteDiscount(String filiala, String codDepart, String codArticol) {
 		Discount discount = new Discount();
@@ -38,7 +44,7 @@ public class HelperArticole {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return discount;
@@ -63,7 +69,7 @@ public class HelperArticole {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return BigDecimal.valueOf(cmp);
@@ -96,7 +102,7 @@ public class HelperArticole {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return pretMediu.doubleValue();
@@ -124,7 +130,7 @@ public class HelperArticole {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(Utils.getStackTrace(e));
 		}
 
 		return BigDecimal.valueOf(procentReducere);
@@ -156,8 +162,7 @@ public class HelperArticole {
 				}
 
 			} catch (SQLException e) {
-
-				e.printStackTrace();
+				logger.error(Utils.getStackTrace(e));
 			}
 
 		}

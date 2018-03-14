@@ -6,15 +6,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import websfa.beans.Login;
 import websfa.beans.User;
 import websfa.database.connection.DBManager;
 import websfa.helpers.HelperUser;
+import websfa.model.articole.OperatiiComenzi;
 import websfa.queries.user.UserSqlQueries;
 import websfa.utils.MailOperations;
 import websfa.utils.Utils;
 
 public class UserDAO {
+
+	private static final Logger logger = LogManager.getLogger(UserDAO.class);
 
 	public User validateUser(Login login) {
 
@@ -43,7 +49,7 @@ public class UserDAO {
 			if (logonStatus == 3) {
 
 				user.setFiliala(callableStatement.getString(5));
-				
+
 				String codAgent = callableStatement.getString(8);
 
 				for (int i = 0; i < 8 - callableStatement.getString(8).length(); i++) {
@@ -54,20 +60,19 @@ public class UserDAO {
 				user.setNume(getNumeAngajat(conn, codAgent));
 				user.setTipAcces(callableStatement.getString(6));
 				user.setUnitLog(callableStatement.getString(5));
-				//user.setTipAngajat(getTipAngajat(conn, codAgent));
+				// user.setTipAngajat(getTipAngajat(conn, codAgent));
 				user.setTipAngajat("AV");
 				String codDepart = HelperUser.getDepartAngajat(conn, codAgent);
 
 				user.setCodDepart(codDepart);
 				user.setSuccessLogon(true);
 
-				
-				
 			} else {
 				user.setSuccessLogon(false);
 				user.setLogonMessage(HelperUser.getLogonStatus(logonStatus));
 			}
 		} catch (SQLException e) {
+			logger.error(Utils.getStackTrace(e));
 
 			MailOperations.sendMail(Utils.getStackTrace(e));
 			user.setSuccessLogon(false);
@@ -76,6 +81,7 @@ public class UserDAO {
 			return user;
 
 		} catch (Exception e) {
+			logger.error(Utils.getStackTrace(e));
 			MailOperations.sendMail(Utils.getStackTrace(e));
 		}
 
@@ -98,7 +104,8 @@ public class UserDAO {
 			}
 
 		} catch (Exception ex) {
-			System.out.println(ex.toString());
+			logger.error(Utils.getStackTrace(ex));
+
 		}
 
 		return fullName;
@@ -122,7 +129,7 @@ public class UserDAO {
 			}
 
 		} catch (Exception ex) {
-			System.out.println(Utils.getStackTrace(ex));
+			logger.error(Utils.getStackTrace(ex));
 		}
 
 		return tipPers;

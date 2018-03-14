@@ -72,7 +72,7 @@
 
 		<div data-role="header" data-theme="a">
 			<h1>Modificare comanda</h1>
-			<a href="main" data-theme="d" data-icon="arrow-l"
+			<a href="main" data-ajax="false" data-theme="d" data-icon="arrow-l"
 				data-iconpos="notext" data-shadow="true" data-iconshadow="true"
 				class="ui-icon-nodisc"></a>
 		</div>
@@ -348,13 +348,13 @@
 	<div id="userbean" style="visibility: hidden">${userjson}</div>
 
 	<script
-		src="<c:url value="/resources/scripts/modificare_comanda.js" />"></script>
+		src="<c:url value="/resources/scripts/modificare_comanda/modificare_comanda.js" />"></script>
 
 	<script
-		src="<c:url value="/resources/scripts/modificare_comanda_articole.js" />"></script>
+		src="<c:url value="/resources/scripts/modificare_comanda/modificare_comanda_articole.js" />"></script>
 
 	<script
-		src="<c:url value="/resources/scripts/modificare_comanda_livrare.js" />"></script>
+		src="<c:url value="/resources/scripts/modificare_comanda/modificare_comanda_livrare.js" />"></script>
 
 	<script src="<c:url value="/resources/scripts/common_scripts.js" />"></script>
 
