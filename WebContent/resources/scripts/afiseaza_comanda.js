@@ -71,22 +71,24 @@ function afisListComenzi(listComenzi) {
 
 function getDetaliiComanda(idComanda) {
 
-	$.mobile.loading('show');
-
 	$.ajax({
 		type : 'GET',
 		url : 'getdetcom',
 		data : ({
 			idCmd : idComanda
 		}),
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
-			$.mobile.loading('hide');
 			afisDetaliiComanda(data);
 
 		},
 		error : function(exception) {
 			alert('Exeption:' + JSON.stringify(exception));
-			$.mobile.loading('hide');
 		}
 
 	});
@@ -136,19 +138,20 @@ function cautaComenzi() {
 }
 
 function cautaComandaService(cautareComanda) {
-	$.mobile.loading('show');
 
 	$.ajax({
 		type : 'GET',
 		url : 'getComAfis',
 		data : cautareComanda,
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			afisListComenzi(data);
-			$.mobile.loading('hide');
 		},
-		error : function(exception) {
-			$.mobile.loading('hide');
-		}
 
 	});
 
@@ -243,10 +246,9 @@ function afisdateGeneraleComanda(dateGenerale) {
 	row = $('<tr></tr>').appendTo(dateGeneraleTable);
 	$('<td></td>').attr('style', 'width:25%').text('Comanda SAP').appendTo(row);
 	$('<td></td>').text(dateGenerale.nrComandaSap).appendTo(row);
-	
+
 	row = $('<tr></tr>').appendTo(dateGeneraleTable);
 	$('<td></td>').html('<br>').appendTo(row);
-	
 
 	return dateGeneraleTable;
 
@@ -378,4 +380,10 @@ function showAlertDialogAfisare(tipAlert, mesajAlert) {
 	$.mobile.changePage('#dialogAfisare', {
 		transition : "none"
 	});
+}
+
+function loading(showOrHide) {
+	setTimeout(function() {
+		$.mobile.loading(showOrHide);
+	}, 1);
 }

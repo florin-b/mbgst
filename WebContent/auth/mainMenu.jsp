@@ -24,7 +24,6 @@
 
 
 
-
 </head>
 <body>
 	<div data-role="page" id="main_menu" data-theme="a" data-url="">
@@ -37,12 +36,12 @@
 
 
 
-			<ul data-role="listview" id="mainList">
-				<jsp:include page="menu_buttons.jsp">
-					<jsp:param name="tipuser" value="${user.tipAngajat}" />
-					<jsp:param name="numeuser" value="${user.nume}" />
-				</jsp:include>
-			</ul>
+
+			<jsp:include page="menu_buttons.jsp">
+				<jsp:param name="tipuser" value="${user.tipAngajat}" />
+				<jsp:param name="numeuser" value="${user.nume}" />
+			</jsp:include>
+
 
 
 		</div>

@@ -9,30 +9,44 @@ import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.handler.Handler;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import websfa.beans.ArticolSimplu;
 import websfa.beans.CautaPret;
 import websfa.beans.Status;
 import websfa.beans.articole.ArticolPret;
-import websfa.enums.EnumOpereazaComanda;
 import websfa.soap.client.ZTBLWEBSERVICE;
 import websfa.soap.client.ZTBLWEBSERVICE_Service;
 import websfa.soap.handlers.TestHandler;
 import websfa.utils.ArticoleUtils;
 import websfa.utils.Constants;
+import websfa.utils.Utils;
 
 public class SapServices {
 
+	private static final Logger logger = LogManager.getLogger(SapServices.class);
+
+	//url = ZTBLWEBSERVICE_Service.class.getResource("sap_bg_test.wsdl");
 	private static final QName SERVICE_NAME = new QName("urn:sap-com:document:sap:soap:functions:mc-style", "ZTBL_WEBSERVICE");
 
 	private static ZTBLWEBSERVICE initWS() {
-		URL wsdlURL = ZTBLWEBSERVICE_Service.WSDL_LOCATION;
 
-		ZTBLWEBSERVICE_Service ss = new ZTBLWEBSERVICE_Service(wsdlURL, SERVICE_NAME);
-		ZTBLWEBSERVICE port = ss.getZTBLWEBSERVICESoap12();
+		ZTBLWEBSERVICE port = null;
 
-		BindingProvider bp = (BindingProvider) port;
-		bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, Constants.userName);
-		bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, Constants.password);
+		try {
+
+			URL wsdlURL = ZTBLWEBSERVICE_Service.WSDL_LOCATION;
+
+			ZTBLWEBSERVICE_Service ss = new ZTBLWEBSERVICE_Service(wsdlURL, SERVICE_NAME);
+			port = ss.getZTBLWEBSERVICESoap12();
+
+			BindingProvider bp = (BindingProvider) port;
+			bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, Constants.userName);
+			bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, Constants.password);
+		} catch (Exception ex) {
+			logger.error(Utils.getStackTrace(ex));
+		}
 
 		return port;
 	}

@@ -84,12 +84,16 @@ function getComenziModificare() {
 	cautaCmdModif.codDepart = userObj.codDepart;
 	cautaCmdModif.codAngajat = userObj.codPers;
 
-	$.mobile.loading('show');
-
 	$.ajax({
 		type : 'GET',
 		url : 'getCmdModif',
 		data : cautaCmdModif,
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			$.mobile.loading('hide');
 			afisComenziModificare(data);
@@ -104,16 +108,23 @@ function getComenziModificare() {
 
 	});
 
-	$.mobile.loading('hide');
-
 }
 
 function afisComenziModificare(listComenzi) {
 
 	$('#cmd_modif_select').empty();
 
-	if (listComenzi.length > 0) {
+	if (listComenzi.length == 0) {
+		$('#cmd_modif_select').append($('<option>', {
+			value : 0,
+			text : "Nu exista comenzi"
+		}));
+	}
 
+	$('#cmd_modif_select').selectmenu("refresh", true);
+
+	if (listComenzi.length > 0) {
+		
 		$('#cmd_modif_select').append($('<option>', {
 			value : 0,
 			text : "Selectati o comanda"
@@ -142,14 +153,18 @@ $('#cmd_modif_select').on('change', function() {
 
 function getDetaliiComandaModif(idComanda) {
 
-	$.mobile.loading('show');
-
 	$.ajax({
 		type : 'GET',
 		url : 'getDetCmdModif',
 		data : ({
 			idComanda : idComanda
 		}),
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			afiseazaComandaModif(data);
 
@@ -162,8 +177,6 @@ function getDetaliiComandaModif(idComanda) {
 		}
 
 	});
-
-	$.mobile.loading('hide');
 
 }
 
@@ -570,12 +583,16 @@ $("#salveazaCmdModif").click(function() {
 	comanda.listArticole = comandaCurenta.listArticole;
 	comanda.totalComanda = $('#totalCmdModif').text();
 
-	$.mobile.loading('show');
-
 	$.ajax({
 		type : 'POST',
 		url : 'salveazaComanda',
 		data : JSON.stringify(comanda),
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			showAlertStatusModificare(data);
 
@@ -588,8 +605,6 @@ $("#salveazaCmdModif").click(function() {
 		}
 
 	});
-
-	$.mobile.loading('hide');
 
 });
 
@@ -601,12 +616,16 @@ $("#stergeCmdModif").click(function() {
 	comanda.codAngajat = userObj.codPers;
 	comanda.seAproba = false;
 
-	$.mobile.loading('show');
-
 	$.ajax({
 		type : 'POST',
 		url : 'stergeComanda',
 		data : JSON.stringify(comanda),
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			showAlertStatusModificare(data);
 
@@ -619,8 +638,6 @@ $("#stergeCmdModif").click(function() {
 		}
 
 	});
-
-	$.mobile.loading('hide');
 
 });
 
@@ -740,4 +757,10 @@ function showAlertDialogModif(tipAlert, mesajAlert) {
 	$.mobile.changePage('#dialogModificare', {
 		transition : "none"
 	});
+}
+
+function loading(showOrHide) {
+	setTimeout(function() {
+		$.mobile.loading(showOrHide);
+	}, 1);
 }

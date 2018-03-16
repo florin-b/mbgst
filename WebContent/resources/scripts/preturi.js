@@ -44,19 +44,23 @@ function cautaArticol() {
 	else
 		articol.nume = $('#codArticol').val();
 
-	$.mobile.loading('show');
-
 	$.ajax({
-		type : 'GET',
+		type : 'POST',
 		url : 'cautaArticol',
-		data : articol,
+		data : JSON.stringify(articol),
+		dataType : 'json',
+		contentType : 'application/json',
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			afiseazaListArticole(data);
-			$.mobile.loading('hide');
 		},
 		error : function(exception) {
 			alert('Exeption:' + JSON.stringify(exception));
-			$.mobile.loading('hide');
 		}
 
 	});
@@ -114,19 +118,21 @@ function getPret(codArticol) {
 	cautaPret.cantitate = "1";
 	cautaPret.um = " ";
 
-	$.mobile.loading('show');
-
 	$.ajax({
 		type : 'POST',
 		url : 'pret',
 		data : JSON.stringify(cautaPret),
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			afiseazaPret(codArticol, data);
-			$.mobile.loading('hide');
 		},
 		error : function(exception) {
 			alert('Exeption:' + JSON.stringify(exception));
-			$.mobile.loading('hide');
 		},
 		dataType : 'json',
 		contentType : 'application/json',
@@ -185,4 +191,10 @@ function afiseazaPret_old(articolCod, articolPret) {
 	$("#pretTable").remove();
 	$(content).appendTo(contentId).enhanceWithin();
 
+}
+
+function loading(showOrHide) {
+	setTimeout(function() {
+		$.mobile.loading(showOrHide);
+	}, 1);
 }

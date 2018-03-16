@@ -6,7 +6,7 @@ public class ComenziSqlQueries {
 		StringBuilder sqlString = new StringBuilder();
 
 		sqlString.append(" select a.id, a.nume_client, to_char(to_date(a.datac,'yyyymmdd')), a.status_aprov, a.valoare, ");
-		sqlString.append(" b.nume from sapdev.zcomhead_tableta a, clienti b where a.cod_agent =? ");
+		sqlString.append(" b.nume, a.status from sapdev.zcomhead_tableta a, clienti b where a.cod_agent =? ");
 		sqlString.append(" and a.cod_client = b.cod and a.datac >= ? ");
 		sqlString.append(status);
 		sqlString.append(" and rownum<30 ");

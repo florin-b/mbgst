@@ -65,7 +65,7 @@
 	</div>
 
 
-	<script src="<c:url value="/resources/scripts/login.js" />"></script>
+	
 
 </body>
 

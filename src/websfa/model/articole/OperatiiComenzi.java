@@ -49,9 +49,9 @@ public class OperatiiComenzi {
 
 		List<ComandaHeader> listHeaderComenzi = new ArrayList<>();
 
-		String stareComanda = " and a.status_aprov in (0,1,2,4) ";
+		String stareComanda = " and a.status != 6 and a.status_aprov in (0,1,2,4) ";
 		if (cautareComanda.getTipComanda().equals("1"))
-			stareComanda = " and a.status_aprov in (0,1,2,4) ";
+			stareComanda = " and a.status != 6 and a.status_aprov in (0,1,2,4) ";
 		if (cautareComanda.getTipComanda().equals("2"))
 			stareComanda = " and a.status = 6 ";
 
@@ -81,7 +81,12 @@ public class OperatiiComenzi {
 
 				header.setNumeClient(rs.getString(2) == "-1" ? rs.getString(2) : rs.getString(6));
 				header.setDataCreare(rs.getString(3));
-				header.setStare(String.valueOf(rs.getInt(4)));
+
+				if (rs.getInt(7) == 6)
+					header.setStare(String.valueOf(rs.getInt(7)));
+				else
+					header.setStare(String.valueOf(rs.getInt(4)));
+
 				header.setValoare(rs.getDouble(5));
 				listHeaderComenzi.add(header);
 

@@ -44,19 +44,24 @@ $('#cautaArticol').click(function() {
 	else
 		articol.nume = $('#codArticol').val();
 
-	$.mobile.loading('show');
-
 	$.ajax({
-		type : 'GET',
+		type : 'POST',
 		url : 'cautaArticol',
-		data : articol,
+		data : JSON.stringify(articol),
+		dataType : 'json',
+		contentType : 'application/json',
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
-			$.mobile.loading('hide');
 			afiseazaListArticole(data);
 		},
 		error : function(exception) {
 			showAlertDialog("Atentie!", JSON.stringify(exception));
-			$.mobile.loading('hide');
+
 		}
 
 	});
@@ -129,8 +134,6 @@ function getDetaliiArticol(codArticol) {
 
 function getStocArticol(codArticol, depozit) {
 
-	$.mobile.loading('show');
-
 	$.ajax({
 		type : 'GET',
 		url : 'stocdepozit',
@@ -139,12 +142,16 @@ function getStocArticol(codArticol, depozit) {
 			filiala : userObj.unitLog,
 			depozit : depozit
 		}),
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
-			$.mobile.loading('hide');
 			afisStocArticol(codArticol, data);
 		},
 		error : function(exception) {
-			$.mobile.loading('hide');
 			showAlertDialog("Atentie!", JSON.stringify(exception));
 		}
 
@@ -250,19 +257,21 @@ function getPretArticol(codArticol) {
 	cautaPret.cantitate = cantArticol;
 	cautaPret.um = umVanz;
 
-	$.mobile.loading('show');
-
 	$.ajax({
 		type : 'POST',
 		url : 'pret',
 		data : JSON.stringify(cautaPret),
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
-			$.mobile.loading('hide');
 			afisPretArticol(codArticol, data);
 		},
 		error : function(exception) {
 			showAlertDialog("Atentie!", JSON.stringify(exception));
-			$.mobile.loading('hide');
 		},
 		dataType : 'json',
 		contentType : 'application/json',
@@ -661,8 +670,6 @@ $('#salveazaComanda').click(function() {
 
 	var comanda = new Object();
 
-	$.mobile.loading('show');
-
 	comanda.codClient = globalDetaliiClient.cod;
 	comanda.codAgent = userObj.codPers;
 	comanda.aprobaSD = aprobaSD;
@@ -675,7 +682,6 @@ $('#salveazaComanda').click(function() {
 	comanda.totalComanda = $('#divTotalCmd').data('totalCmd');
 
 	if (!valideazaComandaNoua(comanda)) {
-		$.mobile.loading('hide');
 		return;
 	}
 
@@ -683,6 +689,12 @@ $('#salveazaComanda').click(function() {
 		type : 'POST',
 		url : 'salveazaComanda',
 		data : JSON.stringify(comanda),
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			showAlertStatus(data);
 
@@ -691,8 +703,6 @@ $('#salveazaComanda').click(function() {
 		contentType : 'application/json',
 
 	});
-
-	$.mobile.loading('hide');
 
 });
 
@@ -723,4 +733,10 @@ function showAlertDialog(tipAlert, mesajAlert) {
 	$.mobile.changePage('#dialogCreare', {
 		transition : "none"
 	});
+}
+
+function loading(showOrHide) {
+	setTimeout(function() {
+		$.mobile.loading(showOrHide);
+	}, 1);
 }

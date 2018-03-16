@@ -44,19 +44,23 @@ function cautaArticol() {
 	else
 		articol.nume = $('#codArticol').val();
 
-	$.mobile.loading('show');
-
 	$.ajax({
-		type : 'GET',
+		type : 'POST',
 		url : 'cautaArticol',
-		data : articol,
+		data : JSON.stringify(articol),
+		dataType : 'json',
+		contentType : 'application/json',
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			afiseazaListArticole(data);
-			$.mobile.loading('hide');
 		},
 		error : function(exception) {
 			alert('Exeption:' + JSON.stringify(exception));
-			$.mobile.loading('hide');
 		}
 
 	});
@@ -93,10 +97,11 @@ function afiseazaListArticole(listArticole) {
 				+ "'><h2><div id='numeart"
 				+ listArticole[u].cod
 				+ "'>"
-				+ listArticole[u].cod + ' - ' + listArticole[u].nume
-				+ "</div></h2><div id='articol"
 				+ listArticole[u].cod
-				+ "'></div></div>";
+				+ ' - '
+				+ listArticole[u].nume
+				+ "</div></h2><div id='articol"
+				+ listArticole[u].cod + "'></div></div>";
 
 		$("#articoleset").append(content).collapsibleset("refresh");
 	}
@@ -105,8 +110,6 @@ function afiseazaListArticole(listArticole) {
 
 function getStoc(codArticol) {
 
-	$.mobile.loading('show');
-
 	$.ajax({
 		type : 'GET',
 		url : 'stoc',
@@ -114,13 +117,17 @@ function getStoc(codArticol) {
 			codArticol : codArticol,
 			filiala : userObj.unitLog
 		}),
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			afiseazaStoc(codArticol, data);
-			$.mobile.loading('hide');
 		},
 		error : function(exception) {
 			alert('Exeption:' + JSON.stringify(exception));
-			$.mobile.loading('hide');
 		}
 
 	});
@@ -170,4 +177,10 @@ function afiseazaStoc(articolCod, articolStoc) {
 	$(stocTable).appendTo($(contentId));
 	$('<br>').appendTo($(contentId));
 
+}
+
+function loading(showOrHide) {
+	setTimeout(function() {
+		$.mobile.loading(showOrHide);
+	}, 1);
 }

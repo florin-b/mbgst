@@ -26,7 +26,8 @@ import javax.xml.ws.ResponseWrapper;
                       serviceName = "ZTBL_WEBSERVICE",
                       portName = "ZTBL_WEBSERVICE",
                       targetNamespace = "urn:sap-com:document:sap:soap:functions:mc-style",
-                      wsdlLocation = "file:/D:/Aplicatii/Java/WebSFATest/WebSFATest/WebContent/resources/wsdl/sap_bg_test.wsdl",
+                      //wsdlLocation = "file:/D:/Aplicatii/Java/WebSFATest/WebSFATest/WebContent/resources/wsdl/sap_bg_test.wsdl",
+                      wsdlLocation = "file:sap_bg_test.wsdl",
                       endpointInterface = "websfa.soap.client.ZTBLWEBSERVICE")
                       
 public class ZTBL_WEBSERVICEImpl implements ZTBLWEBSERVICE {

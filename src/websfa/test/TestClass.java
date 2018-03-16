@@ -1,15 +1,14 @@
 package websfa.test;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.SQLException;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 
-import websfa.database.connection.DBManager;
-import websfa.model.articole.OperatiiConditii;
 import websfa.soap.client.ZTBLWEBSERVICE;
 import websfa.soap.client.ZTBLWEBSERVICE_Service;
 import websfa.utils.Constants;
@@ -18,22 +17,46 @@ public class TestClass {
 
 	private static final QName SERVICE_NAME = new QName("urn:sap-com:document:sap:soap:functions:mc-style", "ZTBL_WEBSERVICE");
 
-	private TestClass() {
-	}
-
-	public static void main(String[] args) {
-
-		// System.out.println(new HelperArticole().getInfoArticolText("222"));
-
-		// SapServices.creeazaComanda(636);
-
+	static{
 		try {
-			System.out.println(new OperatiiConditii().getConditiiComanda(new DBManager().getTestDataSource().getConnection(), "657"));
-		} catch (SQLException e) {
+			
+			//url = ZTBLWEBSERVICE_Service.class.getResource("sap_bg_test.wsdl");
+			
+			URL url = TestClass.class.getResource("sap_bg_test.wsdl");
+			System.out.println("url:"+url);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
 
+	public static void main(String[] args) throws MalformedURLException {
+
+	try {
+		new TestClass().testRes();
+	} catch (UnsupportedEncodingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+	}
+	
+	
+	
+	public void testRes() throws UnsupportedEncodingException, MalformedURLException
+	{
+		
+		System.out.println(TestClass.class.getResource("sap_bg_test.wsdl"));
+		
+		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("resource/sap_bg_test.wsdl");
+		
+		//URL url = ZTBLWEBSERVICE_Service.class.getClass().getClassLoader().getResource("resource/sap_bg_test.wsdl");
+		
+		URL url = new URL("file:sap_bg_test.wsdl");
+      
+		//String dd = this.getClass().getResource("resource/sap_bg_test.wsdl").getPath();
+		
+		System.out.println("URL:" + url);
 	}
 
 	public static void testWS(String[] args) {

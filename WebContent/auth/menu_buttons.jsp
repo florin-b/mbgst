@@ -4,15 +4,18 @@
 <%@ taglib prefix="menuoptions" uri="/WEB-INF/tlds/navigator.tld"%>
 
 
+
 <style>
-ul.twocolumns {
-	display: inline-block;
+.ui-listview li {
+	width: 44% !important;
+	margin: 1.5% !important;
+	float: left;
+	border: 1px solid #ccc !important;
+	box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
 }
 
-ul.twocolumns li {
-	float: left;
-	list-style: outside none none;
-	width: 50%;
+a:link {
+	background-color: #51FCB6;
 }
 </style>
 

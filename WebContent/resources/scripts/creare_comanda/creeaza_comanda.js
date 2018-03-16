@@ -40,23 +40,28 @@ $('#cautaClient').click(function() {
 	if ($('#numeClient').val().trim() == '')
 		return;
 
-	$.mobile.loading('show');
-
 	var cautareClient = new Object();
 
 	cautareClient.nume = $('#numeClient').val();
 
 	$.ajax({
-		type : 'GET',
+		type : 'POST',
 		url : 'cautaclient',
-		data : cautareClient,
+		data : JSON.stringify(cautareClient),
+		dataType : 'json',
+		contentType : 'application/json',
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			afisClienti(data);
-			$.mobile.loading('hide');
 		},
 		error : function(exception) {
 			alert('Exeption:' + JSON.stringify(exception));
-			$.mobile.loading('hide');
+
 		}
 
 	});
@@ -102,8 +107,6 @@ function setColapsibleClientiListener() {
 
 function getDetaliiClient(codClient1) {
 
-	$.mobile.loading('show');
-
 	var cautareClient = new Object();
 
 	cautareClient.nume = $('#numeClient').val();
@@ -114,13 +117,17 @@ function getDetaliiClient(codClient1) {
 		data : ({
 			codClient : codClient1
 		}),
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
-			$.mobile.loading('hide');
 			afisDetaliiClient(data);
 		},
 		error : function(exception) {
 			alert('Exeption:' + JSON.stringify(exception));
-			$.mobile.loading('hide');
 		}
 
 	});
@@ -152,13 +159,13 @@ function afisDetaliiClient(detaliiClient) {
 	$('<td></td>').attr('style', 'width:20%').text('Limita credit').appendTo(
 			row);
 	$('<td></td>').attr('style', 'width:70%').text(
-			detaliiClient.stareClient.limitaCredit).appendTo(row);
+			detaliiClient.stareClient.limitaCredit.toFixed(2)).appendTo(row);
 
 	row = $('<tr></tr>').appendTo(clientTable);
 
 	$('<td></td>').attr('style', 'width:20%').text('Rest credit').appendTo(row);
 	$('<td></td>').attr('style', 'width:70%').text(
-			detaliiClient.stareClient.restCredit).appendTo(row);
+			detaliiClient.stareClient.restCredit.toFixed(2)).appendTo(row);
 
 	if (detaliiClient.stareClient.isBlocat) {
 
@@ -279,4 +286,10 @@ function resetCmdData() {
 
 	resetSelectOptions();
 
+}
+
+function loading(showOrHide) {
+	setTimeout(function() {
+		$.mobile.loading(showOrHide);
+	}, 1);
 }

@@ -28,19 +28,23 @@ $('#cautaArticol').click(function() {
 	else
 		articol.nume = $('#codArticol').val();
 
-	$.mobile.loading('show');
-
 	$.ajax({
-		type : 'GET',
+		type : 'POST',
 		url : 'cautaArticol',
-		data : articol,
+		data : JSON.stringify(articol),
+		dataType : 'json',
+		contentType : 'application/json',
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			afiseazaListArticole(data);
-			$.mobile.loading('hide');
 		},
 		error : function(exception) {
 			alert('Exeption:' + JSON.stringify(exception));
-			$.mobile.loading('hide');
 		}
 
 	});
@@ -101,8 +105,6 @@ function getDetaliiArticol(codArticol) {
 
 function getStocArticol(codArticol, depozit) {
 
-	$.mobile.loading('show');
-
 	$.ajax({
 		type : 'GET',
 		url : 'stocdepozit',
@@ -111,13 +113,17 @@ function getStocArticol(codArticol, depozit) {
 			filiala : userObj.unitLog,
 			depozit : depozit
 		}),
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
-			$.mobile.loading('hide');
 			afisStocArticol(codArticol, data);
 		},
 		error : function(exception) {
 			alert('Exeption:' + JSON.stringify(exception));
-			$.mobile.loading('hide');
 		}
 
 	});
@@ -141,7 +147,7 @@ function getPretArticol(codArticol) {
 	var umVanz = $('#umVanz' + codArticol).html();
 
 	if (!$.isNumeric(cantArticol)) {
-		showAlertDialog("Atentie!", "Cantitate invalida.");
+		showAlertDialogModif("Atentie!", "Cantitate invalida.");
 		return;
 	}
 
@@ -154,19 +160,21 @@ function getPretArticol(codArticol) {
 	cautaPret.cantitate = cantArticol;
 	cautaPret.um = umVanz;
 
-	$.mobile.loading('show');
-
 	$.ajax({
 		type : 'POST',
 		url : 'pret',
 		data : JSON.stringify(cautaPret),
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
-			$.mobile.loading('hide');
 			afisPretArticol(codArticol, data);
 		},
 		error : function(exception) {
-			showAlertDialog("Atentie!", JSON.stringify(exception));
-			$.mobile.loading('hide');
+			showAlertDialogModif("Atentie!", JSON.stringify(exception));
 		},
 		dataType : 'json',
 		contentType : 'application/json',
@@ -194,7 +202,7 @@ function trateazaArticol(articolSelectat) {
 	var idTextCant = '#cant' + articolSelectat.cod;
 
 	if (Number($(idTextStoc).text()) < Number($(idTextCant).val())) {
-		showAlertDialog('Info', 'Stoc insuficient.');
+		showAlertDialogModif('Info', 'Stoc insuficient.');
 		return;
 	}
 
@@ -202,12 +210,12 @@ function trateazaArticol(articolSelectat) {
 	var idTextProcent = '#procent_art' + articolSelectat.cod;
 
 	if (!$.isNumeric($(idTextPret).val())) {
-		showAlertDialog("Atentie!", "Valoare pret invalida.");
+		showAlertDialogModif("Atentie!", "Valoare pret invalida.");
 		return;
 	}
 
 	if (!$.isNumeric($(idTextProcent).val())) {
-		showAlertDialog("Atentie!", "Valoare procent invalida.");
+		showAlertDialogModif("Atentie!", "Valoare procent invalida.");
 		return;
 	}
 
@@ -410,4 +418,10 @@ function setPretReducere(codArticol) {
 
 	$(idTextPret).val(Number(valoarePret).toFixed(2));
 
+}
+
+function loading(showOrHide) {
+	setTimeout(function() {
+		$.mobile.loading(showOrHide);
+	}, 1);
 }

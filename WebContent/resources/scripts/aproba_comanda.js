@@ -87,12 +87,22 @@ function afisComenziAprob(listComenzi) {
 
 	$('#cmd_aprob_select').empty();
 
+	if (listComenzi.length == 0) {
+		$('#cmd_aprob_select').append($('<option>', {
+			value : 0,
+			text : "Nu exista comenzi"
+		}));
+	}
+
+	$('#cmd_aprob_select').selectmenu("refresh", true);
+
 	if (listComenzi.length > 0) {
+
 		$('#cmd_aprob_select').append($('<option>', {
 			value : 0,
 			text : "Selectati o comanda"
 		}));
-
+		
 		for (var i = 0; i < listComenzi.length; i++) {
 			$('#cmd_aprob_select').append($('<option>', {
 				value : listComenzi[i].idComanda,
@@ -216,8 +226,7 @@ function afisArtComAprob(listArticole) {
 				listArticole[i].numeArticol).appendTo(row);
 		$('<td></td>').attr({
 			style : 'width:10%;text-align:right;'
-		}).text(listArticole[i].cantitate).appendTo(
-				row);
+		}).text(listArticole[i].cantitate).appendTo(row);
 		$('<td></td>').attr('style', 'width:5%').text(listArticole[i].um)
 				.appendTo(row);
 
@@ -227,8 +236,7 @@ function afisArtComAprob(listArticole) {
 				listArticole[i].codArticol).appendTo(row);
 		$('<td></td>').attr({
 			style : 'width:10%;text-align:right;'
-		}).text(
-				listArticole[i].pretUnitar).appendTo(row);
+		}).text(listArticole[i].pretUnitar).appendTo(row);
 		$('<td></td>').attr('style', 'width:5%').text("RON").appendTo(row);
 
 		row = $('<tr></tr>').appendTo(mytable);
@@ -236,20 +244,20 @@ function afisArtComAprob(listArticole) {
 		$('<td></td>').attr('style', 'width:50%').appendTo(row);
 		$('<td></td>').attr({
 			style : 'width:10%;text-align:right;'
-		}).text(
-				listArticole[i].procentReducere).appendTo(row);
+		}).text(listArticole[i].procentReducere).appendTo(row);
 		$('<td></td>').attr('style', 'width:5%').text("%").appendTo(row);
 
 		row = $('<tr></tr>').appendTo(mytable);
 		$('<td></td>').attr('style', 'width:5%').appendTo(row);
-		
+
 		$('<td></td>').appendTo(row);
 
-		var tdAddCond = $('<td></td>').attr('style', 'text-align:center').attr('colspan', '2');
+		var tdAddCond = $('<td></td>').attr('style', 'text-align:center').attr(
+				'colspan', '2');
 
 		var btnAddConditii = $('<button>', {
 			text : 'Adauga conditii',
-			position: 'relative',
+			position : 'relative',
 			margin : '0 auto',
 			style : 'width : 70%'
 		}).bind('click', {
@@ -322,7 +330,7 @@ function afisArtComAprob(listArticole) {
 				'text-align:right').appendTo(row);
 
 		$('<td></td>').appendTo(row);
-		
+
 		var tdSaveCond = $('<td></td>').attr('style', 'text-align:right').attr(
 				'colspan', '2').appendTo(row);
 
@@ -525,12 +533,17 @@ $("#respingeCmd").click(function() {
 });
 
 function callService(comanda) {
-	$.mobile.loading('show');
 
 	$.ajax({
 		type : 'POST',
 		url : 'aprobaComanda',
 		data : JSON.stringify(comanda),
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			showAlertStatus(data);
 		},
@@ -539,8 +552,12 @@ function callService(comanda) {
 
 	});
 
-	$.mobile.loading('hide');
+}
 
+function loading(showOrHide) {
+	setTimeout(function() {
+		$.mobile.loading(showOrHide);
+	}, 1);
 }
 
 function showAlertStatus(statusAprobare) {
