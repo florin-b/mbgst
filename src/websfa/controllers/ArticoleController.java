@@ -9,14 +9,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import websfa.beans.CautaPret;
-import websfa.beans.Comanda;
-import websfa.beans.Status;
 import websfa.beans.articole.Articol;
 import websfa.beans.articole.ArticolInfoVanzare;
 import websfa.beans.articole.ArticolPret;
 import websfa.beans.articole.ArticolStoc;
 import websfa.model.articole.OperatiiArticole;
-import websfa.model.articole.OperatiiComenzi;
+
 
 @Controller
 public class ArticoleController {

@@ -10,6 +10,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import websfa.beans.nagivation.NavigationDetails;
 import websfa.enums.EnumMeniu;
+import websfa.helpers.HelperMeniu;
 
 public class Navigator extends SimpleTagSupport {
 
@@ -26,6 +27,8 @@ public class Navigator extends SimpleTagSupport {
 	}
 
 	private void CreateNavigationLinks() {
+		
+		
 
 		navigationLinks = new ArrayList<>();
 
@@ -38,37 +41,37 @@ public class Navigator extends SimpleTagSupport {
 		nd.setLink(String.format("%s/comanda", root));
 		nd.setText("Creare comanda");
 		nd.setNume(EnumMeniu.CREARE_COMANDA);
-		navigationLinks.add(nd);
+		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
 
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/modifcmd", root));
 		nd.setText("Modificare comanda");
 		nd.setNume(EnumMeniu.MODIFICARE_COMANDA);
-		navigationLinks.add(nd);
+		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
 
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/afiscom", root));
 		nd.setText("Afisare comanda");
 		nd.setNume(EnumMeniu.AFISARE_COMANDA);
-		navigationLinks.add(nd);
+		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
 
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/aprobacmd", root));
 		nd.setText("Aprobare comanda");
 		nd.setNume(EnumMeniu.APROBARE_COMANDA);
-		navigationLinks.add(nd);
+		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
 
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/stocuri", root));
 		nd.setText("Stocuri");
 		nd.setNume(EnumMeniu.STOCURI);
-		navigationLinks.add(nd);
+		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
 
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/preturi", root));
 		nd.setText("Preturi");
 		nd.setNume(EnumMeniu.PRETURI);
-		navigationLinks.add(nd);
+		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
 
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/exit", root));

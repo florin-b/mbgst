@@ -21,7 +21,10 @@
 
 <link rel="stylesheet" href="resources/css/afiseaza_comanda.css">
 
-<script src="<c:url value="/resources/scripts/afiseaza_comanda.js" />"></script>
+<script
+	src="<c:url value="/resources/scripts/afiseaza_comanda/afiseaza_comanda.js" />"></script>
+<script
+	src="<c:url value="/resources/scripts/afiseaza_comanda/afiseaza_comanda_agenti.js" />"></script>
 
 
 <style>
@@ -62,9 +65,9 @@
 
 		<div data-role="header" data-theme="a">
 			<h1>Afisare comanda</h1>
-			<a href="main" data-ajax="false" id="afisMainLink" data-theme="d" data-icon="arrow-l"
-				data-iconpos="notext" data-shadow="true" data-iconshadow="true"
-				class="ui-icon-nodisc"></a>
+			<a href="main" data-ajax="false" id="afisMainLink" data-theme="d"
+				data-icon="arrow-l" data-iconpos="notext" data-shadow="true"
+				data-iconshadow="true" class="ui-icon-nodisc"></a>
 		</div>
 
 
@@ -106,6 +109,14 @@
 												<option value="2">Respinse/sterse</option>
 										</select></td>
 									</tr>
+
+									<tr id='rowAgent' style="display: none;">
+										<td>Agent</td>
+										<td><select id='selectAgenti'>
+
+										</select></td>
+									</tr>
+
 									<tr>
 										<td colspan='2'><input type="button"
 											name="getComenziAfis" id="getComenziAfis"

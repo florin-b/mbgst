@@ -31,8 +31,8 @@ public class UserDAO {
 
 		try (Connection conn = new DBManager().getTestDataSource().getConnection(); CallableStatement callableStatement = conn.prepareCall(storedProcedure);) {
 
-			callableStatement.setString(1, login.getUsername());
-			callableStatement.setString(2, login.getPassword());
+			callableStatement.setString(1, login.getUsername().trim());
+			callableStatement.setString(2, login.getPassword().trim());
 
 			callableStatement.registerOutParameter(3, java.sql.Types.NUMERIC);
 			callableStatement.registerOutParameter(4, java.sql.Types.VARCHAR);
@@ -60,8 +60,8 @@ public class UserDAO {
 				user.setNume(getNumeAngajat(conn, codAgent));
 				user.setTipAcces(callableStatement.getString(6));
 				user.setUnitLog(callableStatement.getString(5));
-				// user.setTipAngajat(getTipAngajat(conn, codAgent));
-				user.setTipAngajat("AV");
+				 user.setTipAngajat(getTipAngajat(conn, codAgent));
+				
 				String codDepart = HelperUser.getDepartAngajat(conn, codAgent);
 
 				user.setCodDepart(codDepart);
@@ -125,7 +125,7 @@ public class UserDAO {
 
 			while (rs.next()) {
 
-				tipPers = rs.getString("cod");
+				tipPers = rs.getString("tip");
 			}
 
 		} catch (Exception ex) {

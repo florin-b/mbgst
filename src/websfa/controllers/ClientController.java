@@ -1,6 +1,5 @@
 package websfa.controllers;
 
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -12,11 +11,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import websfa.beans.CautareClient;
 import websfa.beans.ClientLite;
-import websfa.beans.Comanda;
+
 import websfa.beans.DetaliiClient;
 import websfa.beans.Status;
 import websfa.model.articole.OperatiiClient;
-
 
 @Controller
 public class ClientController {

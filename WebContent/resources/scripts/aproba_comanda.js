@@ -59,12 +59,16 @@ function getComenziAprobare() {
 	cautaCmdAprob.codDepart = userObj.codDepart;
 	cautaCmdAprob.codAngajat = userObj.codPers;
 
-	$.mobile.loading('show');
-
 	$.ajax({
 		type : 'GET',
 		url : 'getCmdAprob',
 		data : cautaCmdAprob,
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		success : function(data) {
 			$.mobile.loading('hide');
 			afisComenziAprob(data);
@@ -78,8 +82,6 @@ function getComenziAprobare() {
 		}
 
 	});
-
-	$.mobile.loading('hide');
 
 }
 
@@ -102,7 +104,7 @@ function afisComenziAprob(listComenzi) {
 			value : 0,
 			text : "Selectati o comanda"
 		}));
-		
+
 		for (var i = 0; i < listComenzi.length; i++) {
 			$('#cmd_aprob_select').append($('<option>', {
 				value : listComenzi[i].idComanda,
@@ -126,11 +128,15 @@ $('#cmd_aprob_select').on('change', function() {
 
 function getDetaliiCmdAprob(idComanda) {
 
-	$.mobile.loading('show');
-
 	$.ajax({
 		type : 'GET',
 		url : 'getDetCmdAprob',
+		beforeSend : function() {
+			loading('show');
+		},
+		complete : function() {
+			loading('hide');
+		},
 		data : ({
 			idComanda : idComanda
 		}),
@@ -145,8 +151,6 @@ function getDetaliiCmdAprob(idComanda) {
 		}
 
 	});
-
-	$.mobile.loading('hide');
 
 }
 

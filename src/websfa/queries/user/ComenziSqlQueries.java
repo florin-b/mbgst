@@ -73,7 +73,7 @@ public class ComenziSqlQueries {
 		StringBuilder sqlString = new StringBuilder();
 
 		sqlString.append(" select a.id, a.valoare, b.nume from sapdev.zcomhead_tableta a, clienti b where ");
-		sqlString.append(" a.cod_agent in (select p.cod from agenti p where p.filiala=? and p.divizie =? ) ");
+		sqlString.append(" a.cod_agent in (select p.cod from agenti p where p.filiala in ('BU10','BU11') and p.divizie =? ) ");
 		sqlString.append(" and a.status in ('2','11') and a.status_aprov in ('1') and b.cod = a.cod_client order by a.id ");
 
 		return sqlString.toString();

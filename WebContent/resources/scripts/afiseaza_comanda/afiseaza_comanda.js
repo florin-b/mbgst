@@ -2,6 +2,11 @@ var userObj;
 var numeArtSel;
 var comandaId;
 
+var tipAngajat = {
+	AV : 'AV',
+	SD : 'SD'
+};
+
 $(document).on('pagebeforeshow', '#afiscomanda', function() {
 
 	$('#optiuni_div').parent().css('margin-left', '10px');
@@ -18,6 +23,8 @@ $(document).on('pageshow', '#afiscomanda', function() {
 
 	$('#inner_optiuni_div').collapsible("expand");
 
+	initScreen();
+
 });
 
 $(document).on('pagecreate', '#afiscomanda', function() {
@@ -25,6 +32,16 @@ $(document).on('pagecreate', '#afiscomanda', function() {
 	setColapsibleListener();
 
 })
+
+function initScreen() {
+
+	if (userObj.tipAngajat == tipAngajat.SD) {
+		$('#rowAgent').show();
+		getAgentiListComanda();
+	}
+}
+
+
 
 function setColapsibleListener() {
 	$('#comenziset').bind('collapsibleexpand', function(data) {

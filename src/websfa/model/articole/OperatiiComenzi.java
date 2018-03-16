@@ -308,8 +308,8 @@ public class OperatiiComenzi {
 				CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.getComenziAprobare())) {
 
 			stmt.clearParameters();
-			stmt.setString(1, cautaCmd.getUnitLog());
-			stmt.setString(2, cautaCmd.getCodDepart());
+			//stmt.setString(1, cautaCmd.getUnitLog());
+			stmt.setString(1, cautaCmd.getCodDepart());
 			stmt.executeQuery();
 
 			ResultSet rs = stmt.getResultSet();

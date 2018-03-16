@@ -9,6 +9,7 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 
+import websfa.model.articole.OperatiiAngajati;
 import websfa.soap.client.ZTBLWEBSERVICE;
 import websfa.soap.client.ZTBLWEBSERVICE_Service;
 import websfa.utils.Constants;
@@ -17,13 +18,14 @@ public class TestClass {
 
 	private static final QName SERVICE_NAME = new QName("urn:sap-com:document:sap:soap:functions:mc-style", "ZTBL_WEBSERVICE");
 
-	static{
+	static {
 		try {
-			
-			//url = ZTBLWEBSERVICE_Service.class.getResource("sap_bg_test.wsdl");
-			
+
+			// url =
+			// ZTBLWEBSERVICE_Service.class.getResource("sap_bg_test.wsdl");
+
 			URL url = TestClass.class.getResource("sap_bg_test.wsdl");
-			System.out.println("url:"+url);
+			System.out.println("url:" + url);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -32,30 +34,24 @@ public class TestClass {
 
 	public static void main(String[] args) throws MalformedURLException {
 
-	try {
-		new TestClass().testRes();
-	} catch (UnsupportedEncodingException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+		System.out.println(new OperatiiAngajati().getAgenti("33", "01"));
 
 	}
-	
-	
-	
-	public void testRes() throws UnsupportedEncodingException, MalformedURLException
-	{
-		
+
+	public void testRes() throws UnsupportedEncodingException, MalformedURLException {
+
 		System.out.println(TestClass.class.getResource("sap_bg_test.wsdl"));
-		
+
 		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("resource/sap_bg_test.wsdl");
-		
-		//URL url = ZTBLWEBSERVICE_Service.class.getClass().getClassLoader().getResource("resource/sap_bg_test.wsdl");
-		
+
+		// URL url =
+		// ZTBLWEBSERVICE_Service.class.getClass().getClassLoader().getResource("resource/sap_bg_test.wsdl");
+
 		URL url = new URL("file:sap_bg_test.wsdl");
-      
-		//String dd = this.getClass().getResource("resource/sap_bg_test.wsdl").getPath();
-		
+
+		// String dd =
+		// this.getClass().getResource("resource/sap_bg_test.wsdl").getPath();
+
 		System.out.println("URL:" + url);
 	}
 
