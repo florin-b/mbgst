@@ -167,6 +167,8 @@ function afiseazaComandaAprob(comanda) {
 	comandaCurenta.id = $("#cmd_aprob_select option:selected").val();
 	comandaCurenta.nrCmdSap = comanda.idComandaSAP;
 	comandaCurenta.codAngaj = userObj.codPers;
+	comandaCurenta.aprobariNecesare = comanda.aprobariNecesare;
+	comandaCurenta.tipAngajatAprob = userObj.tipAngajat;
 
 	$('#dateGenTable tbody').remove();
 
@@ -193,6 +195,12 @@ function afiseazaComandaAprob(comanda) {
 	row = $('<tr></tr>').appendTo(dateGenTable);
 	$('<td></td>').attr('style', 'width:20%').text('Nume agent').appendTo(row);
 	$('<td></td>').text(comanda.numeAgent).appendTo(row);
+
+	row = $('<tr></tr>').appendTo(dateGenTable);
+	$('<td></td>').attr('style', 'width:20%').text('Aprobari necesare')
+			.appendTo(row);
+	$('<td></td>').text(getAprobariNecesareText(comanda.aprobariNecesare))
+			.appendTo(row);
 
 	globalListArticole = comanda.listArticole;
 	afisArtComAprob(comanda.listArticole);
@@ -575,6 +583,17 @@ function showAlertStatus(statusAprobare) {
 		getComenziAprobare();
 	}
 
+}
+
+function getAprobariNecesareText(codAprobari) {
+	var textAprobari = '';
+
+	if (codAprobari == 'SD_ONLY')
+		textAprobari = 'SD';
+	else if (codAprobari == 'SD_DV')
+		textAprobari = 'SD, DV';
+
+	return textAprobari;
 }
 
 function showAlertDialog(tipAlert, mesajAlert) {

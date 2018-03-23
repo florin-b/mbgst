@@ -14,6 +14,7 @@ public class NavigationDetails implements Serializable {
 	private String link;
 	private String text;
 	private EnumMeniu nume;
+	private int navNumber;
 
 	public NavigationDetails() {
 
@@ -42,5 +43,20 @@ public class NavigationDetails implements Serializable {
 	public void setNume(EnumMeniu nume) {
 		this.nume = nume;
 	}
+
+	public int getNavNumber() {
+		return navNumber;
+	}
+
+	public void setNavNumber(int navNumber) {
+		this.navNumber = navNumber;
+	}
+
+	@Override
+	public String toString() {
+		return "NavigationDetails [link=" + link + ", text=" + text + ", nume=" + nume + ", navNumber=" + navNumber + "]";
+	}
+	
+	
 
 }

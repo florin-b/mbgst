@@ -2,6 +2,7 @@ package websfa.controllers;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +19,10 @@ import websfa.beans.Status;
 import websfa.beans.articole.CautareComanda;
 import websfa.beans.articole.ComandaDetalii;
 import websfa.beans.articole.ComandaHeader;
-import websfa.enums.EnumOpereazaComanda;
 import websfa.model.articole.OperatiiComenzi;
 
 @Controller
+@Scope("session")
 public class ComenziController {
 
 	@RequestMapping(value = "/getComAfis", produces = "application/json")
@@ -95,5 +96,7 @@ public class ComenziController {
 		return new OperatiiComenzi().opereazaComanda(comanda);
 
 	}
+	
+	
 
 }

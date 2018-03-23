@@ -1,55 +1,22 @@
 package websfa.tags.navigator;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
+import javax.servlet.http.HttpServletRequest;
 
 import websfa.beans.nagivation.NavigationDetails;
 import websfa.enums.EnumMeniu;
 import websfa.helpers.HelperMeniu;
 import websfa.model.articole.OperatiiComenzi;
 
-public class Navigator extends SimpleTagSupport {
+public class MenuNavigator {
 
-	private List<NavigationDetails> navigationLinks;
+	public List<NavigationDetails> createNavigationLinks(String tipUser, String codDepart, HttpServletRequest request) {
 
-	private String tipUser;
-	private String codDepart;
+		ArrayList<NavigationDetails> navigationLinks = new ArrayList<>();
 
-	public String getTipUser() {
-		return tipUser;
-	}
-
-	public void setTipUser(String tipUser) {
-		this.tipUser = tipUser;
-	}
-
-	public List<NavigationDetails> getNavigationLinks() {
-		return navigationLinks;
-	}
-
-	public void setNavigationLinks(List<NavigationDetails> navigationLinks) {
-		this.navigationLinks = navigationLinks;
-	}
-
-	public String getCodDepart() {
-		return codDepart;
-	}
-
-	public void setCodDepart(String codDepart) {
-		this.codDepart = codDepart;
-	}
-
-	private void createNavigationLinks() {
-
-		navigationLinks = new ArrayList<>();
-
-		PageContext pageContext = (PageContext) getJspContext();
-		String root = pageContext.getServletContext().getContextPath();
+		String root = request.getServletContext().getContextPath();
 
 		NavigationDetails nd;
 
@@ -97,17 +64,8 @@ public class Navigator extends SimpleTagSupport {
 		nd.setNume(EnumMeniu.EXIT);
 		navigationLinks.add(nd);
 
-	}
+		return navigationLinks;
 
-	@Override
-	public void doTag() throws JspException, IOException {
-
-		createNavigationLinks();
-
-		for (NavigationDetails nd : navigationLinks) {
-			getJspContext().setAttribute("navdetails", nd);
-			getJspBody().invoke(null);
-		}
 	}
 
 }

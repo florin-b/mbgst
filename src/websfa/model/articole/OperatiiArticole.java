@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +22,7 @@ import websfa.soap.model.SapServices;
 import websfa.utils.Utils;
 
 public class OperatiiArticole {
-	
+
 	private static final Logger logger = LogManager.getLogger(OperatiiArticole.class);
 
 	public List<Articol> cautaArticole(Articol articol) {
@@ -130,30 +129,6 @@ public class OperatiiArticole {
 		return articolStoc;
 	}
 
-	public ArticolPret getPret(String codArticol, String filiala, String departament) {
-		ArticolPret articolPret = new ArticolPret();
-
-		/*
-		 * articolPret.setPret(generatePret()); articolPret.setUm("BUC");
-		 * articolPret.setPermiteDiscount(true);
-		 * articolPret.setPretLista(generatePret());
-		 * articolPret.setCantitate(5); articolPret.setConditiiPret(
-		 * "Conditii pret"); articolPret.setMultiplu(1);
-		 * articolPret.setCantUmBaza(1); articolPret.setUmBaza("BUC");
-		 * articolPret.setImpachetare("PAK"); articolPret.setCmp(new
-		 * HelperArticole().getCmpArticol(filiala, codArticol));
-		 * articolPret.setPretCuDiscount(articolPret.getPret() / 95);
-		 * articolPret.setPretLista(articolPret.getPret() * 1.2);
-		 * articolPret.setProcReducereCmp(new
-		 * HelperArticole().getProcentRedCmp(codArticol));
-		 * articolPret.setProcenteDiscount(new
-		 * HelperArticole().getProcenteDiscount(filiala, departament,
-		 * codArticol));
-		 */
-		return articolPret;
-
-	}
-
 	public ArticolPret getPret(CautaPret cautaPret) {
 
 		ArticolPret articolPret;
@@ -169,12 +144,6 @@ public class OperatiiArticole {
 		articolPret.setProcenteDiscount(discount);
 
 		return articolPret;
-	}
-
-	public static int generatePret() {
-		Random rand = new Random();
-
-		return rand.nextInt(100) + 10;
 	}
 
 }

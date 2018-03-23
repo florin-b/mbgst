@@ -1,5 +1,7 @@
 package websfa.beans;
 
+
+
 public class User {
 
 	private String nume;

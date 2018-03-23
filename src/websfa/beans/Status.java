@@ -21,4 +21,11 @@ public class Status {
 		this.message = message;
 	}
 
+	@Override
+	public String toString() {
+		return "Status [success=" + success + ", message=" + message + "]";
+	}
+	
+	
+
 }

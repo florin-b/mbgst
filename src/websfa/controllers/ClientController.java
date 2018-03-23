@@ -3,6 +3,7 @@ package websfa.controllers;
 import java.nio.charset.Charset;
 import java.util.List;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import websfa.beans.Status;
 import websfa.model.articole.OperatiiClient;
 
 @Controller
+@Scope("session")
 public class ClientController {
 
 	public static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");

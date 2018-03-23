@@ -9,7 +9,7 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 
-import websfa.model.articole.OperatiiAngajati;
+import websfa.model.articole.OperatiiComenzi;
 import websfa.soap.client.ZTBLWEBSERVICE;
 import websfa.soap.client.ZTBLWEBSERVICE_Service;
 import websfa.utils.Constants;
@@ -18,23 +18,11 @@ public class TestClass {
 
 	private static final QName SERVICE_NAME = new QName("urn:sap-com:document:sap:soap:functions:mc-style", "ZTBL_WEBSERVICE");
 
-	static {
-		try {
-
-			// url =
-			// ZTBLWEBSERVICE_Service.class.getResource("sap_bg_test.wsdl");
-
-			URL url = TestClass.class.getResource("sap_bg_test.wsdl");
-			System.out.println("url:" + url);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 
 	public static void main(String[] args) throws MalformedURLException {
 
-		System.out.println(new OperatiiAngajati().getAgenti("33", "01"));
+		System.out.println(new OperatiiComenzi().aprobaComandaSDDV("739"));
 
 	}
 

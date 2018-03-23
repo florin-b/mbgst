@@ -37,11 +37,10 @@ public class ComenziSqlQueries {
 
 		sqlString.append(" begin insert into sapdev.zcomhead_tableta(mandt,id,cod_client,ul,status,status_aprov ,datac, cod_agent,tip_plata, ");
 		sqlString.append(" pers_contact,telefon,adr_livrare,valoare,mt,nrcmdsap,accept1,accept2,  fact_red, city, region,  obstra, ketdat, docin, obsplata,");
-		sqlString.append(" depart, cantar, cod_init, timpc, tip_pers, com_referinta, ora_accept1 ) ");
+		sqlString.append(" depart, cantar, cod_init, timpc, tip_pers, com_referinta ) ");
 		sqlString.append(" values ('900', pk_key.nextval, :codCl,:ul,:status,:status_aprov, ");
 		sqlString.append(" :datac, :agent,:plata,:perscont,:tel,:adr,:valoare,:transp,:comsap,:accept1,:accept2, ");
-		sqlString.append(
-				" :factred,:city,:region,:obslivr, :dataLivrare, :docInsot, :obsPlata, :depart, '0', :cod_init, :timpc, :tip_pers, :comref,:oraAccept1  ) ");
+		sqlString.append(" :factred,:city,:region,:obslivr, :dataLivrare, :docInsot, :obsPlata, :depart, '0', :cod_init, :timpc, :tip_pers, :comref ) ");
 		sqlString.append(" returning id into ?; end; ");
 
 		return sqlString.toString();
@@ -74,7 +73,8 @@ public class ComenziSqlQueries {
 
 		sqlString.append(" select a.id, a.valoare, b.nume from sapdev.zcomhead_tableta a, clienti b where ");
 		sqlString.append(" a.cod_agent in (select p.cod from agenti p where p.filiala in ('BU10','BU11') and p.divizie =? ) ");
-		sqlString.append(" and a.status in ('2','11') and a.status_aprov in ('1') and b.cod = a.cod_client order by a.id ");
+		sqlString.append(" and a.status in ('2','11') and a.status_aprov in ('1') and a.accept1 ='X' ");
+		sqlString.append(" and a.ora_accept1 ='000000' and b.cod = a.cod_client order by a.id ");
 
 		return sqlString.toString();
 	}
@@ -83,7 +83,7 @@ public class ComenziSqlQueries {
 		StringBuilder sqlString = new StringBuilder();
 
 		sqlString.append(" select a.nrcmdsap, a.valoare, to_char(to_date(a.datac,'yyyymmdd'),'dd-mm-yyyy'), b.nume, c.nume, a.cod_client, a.ul,  ");
-		sqlString.append(" a.status_aprov from sapdev.zcomhead_tableta a, clienti b, agenti c where ");
+		sqlString.append(" a.status_aprov, accept1, accept2 from sapdev.zcomhead_tableta a, clienti b, agenti c where ");
 		sqlString.append(" a.mandt='900' and a.id=? and b.cod=a.cod_client and c.cod = a.cod_agent ");
 
 		return sqlString.toString();
@@ -143,6 +143,15 @@ public class ComenziSqlQueries {
 
 	}
 
+	public static String aprobaComandaSD_DV() {
+		StringBuilder sqlString = new StringBuilder();
+
+		sqlString.append(" update sapdev.zcomhead_tableta set ora_accept1 = (select to_char(sysdate,'hh24miss') from dual) where id=? ");
+
+		return sqlString.toString();
+
+	}
+
 	public static String conditioneazaComanda() {
 		StringBuilder sqlString = new StringBuilder();
 
@@ -187,6 +196,15 @@ public class ComenziSqlQueries {
 
 		return sqlString.toString();
 
+	}
+
+	public static String getComenziAprobareSD() {
+		StringBuilder sqlString = new StringBuilder();
+
+		sqlString.append(" select count(id) from sapdev.zcomhead_tableta where mandt='900' and status = 2 and status_aprov = 1 ");
+		sqlString.append(" and accept1 = 'X' and ora_accept1 = '000000' and depart = ? ");
+
+		return sqlString.toString();
 	}
 
 }

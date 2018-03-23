@@ -2,6 +2,7 @@ package websfa.controllers;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import websfa.model.articole.OperatiiArticole;
 
 
 @Controller
+@Scope("session")
 public class ArticoleController {
 
 	@RequestMapping(value = "/cautaArticol", method = RequestMethod.POST, produces = "application/json")
@@ -35,13 +37,6 @@ public class ArticoleController {
 
 	}
 
-	@RequestMapping(value = "/pret1", produces = "application/json")
-	@ResponseBody
-	public ArticolPret afiseazaPret(String codArticol, String filiala, String departament) {
-
-		return new OperatiiArticole().getPret(codArticol, filiala, departament);
-
-	}
 
 	@RequestMapping(value = "/pret", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
@@ -65,7 +60,6 @@ public class ArticoleController {
 
 		ArticolInfoVanzare artInfo = new ArticolInfoVanzare();
 		artInfo.setStocArticol(new OperatiiArticole().getStoc(codArticol, filiala, depozit));
-		artInfo.setPretArticol(new OperatiiArticole().getPret(codArticol, filiala, codDepart));
 
 		return artInfo;
 

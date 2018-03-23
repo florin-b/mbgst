@@ -39,6 +39,7 @@ function getProcentFact(articol) {
 
 function getProcentAprob(articol) {
 
+	
 	return ((1 - articol.pretUnitar
 			/ (articol.pretLista / articol.cantitate * articol.multiplu)) * 100)
 			.toFixed(2);

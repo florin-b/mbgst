@@ -2,6 +2,7 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@page language="java" contentType="text/html; " pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="menuoptions" uri="/WEB-INF/tlds/navigator.tld"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,9 +21,21 @@
 <script
 	src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
-<script src="<c:url value="/resources/scripts/main_menu.js" />"></script>
 
 
+<style>
+.ui-listview li {
+	width: 44% !important;
+	margin: 1.5% !important;
+	float: left;
+	border: 1px solid #ccc !important;
+	box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
+}
+
+a:link {
+	background-color: #51FCB6;
+}
+</style>
 
 </head>
 <body>
@@ -34,14 +47,12 @@
 
 		<div data-role="content" class="ui-content">
 
+			<br>
+			<div id="userName"></div>
+			<br>
 
-
-
-			<jsp:include page="menu_buttons.jsp">
-				<jsp:param name="tipuser" value="${user.tipAngajat}" />
-				<jsp:param name="numeuser" value="${user.nume}" />
-			</jsp:include>
-
+			<ul data-role="listview" data-icon="false" id="listMenu">
+			</ul>
 
 
 		</div>
@@ -52,6 +63,9 @@
 	</div>
 
 	<div id="userbean" style="visibility: hidden">${userjson}</div>
+	<div id="menubean" style="visibility: hidden">${menu}</div>
+
+	<script src="<c:url value="/resources/scripts/main_menu.js" />"></script>
 
 </body>
 </html>

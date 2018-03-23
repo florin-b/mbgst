@@ -124,7 +124,7 @@ function afisComenziModificare(listComenzi) {
 	$('#cmd_modif_select').selectmenu("refresh", true);
 
 	if (listComenzi.length > 0) {
-		
+
 		$('#cmd_modif_select').append($('<option>', {
 			value : 0,
 			text : "Selectati o comanda"
@@ -439,6 +439,22 @@ function acceptaConditiiValorice(articol) {
 	$(idProc).text(articol.procentReducere);
 
 	articol.pretUnitar = articol.conditiiVal;
+
+	var procentFactNumarator = pretInit / articol.cantitate * articol.multiplu
+			- articol.pretUnitar;
+
+	var procentFactNumitor = pretInit / articol.cantitate * articol.multiplu;
+	articol.procentFact = ((procentFactNumarator / procentFactNumitor) * 100)
+			.toFixed(2);
+
+	var pretVanzareInit = pretInit / (1 - articol.discountClient / 100);
+
+	var newProcentAprob = ((1 - articol.pretUnitar
+			/ (pretVanzareInit / articol.cantitate * articol.multiplu)) * 100)
+			.toFixed(2);
+
+	articol.procentAprob = newProcentAprob;
+
 	var idPret = '#pretArt' + articol.cod;
 	$(idPret).text(articol.pretUnitar);
 	articol.conditiiVal = 0;

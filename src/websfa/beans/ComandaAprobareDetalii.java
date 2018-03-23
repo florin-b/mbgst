@@ -2,6 +2,8 @@ package websfa.beans;
 
 import java.util.List;
 
+import websfa.enums.EnumTipAprobare;
+
 public class ComandaAprobareDetalii {
 
 	private String idComanda;
@@ -11,6 +13,7 @@ public class ComandaAprobareDetalii {
 	private String dataEmitere;
 	private String numeAgent;
 	private List<ArticolCmdAprob> listArticole;
+	private EnumTipAprobare aprobariNecesare;
 
 	public String getIdComanda() {
 		return idComanda;
@@ -68,10 +71,19 @@ public class ComandaAprobareDetalii {
 		this.listArticole = listArticole;
 	}
 
+	public EnumTipAprobare getAprobariNecesare() {
+		return aprobariNecesare;
+	}
+
+	public void setAprobariNecesare(EnumTipAprobare aprobariNecesare) {
+		this.aprobariNecesare = aprobariNecesare;
+	}
+
 	@Override
 	public String toString() {
 		return "ComandaAprobareDetalii [idComanda=" + idComanda + ", idComandaSAP=" + idComandaSAP + ", valoare=" + valoare + ", numeClient=" + numeClient
-				+ ", dataEmitere=" + dataEmitere + ", numeAgent=" + numeAgent + ", listArticole=" + listArticole + "]";
+				+ ", dataEmitere=" + dataEmitere + ", numeAgent=" + numeAgent + ", listArticole=" + listArticole + ", aprobariNecesare=" + aprobariNecesare
+				+ "]";
 	}
 
 }

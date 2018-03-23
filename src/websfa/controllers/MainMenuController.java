@@ -1,15 +1,18 @@
 package websfa.controllers;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
@@ -17,11 +20,12 @@ import com.google.gson.GsonBuilder;
 
 import websfa.beans.Login;
 import websfa.beans.User;
+import websfa.beans.nagivation.NavigationDetails;
 import websfa.database.user.UserDAO;
-import websfa.utils.MailOperations;
-import websfa.utils.Utils;
+import websfa.tags.navigator.MenuNavigator;
 
 @Controller
+@Scope("session")
 public class MainMenuController {
 
 	@Autowired
@@ -29,9 +33,12 @@ public class MainMenuController {
 
 	private User user;
 
+	private static final String LOGIN_VIEW = "login";
+
 	@RequestMapping(value = { "/auth/login", "login", "/" }, method = RequestMethod.GET)
 	public ModelAndView displayLogin(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("login");
+
+		ModelAndView model = new ModelAndView(LOGIN_VIEW);
 		Login login = new Login();
 		model.addObject("login", login);
 		return model;
@@ -40,22 +47,17 @@ public class MainMenuController {
 	@RequestMapping(value = { "/auth/login", "login", "/" }, method = RequestMethod.POST)
 	public ModelAndView executeLogin(HttpServletRequest request, HttpServletResponse response, @ModelAttribute("login") Login login) {
 
-		ModelAndView model = null;
-		user = loginService.validateUser(login);
+		ModelAndView model;
+		this.user = loginService.validateUser(login);
 
-		try {
+		if (this.user.isSuccessLogon()) {
+			model = new ModelAndView(LOGIN_VIEW);
+			model.addObject("redirectUrl", "/main");
 
-			if (user.isSuccessLogon()) {
-				model = new ModelAndView("login");
-				model.addObject("redirectUrl", "/main");
-
-			} else {
-				model = new ModelAndView("login");
-				model.addObject("login", login);
-				request.setAttribute("infoMsg", user.getLogonMessage());
-			}
-		} catch (Exception e) {
-			MailOperations.sendMail(Utils.getStackTrace(e));
+		} else {
+			model = new ModelAndView(LOGIN_VIEW);
+			model.addObject("login", login);
+			request.setAttribute("infoMsg", user.getLogonMessage());
 		}
 
 		return model;
@@ -66,14 +68,18 @@ public class MainMenuController {
 
 		if (user == null) {
 			response.sendRedirect("exit");
+			return null;
 		}
 
 		ModelAndView model;
 		Gson gson = new GsonBuilder().create();
 
+		List<NavigationDetails> mainMenu = new MenuNavigator().createNavigationLinks(user.getTipAngajat(), user.getCodDepart(), request);
+
 		model = new ModelAndView("mainMenu");
 		model.addObject("user", user);
 		model.addObject("userjson", gson.toJson(user));
+		model.addObject("menu", gson.toJson(mainMenu));
 
 		return model;
 	}
@@ -81,9 +87,7 @@ public class MainMenuController {
 	@RequestMapping(value = "/stocuri", method = RequestMethod.GET)
 	public ModelAndView executeStocuri(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		if (user == null) {
-			response.sendRedirect("exit");
-		}
+		checkSessionStatus(response);
 
 		ModelAndView model;
 		Gson gson = new GsonBuilder().create();
@@ -98,9 +102,7 @@ public class MainMenuController {
 	@RequestMapping(value = "/preturi", method = RequestMethod.GET)
 	public ModelAndView executePreturi(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		if (user == null) {
-			response.sendRedirect("exit");
-		}
+		checkSessionStatus(response);
 
 		ModelAndView model;
 		Gson gson = new GsonBuilder().create();
@@ -115,9 +117,7 @@ public class MainMenuController {
 	@RequestMapping(value = "/afiscom", method = RequestMethod.GET)
 	public ModelAndView afiseazaComanda(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		if (user == null) {
-			response.sendRedirect("exit");
-		}
+		checkSessionStatus(response);
 
 		ModelAndView model;
 		Gson gson = new GsonBuilder().create();
@@ -132,9 +132,7 @@ public class MainMenuController {
 	@RequestMapping(value = "/aprobacmd", method = RequestMethod.GET)
 	public ModelAndView aprobaComanda(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		if (user == null) {
-			response.sendRedirect("exit");
-		}
+		checkSessionStatus(response);
 
 		ModelAndView model;
 		Gson gson = new GsonBuilder().create();
@@ -149,9 +147,7 @@ public class MainMenuController {
 	@RequestMapping(value = "/modifcmd", method = RequestMethod.GET)
 	public ModelAndView modificaComanda(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		if (user == null) {
-			response.sendRedirect("exit");
-		}
+		checkSessionStatus(response);
 
 		ModelAndView model;
 		Gson gson = new GsonBuilder().create();
@@ -166,9 +162,7 @@ public class MainMenuController {
 	@RequestMapping(value = "/comanda", method = RequestMethod.GET)
 	public ModelAndView creeazaComanda(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		if (user == null) {
-			response.sendRedirect("exit");
-		}
+		checkSessionStatus(response);
 
 		ModelAndView model;
 		Gson gson = new GsonBuilder().create();
@@ -185,6 +179,18 @@ public class MainMenuController {
 		user = null;
 		return "redirect:/login";
 
+	}
+
+	@RequestMapping(value = "/mainMenu", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public List<NavigationDetails> getMainMenu(String tipUser, String codDepart, HttpServletRequest request) {
+		return new MenuNavigator().createNavigationLinks(tipUser, codDepart, request);
+	}
+
+	private void checkSessionStatus(HttpServletResponse response) throws IOException {
+		if (user == null) {
+			response.sendRedirect("exit");
+		}
 	}
 
 }

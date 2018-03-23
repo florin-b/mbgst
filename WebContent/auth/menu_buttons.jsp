@@ -24,12 +24,15 @@ a:link {
 <p align="center">${param.numeuser}</p>
 <br>
 
+
+
 <ul data-role="listview" data-icon="false" id="listMenu">
+
 	<menuoptions:navigator tipUser="${param.tipuser}">
-		<li><a href="${navdetails.link}" data-ajax="false">${navdetails.text}</a></li>
+
+		<li><a href="${navdetails.link}" data-ajax="false">${navdetails.text}
+				<span class="ui-li-count">${navdetails.navNumber}</span>
+		</a></li>
+
 	</menuoptions:navigator>
 </ul>
-
-
-
-

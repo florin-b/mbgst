@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +34,8 @@ import websfa.beans.articole.ComandaHeader;
 import websfa.beans.articole.DateLivrareAfis;
 import websfa.database.connection.DBManager;
 import websfa.enums.EnumOpereazaComanda;
+import websfa.enums.EnumTipAngajat;
+import websfa.enums.EnumTipAprobare;
 import websfa.helpers.HelperComanda;
 import websfa.queries.user.ComenziSqlQueries;
 import websfa.soap.model.SapServices;
@@ -217,13 +218,12 @@ public class OperatiiComenzi {
 			stmt.setString(25, DateUtils.getCurrentTime());
 			stmt.setString(26, comanda.getTipUser());
 			stmt.setString(27, comanda.getIdCmdSap() == null ? "-1" : comanda.getIdCmdSap());
-			stmt.setString(28, DateUtils.getCurrentTime());
 
-			stmt.registerOutParameter(29, Types.NUMERIC);
+			stmt.registerOutParameter(28, Types.NUMERIC);
 
 			stmt.executeQuery();
 
-			idComanda = stmt.getLong(29);
+			idComanda = stmt.getLong(28);
 
 			status = salveazaArticoleComanda(conn, comanda.getListArticole(), idComanda, comanda.getUnitLog());
 
@@ -308,7 +308,7 @@ public class OperatiiComenzi {
 				CallableStatement stmt = conn.prepareCall(ComenziSqlQueries.getComenziAprobare())) {
 
 			stmt.clearParameters();
-			//stmt.setString(1, cautaCmd.getUnitLog());
+			// stmt.setString(1, cautaCmd.getUnitLog());
 			stmt.setString(1, cautaCmd.getCodDepart());
 			stmt.executeQuery();
 
@@ -527,6 +527,18 @@ public class OperatiiComenzi {
 				comandaAprobare.setNumeClient(rs.getString(4));
 				comandaAprobare.setNumeAgent(rs.getString(5));
 
+				String aprobSD = rs.getString(9);
+				String aprobDV = rs.getString(10);
+
+				EnumTipAprobare tipAprobare = EnumTipAprobare.NONE;
+
+				if (aprobSD.equals("X") && aprobDV.equals("X"))
+					tipAprobare = EnumTipAprobare.SD_DV;
+				else if (aprobSD.equals("X") && !aprobDV.equals("X"))
+					tipAprobare = EnumTipAprobare.SD_ONLY;
+
+				comandaAprobare.setAprobariNecesare(tipAprobare);
+
 			}
 
 			comandaAprobare.setListArticole(getArticoleComandaAprobare(conn, idComanda));
@@ -575,7 +587,7 @@ public class OperatiiComenzi {
 
 	public Status opereazaComanda(ComandaAprobareOperare comanda) {
 
-		Status status;
+		Status status = null;
 		EnumOpereazaComanda stareComanda;
 
 		if (comanda.isSeAproba())
@@ -672,7 +684,16 @@ public class OperatiiComenzi {
 	public Status modificaStareComanda(ComandaAprobareOperare comanda, EnumOpereazaComanda stareComanda) {
 		Status status = new Status();
 
-		if (stareComanda == EnumOpereazaComanda.APROBARE || stareComanda == EnumOpereazaComanda.RESPINGERE) {
+		if (stareComanda == EnumOpereazaComanda.APROBARE) {
+			if (comanda.getTipAngajatAprob() == EnumTipAngajat.SD)
+				if (comanda.getAprobariNecesare().equals(EnumTipAprobare.SD_ONLY)) {
+					status = SapServices.opereazaComanda(comanda.getId(), comanda.getCodAngajat(), stareComanda.getCodStare());
+				} else if (comanda.getAprobariNecesare().equals(EnumTipAprobare.SD_DV))
+					status = aprobaComandaSDDV(comanda.getId());
+
+		}
+
+		if (stareComanda == EnumOpereazaComanda.RESPINGERE) {
 			status = SapServices.opereazaComanda(comanda.getId(), comanda.getCodAngajat(), stareComanda.getCodStare());
 
 		}
@@ -680,27 +701,20 @@ public class OperatiiComenzi {
 		return status;
 	}
 
-	public Status modificaStareComanda_old(ComandaAprobareOperare comanda, EnumOpereazaComanda stareComanda) {
+	public Status aprobaComandaSDDV(String idComanda) {
 		Status status = new Status();
 
-		String sqlString = ComenziSqlQueries.respingeComanda();
-
-		if (stareComanda == EnumOpereazaComanda.APROBARE)
-			sqlString = ComenziSqlQueries.aprobaComanda();
-		else if (stareComanda == EnumOpereazaComanda.RESPINGERE)
-			sqlString = ComenziSqlQueries.respingeComanda();
-		else if (stareComanda == EnumOpereazaComanda.CONDITIONARE)
-			sqlString = ComenziSqlQueries.conditioneazaComanda();
-
-		try (Connection conn = new DBManager().getTestDataSource().getConnection(); PreparedStatement stmt = conn.prepareCall(sqlString)) {
+		try (Connection conn = new DBManager().getTestDataSource().getConnection();
+				PreparedStatement stmt = conn.prepareCall(ComenziSqlQueries.aprobaComandaSD_DV())) {
 
 			stmt.clearParameters();
-			stmt.setString(1, comanda.getId());
+			stmt.setString(1, idComanda);
 
 			stmt.executeQuery();
 
 			status.setSuccess(true);
 			status.setMessage("Operatie reusita");
+
 		} catch (SQLException e) {
 			logger.error(Utils.getStackTrace(e));
 			status.setSuccess(false);
@@ -708,6 +722,29 @@ public class OperatiiComenzi {
 		}
 
 		return status;
+	}
+
+	public int getComenziAprobareSD(String codDepart) {
+		int nrComenzi = 0;
+
+		try (Connection conn = new DBManager().getTestDataSource().getConnection();
+				PreparedStatement stmt = conn.prepareCall(ComenziSqlQueries.getComenziAprobareSD())) {
+
+			stmt.clearParameters();
+			stmt.setString(1, codDepart);
+			stmt.executeQuery();
+
+			ResultSet rs = stmt.getResultSet();
+
+			while (rs.next()) {
+				nrComenzi = rs.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			logger.error(Utils.getStackTrace(e));
+		}
+
+		return nrComenzi;
 	}
 
 }
