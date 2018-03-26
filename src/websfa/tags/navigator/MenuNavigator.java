@@ -19,6 +19,12 @@ public class MenuNavigator {
 		String root = request.getServletContext().getContextPath();
 
 		NavigationDetails nd;
+		
+		nd = new NavigationDetails();
+		nd.setLink(String.format("%s/user", root));
+		nd.setText("Utilizator");
+		nd.setNume(EnumMeniu.UTILIZATOR);
+		navigationLinks.add(nd);
 
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/comanda", root));

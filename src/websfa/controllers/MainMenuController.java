@@ -173,6 +173,21 @@ public class MainMenuController {
 
 		return model;
 	}
+	
+	@RequestMapping(value = "/user", method = RequestMethod.GET)
+	public ModelAndView afisUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		checkSessionStatus(response);
+
+		ModelAndView model;
+		Gson gson = new GsonBuilder().create();
+
+		model = new ModelAndView("user");
+		model.addObject("user", user);
+		model.addObject("userjson", gson.toJson(user));
+
+		return model;
+	}
 
 	@RequestMapping(value = "/exit", method = RequestMethod.GET)
 	public String executeExit(HttpServletRequest request, HttpServletResponse response) throws IOException {

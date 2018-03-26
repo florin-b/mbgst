@@ -12,7 +12,7 @@ $(document).on('pageshow', '#main_menu', function() {
 	userObj = JSON.parse($('#userbean').text());
 
 	$('#userName').text(userObj.nume);
-
+	
 	getMainMenu();
 	
 	setInterval(getMainMenu, 10000);

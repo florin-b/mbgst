@@ -87,3 +87,21 @@ function getStareComandaText(idStareComanda) {
 	return textStare;
 
 }
+
+
+
+function getTipAngajat(tipAng) {
+
+	var strTipResp = 'Nedefinit';
+
+	if (tipAng == 'AV')
+		strTipResp = 'Agent vanzari';
+	else if (tipAng == 'SD')
+		strTipResp = 'Sef departament';
+
+	return strTipResp;
+
+}
+
+
+

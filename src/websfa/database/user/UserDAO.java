@@ -60,7 +60,7 @@ public class UserDAO {
 				user.setNume(getNumeAngajat(conn, codAgent));
 				user.setTipAcces(callableStatement.getString(6));
 				user.setUnitLog(callableStatement.getString(5));
-				 user.setTipAngajat(getTipAngajat(conn, codAgent));
+				user.setTipAngajat(getTipAngajat(conn, codAgent));
 				
 				String codDepart = HelperUser.getDepartAngajat(conn, codAgent);
 
