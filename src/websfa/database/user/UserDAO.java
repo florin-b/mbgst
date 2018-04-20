@@ -13,7 +13,7 @@ import websfa.beans.Login;
 import websfa.beans.User;
 import websfa.database.connection.DBManager;
 import websfa.helpers.HelperUser;
-import websfa.model.articole.OperatiiComenzi;
+
 import websfa.queries.user.UserSqlQueries;
 import websfa.utils.MailOperations;
 import websfa.utils.Utils;

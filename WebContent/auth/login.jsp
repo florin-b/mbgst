@@ -37,10 +37,10 @@
 
 				<h3>Autentificare</h3>
 
-				<form:label path="username">Utilizator</form:label>
+				<form:label path="username">Потребител</form:label>
 				<form:input id="username" name="username" path="" value="LSTAVREV" />
 				<br>
-				<form:label path="username">Parola</form:label>
+				<form:label path="username">парола</form:label>
 				<form:password id="password" name="password" path="" value="yPY4wC" />
 				<br>
 				<input type="submit" value="Login" />

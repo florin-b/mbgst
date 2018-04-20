@@ -105,7 +105,7 @@ hr {
 
 
 		<div data-role="header" data-theme="a">
-			<h1>Creare comanda</h1>
+			<h1>Създаване поръчка</h1>
 			<a href="main" data-ajax="false" data-theme="d" data-icon="arrow-l"
 				data-iconpos="notext" data-shadow="true" data-iconshadow="true"
 				class="ui-icon-nodisc"></a>
@@ -115,10 +115,10 @@ hr {
 		<div data-role="content" class="ui-content">
 
 			<select name="creare_comanda_select" id="creare_comanda_select">
-				<option value="0">Selectati</option>
-				<option value="1">Client</option>
-				<option value="2">Articole</option>
-				<option value="3">Date livrare</option>
+				<option value="0">Изберете</option>
+				<option value="1">Клиент</option>
+				<option value="2">Артикули</option>
+				<option value="3">Дата доставка</option>
 			</select> <br>
 
 			<div id='selectClientDiv' style="display: none">
@@ -130,7 +130,7 @@ hr {
 
 					<div class="ui-block-b" style='padding-left: 50px;'>
 						<input type="button" name=cautaClient id="cautaClient"
-							value="Cauta client" />
+							value="Търси клиент" />
 					</div>
 				</div>
 
@@ -203,9 +203,9 @@ hr {
 
 					<tbody>
 						<tr>
-							<td style="width: 25%">Judet</td>
+							<td style="width: 25%">Област</td>
 							<td><select id='codJudet'>
-									<option value='00'>Selectati un judet</option>
+									<option value='00'>Област</option>
 									<option value='01'>БЛАГОЕВГРАДСКА</option>
 									<option value='02'>БУРГАСКА</option>
 									<option value='03'>ДОБРИЧСКА</option>
@@ -240,85 +240,85 @@ hr {
 
 
 						<tr>
-							<td>Localitate</td>
+							<td>Населено място</td>
 							<td><input id="localitate" data-type="text"></td>
 						</tr>
 
 						<tr>
-							<td>Strada</td>
+							<td>Улица</td>
 							<td><input id="strada" data-type="text"></td>
 						</tr>
 
 						<tr>
-							<td>Persoana de contact</td>
+							<td>Лице за контакт</td>
 							<td><input id="persContact" data-type="text"></td>
 						</tr>
 
 						<tr>
-							<td>Telefon</td>
+							<td>Tелефон</td>
 							<td><input id="telPersContact" data-type="text"></td>
 						</tr>
 
 						<tr>
-							<td>Tip reducere</td>
+							<td>ВИД ОТСТЪПКА</td>
 							<td><select id="selectTipReducere">
-									<option value="1">1 factura (reducere in pret)</option>
-									<option value="2">2 facturi</option>
-									<option value="3">1 factura (reducere separat)</option>
+									<option value="1">ФАКТУРА (ОТСТЪПКА В ЦЕНАТА)</option>
+									<option value="2">ДВЕ ФАКТУРИ</option>
+									<option value="3">ЕДНА ФАКТУРА</option>
 							</select></td>
 						</tr>
 
 						<tr>
-							<td>Document insotitor</td>
+							<td>Придружаващ документ</td>
 							<td><select id="selectDocInsotitor">
-									<option value="1">Factura</option>
-									<option value="2">Aviz de expeditie</option>
+									<option value="1">Фактура</option>
+									<option value="2">Протокол</option>
 							</select></td>
 						</tr>
 
 
 						<tr>
-							<td>Plata</td>
+							<td>Плащане</td>
 							<td><select id="selectPlata">
 
-									<option value="E">Plata in numerar</option>
-									<option value="O">Ordin de plata</option>
-									<option value="Z">Incasare ulterioara</option>
+									<option value="E">Плащане в брой</option>
+									<option value="O">Платежно нареждане</option>
+									<option value="Z">Плащане при доставка</option>
 							</select></td>
 						</tr>
 
 						<tr>
-							<td>Responsabil incasare</td>
+							<td>Отговорник събиране пари</td>
 							<td><select id="selectResponsabil">
-									<option value="AV">Agent vanzari</option>
-									<option value="SO">Sofer</option>
-									<option value="OF">Operator facturare</option>
+									<option value="AV">Търговски агент</option>
+									<option value="SO">Шофьор</option>
+									<option value="OF">Оператор фактуриране</option>
 							</select></td>
 						</tr>
 
 						<tr>
-							<td>Transport</td>
+							<td>Транспорт</td>
 							<td><select id="selectTransport">
-									<option value="TCLI">Client</option>
+									<option value="TCLI">Клиент</option>
 							</select></td>
 						</tr>
 
 
 						<tr>
-							<td>Data livrare</td>
+							<td>Дата доставка</td>
 							<td><input id="dataLivrare" type="text" readonly="readonly"
 								style="position: relative; z-index: 100000;" /></td>
 						</tr>
 
 						<tr>
-							<td>Observatii livrare</td>
+							<td>Забележки доставка</td>
 							<td><input id="obsLivrare" data-type="text"></td>
 						</tr>
 
 						<tr>
 							<td colspan=2><br> <input type="button"
 								name="salveazaDateLivrare" id="salveazaDateLivrare"
-								value="Salveaza date livrare" /></td>
+								value="Запази данни доставка" /></td>
 						</tr>
 
 					</tbody>
@@ -339,7 +339,7 @@ hr {
 
 			<br> <br>
 			<div id="divArticole" style="display: none">
-				<b><font color="#008B00">Articole</font></b>
+				<b><font color="#008B00">Артикули</font></b>
 				<hr>
 
 				<ul id='listArticoleCreare' data-role='listview' data-inset='true'></ul>
@@ -358,7 +358,7 @@ hr {
 			<br> <br>
 
 			<div id="divDateLivrare" style="display: none">
-				<b><font color="#008B00">Date livrare</font></b>
+				<b><font color="#008B00">Дата доставка</font></b>
 				<hr>
 
 
@@ -373,65 +373,65 @@ hr {
 
 						<tbody>
 							<tr id="rowJudetAfis" style="display: none">
-								<th style="width: 25%">Judet</th>
+								<th style="width: 25%">Област</th>
 								<td><div id="numeJudetAfis"></div></td>
 							</tr>
 
 
 							<tr id="rowLocalitateAfis" style="display: none">
-								<th>Localitate</th>
+								<th>Населено място</th>
 								<td><div id="localitateAfis"></div></td>
 							</tr>
 
 							<tr id="rowStradaAfis" style="display: none">
-								<th>Strada</th>
+								<th>Улица</th>
 								<td><div id="stradaAfis"></div></td>
 							</tr>
 
 							<tr id="rowPersContactAfis" style="display: none">
-								<th>Persoana de contact</th>
+								<th>Лице за контакт</th>
 								<td><div id="persContactAfis"></div></td>
 							</tr>
 
 							<tr id="rowTelefonAfis" style="display: none">
-								<th>Telefon</th>
+								<th>Tелефон</th>
 								<td><div id="telPersContactAfis"></div></td>
 							</tr>
 
 							<tr id="rowTipReducereAfis" style="display: none">
-								<th>Tip reducere</th>
+								<th>ВИД ОТСТЪПКА</th>
 								<td><div id="tipReducereAfis"></div></td>
 							</tr>
 
 							<tr id="rowDocInsotitorAfis" style="display: none">
-								<th>Document insotitor</th>
+								<th>Придружаващ документ</th>
 								<td><div id="docInsotitorAfis"></div></td>
 							</tr>
 
 
 							<tr id="rowPlataAfis" style="display: none">
-								<th>Plata</th>
+								<th>Плащане</th>
 								<td><div id="plataAfis"></div></td>
 							</tr>
 
 							<tr id="rowRespIncasareAfis" style="display: none">
-								<th>Responsabil incasare</th>
+								<th>Отговорник събиране пари</th>
 								<td><div id="responsabilAfis"></div></td>
 							</tr>
 
 							<tr id="rowTransportAfis" style="display: none">
-								<th>Transport</th>
+								<th>Транспорт</th>
 								<td><div id="transportAfis"></div></td>
 							</tr>
 
 
 							<tr id="rowDataLivrareAfis" style="display: none">
-								<th>Data livrare</th>
+								<th>Дата доставка</th>
 								<td><div id="dataLivrareAfis"></div></td>
 							</tr>
 
 							<tr id="rowObsLivrareAfis" style="display: none">
-								<th>Observatii livrare</th>
+								<th>Забележки доставка</th>
 								<td><div id="obsLivrareAfis"></div></td>
 							</tr>
 
@@ -452,7 +452,7 @@ hr {
 			<div id='divSalveazaComanda' style="display: none">
 
 				<a href="#" id="salveazaComanda" class="ui-btn ui-corner-all"
-					style="background: #bbefbb;">Salveaza comanda</a>
+					style="background: #bbefbb;">Изтрй поръчка</a>
 
 			</div>
 

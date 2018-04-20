@@ -151,19 +151,19 @@ function afisDetaliiClient(detaliiClient) {
 
 	var row = $('<tr></tr>').appendTo(clientTable);
 
-	$('<td></td>').attr('style', 'width:20%').text('Adresa').appendTo(row);
+	$('<td></td>').attr('style', 'width:20%').text('Адрес').appendTo(row);
 	$('<td></td>').attr('style', 'width:70%').text(adresa).appendTo(row);
 
 	row = $('<tr></tr>').appendTo(clientTable);
 
-	$('<td></td>').attr('style', 'width:20%').text('Limita credit').appendTo(
+	$('<td></td>').attr('style', 'width:20%').text('Кредитен лимит').appendTo(
 			row);
 	$('<td></td>').attr('style', 'width:70%').text(
 			detaliiClient.stareClient.limitaCredit.toFixed(2)).appendTo(row);
 
 	row = $('<tr></tr>').appendTo(clientTable);
 
-	$('<td></td>').attr('style', 'width:20%').text('Rest credit').appendTo(row);
+	$('<td></td>').attr('style', 'width:20%').text('Остатък кредит').appendTo(row);
 	$('<td></td>').attr('style', 'width:70%').text(
 			detaliiClient.stareClient.restCredit.toFixed(2)).appendTo(row);
 
@@ -187,7 +187,7 @@ function afisDetaliiClient(detaliiClient) {
 		}).appendTo(row);
 
 		var btnSelectClient = $('<button>', {
-			text : 'Selecteaza',
+			text : 'Изберете',
 			style : 'width:100%'
 
 		}).bind('click', {

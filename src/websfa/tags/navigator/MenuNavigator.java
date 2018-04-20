@@ -22,25 +22,25 @@ public class MenuNavigator {
 		
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/user", root));
-		nd.setText("Utilizator");
+		nd.setText("Потребител");
 		nd.setNume(EnumMeniu.UTILIZATOR);
 		navigationLinks.add(nd);
 
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/comanda", root));
-		nd.setText("Creare comanda");
+		nd.setText("Създаване поръчка");
 		nd.setNume(EnumMeniu.CREARE_COMANDA);
 		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
 
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/modifcmd", root));
-		nd.setText("Modificare comanda");
+		nd.setText("Промяна поръчка");
 		nd.setNume(EnumMeniu.MODIFICARE_COMANDA);
 		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
 
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/afiscom", root));
-		nd.setText("Afisare comanda");
+		nd.setText("Показване поръчка");
 		nd.setNume(EnumMeniu.AFISARE_COMANDA);
 		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
 
@@ -54,19 +54,19 @@ public class MenuNavigator {
 
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/stocuri", root));
-		nd.setText("Stocuri");
+		nd.setText("Наличности");
 		nd.setNume(EnumMeniu.STOCURI);
 		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
 
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/preturi", root));
-		nd.setText("Preturi");
+		nd.setText("Цени");
 		nd.setNume(EnumMeniu.PRETURI);
 		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
 
 		nd = new NavigationDetails();
 		nd.setLink(String.format("%s/exit", root));
-		nd.setText("Iesire");
+		nd.setText("Изход");
 		nd.setNume(EnumMeniu.EXIT);
 		navigationLinks.add(nd);
 

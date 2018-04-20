@@ -127,7 +127,7 @@ function afisComenziModificare(listComenzi) {
 
 		$('#cmd_modif_select').append($('<option>', {
 			value : 0,
-			text : "Selectati o comanda"
+			text : "Изберете поръчка"
 		}));
 
 		for (var i = 0; i < listComenzi.length; i++) {

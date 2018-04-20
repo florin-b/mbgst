@@ -324,7 +324,7 @@ function afisPretArticol(codArticol, datePret) {
 
 	row = $('<tr></tr>');
 	$(row).appendTo(pretTable);
-	$('<td></td>').text('Reducere').attr('style', 'width:30%').appendTo(row);
+	$('<td></td>').text('Отстъпка').attr('style', 'width:30%').appendTo(row);
 
 	var textProcRed = $('<input/>', {
 		type : 'text',

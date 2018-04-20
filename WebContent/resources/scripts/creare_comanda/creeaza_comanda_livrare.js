@@ -91,11 +91,11 @@ function getTipReducereText(tipReducere) {
 	var strTipReducere;
 
 	if (tipReducere == 1)
-		strTipReducere = '1 factura (reducere in pret)';
+		strTipReducere = 'ФАКТУРА (ОТСТЪПКА В ЦЕНАТА)';
 	else if (tipReducere == 2)
-		strTipReducere = '2 facturi';
+		strTipReducere = 'ДВЕ ФАКТУРИ';
 	else if (tipReducere == 3)
-		strTipReducere = '1 factura (reducere separat)';
+		strTipReducere = 'ЕДНА ФАКТУРА';
 
 	return strTipReducere;
 
@@ -106,9 +106,9 @@ function getDocInsotitorText(tipDocument) {
 	var strTipDocument;
 
 	if (tipDocument == 1)
-		strTipDocument = 'Factura';
+		strTipDocument = 'Фактура';
 	else if (tipDocument == 2)
-		strTipDocument = 'Aviz de expeditie';
+		strTipDocument = 'Протокол';
 
 	return strTipDocument;
 
@@ -123,9 +123,9 @@ function getTipPlataText(tipPlata) {
 	else if (tipPlata == 'C')
 		strTipPlata = 'Cec';
 	else if (tipPlata == 'E')
-		strTipPlata = 'Plata in numerar';
+		strTipPlata = 'Плащане в брой';
 	else if (tipPlata == 'O')
-		strTipPlata = 'Ordin de plata';
+		strTipPlata = 'Платежно нареждане';
 
 	return strTipPlata;
 
@@ -136,11 +136,11 @@ function getRespIncasareText(tipResp) {
 	var strTipResp;
 
 	if (tipResp == 'AV')
-		strTipResp = 'Agent vanzari';
+		strTipResp = 'Търговски агент';
 	else if (tipResp == 'SO')
-		strTipResp = 'Sofer';
+		strTipResp = 'Шофьор';
 	else if (tipResp == 'OF')
-		strTipResp = 'Operator';
+		strTipResp = 'Оператор фактуриране';
 
 	return strTipResp;
 
@@ -151,9 +151,9 @@ function getTipTranspText(tipTransp) {
 	var strTipTransp;
 
 	if (tipTransp == 'TRAP')
-		strTipTransp = 'Arabesque';
+		strTipTransp = 'Будмакс';
 	else if (tipTransp == 'TCLI')
-		strTipTransp = 'Client';
+		strTipTransp = 'Клиент';
 	else if (tipTransp == 'TFRN')
 		strTipTransp = 'Furnizor';
 

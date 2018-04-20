@@ -234,7 +234,7 @@ function afisArticolComanda(articol, poz) {
 	$('<td></td>').attr({
 		style : 'width:10%;text-align:right;'
 	}).text(articol.pretUnitar).appendTo(row);
-	$('<td></td>').text('RON').appendTo(row);
+	$('<td></td>').text('BGN').appendTo(row);
 
 	row = $('<tr></tr>').appendTo(articoleTable);
 	$('<td></td>').attr('style', 'width:2%').appendTo(row);
@@ -282,28 +282,28 @@ function afisdateLivrareComanda(dateLivrare) {
 
 	var row = $('<tr></tr>').appendTo(dateLivrTable);
 	$('<td></td>').attr('colspan', '2').attr('style', 'font-weight:bold').text(
-			'Date livrare').appendTo(row);
+			'Дата доставка').appendTo(row);
 
 	row = $('<tr></tr>').appendTo(dateLivrTable);
-	$('<td></td>').attr('style', 'width:5%').text('Judet').appendTo(row);
+	$('<td></td>').attr('style', 'width:5%').text('Област').appendTo(row);
 	$('<td></td>').text(getNumeJudet(dateLivrare.adresaLivrare.numeJudet))
 			.appendTo(row);
 
 	row = $('<tr></tr>').appendTo(dateLivrTable);
-	$('<td></td>').attr('style', 'width:5%').text('Localitate').appendTo(row);
+	$('<td></td>').attr('style', 'width:5%').text('Населено място').appendTo(row);
 	$('<td></td>').text(dateLivrare.adresaLivrare.localitate).appendTo(row);
 
 	row = $('<tr></tr>').appendTo(dateLivrTable);
-	$('<td></td>').attr('style', 'width:25%').text('Strada').appendTo(row);
+	$('<td></td>').attr('style', 'width:25%').text('Улица').appendTo(row);
 	$('<td></td>').text(dateLivrare.adresaLivrare.strada).appendTo(row);
 
 	row = $('<tr></tr>').appendTo(dateLivrTable);
-	$('<td></td>').attr('style', 'width:25%').text('Pers. contact').appendTo(
+	$('<td></td>').attr('style', 'width:25%').text('Лице за контакт').appendTo(
 			row);
 	$('<td></td>').text(dateLivrare.persoanaContact).appendTo(row);
 
 	row = $('<tr></tr>').appendTo(dateLivrTable);
-	$('<td></td>').attr('style', 'width:25%').text('Telefon').appendTo(row);
+	$('<td></td>').attr('style', 'width:25%').text('Tелефон').appendTo(row);
 	$('<td></td>').text(dateLivrare.telPersContact).appendTo(row);
 
 	return dateLivrTable;
@@ -316,7 +316,7 @@ function getStareComanda(intStare) {
 
 	switch (Number(intStare)) {
 	case -1:
-		retVal = "Comanda NU a fost salvata.";
+		retVal = "Comanda nu a fost salvata.";
 		break;
 
 	case 0:
@@ -324,7 +324,7 @@ function getStareComanda(intStare) {
 		break;
 
 	case 1:
-		retVal = "Comanda in curs de aprobare.";
+		retVal = "Поръчка в процес на одобрение.";
 		break;
 
 	case 2:

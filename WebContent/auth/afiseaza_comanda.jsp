@@ -1,12 +1,12 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Afisare comanda</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Показване поръчка</title>
 
 
 
@@ -64,7 +64,7 @@
 
 
 		<div data-role="header" data-theme="a">
-			<h1>Afisare comanda</h1>
+			<h1>Показване поръчка</h1>
 			<a href="main" data-ajax="false" id="afisMainLink" data-theme="d"
 				data-icon="arrow-l" data-iconpos="notext" data-shadow="true"
 				data-iconshadow="true" class="ui-icon-nodisc"></a>
@@ -81,7 +81,7 @@
 					id="optiuni_div" data-collapsed="true">
 					<div data-role="collapsible" id="inner_optiuni_div"
 						data-content-theme="c">
-						<h4>Optiuni cautare</h4>
+						<h4>Избор търсене</h4>
 
 						<div>
 							<table data-role="table" id="optiuni-table" data-mode="reflow"
@@ -94,24 +94,24 @@
 								</thead>
 								<tbody>
 									<tr>
-										<td>Interval emitere</td>
+										<td>Интервал издаване</td>
 										<td><select id='intervalCautare'>
-												<option value="1">Astazi</option>
-												<option value="2">Ultimele 7 zile</option>
-												<option value="3">Ultimele 30 de zile</option>
+												<option value="1">Днес</option>
+												<option value="2">Последните 7 дни</option>
+												<option value="3">Последните 30 дни</option>
 
 										</select></td>
 									</tr>
 									<tr>
-										<td>Stare comanda</td>
+										<td>Статус поръчка</td>
 										<td><select id='tipComanda'>
-												<option value="1">Emise</option>
-												<option value="2">Respinse/sterse</option>
+												<option value="1">Издадени</option>
+												<option value="2">Отхвърлени/Изтрити</option>
 										</select></td>
 									</tr>
 
 									<tr id='rowAgent' style="display: none;">
-										<td>Agent</td>
+										<td>Aгент</td>
 										<td><select id='selectAgenti'>
 
 										</select></td>
@@ -120,7 +120,7 @@
 									<tr>
 										<td colspan='2'><input type="button"
 											name="getComenziAfis" id="getComenziAfis"
-											onClick="cautaComenzi();" value="Cauta" /></td>
+											onClick="cautaComenzi();" value="Търсене" /></td>
 									</tr>
 								</tbody>
 							</table>

@@ -71,7 +71,7 @@
 
 
 		<div data-role="header" data-theme="a">
-			<h1>Modificare comanda</h1>
+			<h1>Промяна поръчка</h1>
 			<a href="main" data-ajax="false" data-theme="d" data-icon="arrow-l"
 				data-iconpos="notext" data-shadow="true" data-iconshadow="true"
 				class="ui-icon-nodisc"></a>
@@ -85,7 +85,7 @@
 			<select name="cmd_modif_select" id="cmd_modif_select">
 
 			</select> <br> <select name="modif_act_select" id="modif_act_select">
-				<option value="0">Selectati</option>
+				<option value="0">Изберете</option>
 				<option value="1">Adaugare articole</option>
 				<option value="2">Modificare date livrare</option>
 			</select> <br> <br> <br>
@@ -151,93 +151,93 @@
 
 					<tbody>
 						<tr>
-							<td style="width: 25%">Judet</td>
+							<td style="width: 25%">Област</td>
 							<td><input id="numeJudet" data-type="text"></td>
 						</tr>
 
 
 						<tr>
-							<td>Localitate</td>
+							<td>Населено място</td>
 							<td><input id="localitate" data-type="text"></td>
 						</tr>
 
 						<tr>
-							<td>Strada</td>
+							<td>Улица</td>
 							<td><input id="strada" data-type="text"></td>
 						</tr>
 
 						<tr>
-							<td>Persoana de contact</td>
+							<td>Лице за контакт</td>
 							<td><input id="persContact" data-type="text"></td>
 						</tr>
 
 						<tr>
-							<td>Telefon</td>
+							<td>Tелефон</td>
 							<td><input id="telPersContact" data-type="text"></td>
 						</tr>
 
 						<tr>
-							<td>Tip reducere</td>
+							<td>ВИД ОТСТЪПКА</td>
 							<td><select id="selectTipReducere">
-									<option value="1">1 factura (reducere in pret)</option>
-									<option value="2">2 facturi</option>
-									<option value="3">1 factura (reducere separat)</option>
+									<option value="1">ФАКТУРА (ОТСТЪПКА В ЦЕНАТА)</option>
+									<option value="2">ДВЕ ФАКТУРИ</option>
+									<option value="3">ЕДНА ФАКТУРА</option>
 							</select></td>
 						</tr>
 
 						<tr>
-							<td>Document insotitor</td>
+							<td>Придружаващ документ</td>
 							<td><select id="selectDocInsotitor">
-									<option value="1">Factura</option>
-									<option value="2">Aviz de expeditie</option>
+									<option value="1">Фактура</option>
+									<option value="2">Протокол</option>
 							</select></td>
 						</tr>
 
 
 						<tr>
-							<td>Plata</td>
+							<td>Плащане</td>
 							<td><select id="selectPlata">
 									<option value="B">Bilet la ordin</option>
 									<option value="C">Cec</option>
-									<option value="E">Plata in numerar</option>
-									<option value="O">Ordin de plata</option>
+									<option value="E">Плащане в брой</option>
+									<option value="O">Платежно нареждане</option>
 							</select></td>
 						</tr>
 
 						<tr>
-							<td>Responsabil incasare</td>
+							<td>Отговорник събиране пари</td>
 							<td><select id="selectResponsabil">
-									<option value="AV">Agent vanzari</option>
-									<option value="SO">Sofer</option>
-									<option value="OF">Operator facturare</option>
+									<option value="AV">Търговски агент</option>
+									<option value="SO">Шофьор</option>
+									<option value="OF">Оператор фактуриране</option>
 							</select></td>
 						</tr>
 
 						<tr>
-							<td>Transport</td>
+							<td>Транспорт</td>
 							<td><select id="selectTransport">
-									<option value="TRAP">Arabesque</option>
-									<option value="TCLI">Client</option>
+									<option value="TRAP">Будмакс</option>
+									<option value="TCLI">Клиент</option>
 									<option value="TFRN">Furnizor</option>
 							</select></td>
 						</tr>
 
 
 						<tr>
-							<td>Data livrare</td>
+							<td>Дата доставка</td>
 							<td><input id="dataLivrare" type="text" readonly="readonly"
 								style="position: relative; z-index: 100000;" /></td>
 						</tr>
 
 						<tr>
-							<td>Observatii livrare</td>
+							<td>Забележки доставка</td>
 							<td><input id="obsLivrare" data-type="text"></td>
 						</tr>
 
 						<tr>
 							<td colspan=2><br> <input type="button"
 								name="saveDateLivr" id="saveDateLivr"
-								value="Salveaza date livrare" /></td>
+								value="Запази данни доставка" /></td>
 						</tr>
 
 					</tbody>
@@ -316,11 +316,11 @@
 
 					<td style='width: 30%; padding: 20px;'><a href="#"
 						id="stergeCmdModif" class="ui-btn ui-corner-all"
-						style="background: #FFD399;">Sterge comanda</a></td>
+						style="background: #FFD399;">Изтрй поръчка</a></td>
 
 					<td style='width: 50%; padding: 20px;'><a href="#"
 						id="salveazaCmdModif" class="ui-btn ui-corner-all"
-						style="background: #99FFD3;">Salveaza comanda</a></td>
+						style="background: #99FFD3;">Запази поръчка</a></td>
 				</tr>
 			</table>
 		</div>
