@@ -11,17 +11,15 @@ $(document).on('pageshow', '#main_menu', function() {
 
 	userObj = JSON.parse($('#userbean').text());
 
-	$('#userName').text(userObj.nume);
-	
 	getMainMenu();
-	
+
 	setInterval(getMainMenu, 10000);
 
 });
 
 function initMenu() {
 	var menuList = JSON.parse($('#menubean').text());
-	
+
 	$("listMenu").empty();
 
 	for (var i = 0; i < menuList.length; i++) {
@@ -46,11 +44,8 @@ function initMenu() {
 }
 
 function initMenuObject(menuList) {
-	
-	
-	
+
 	$("#listMenu").empty();
-	
 
 	for (var i = 0; i < menuList.length; i++) {
 
@@ -79,8 +74,7 @@ function getMainMenu() {
 		type : 'GET',
 		url : 'mainMenu',
 		data : ({
-			tipUser :  userObj.tipAngajat,
-			codDepart : userObj.codDepart
+			tipUser : userObj.tipAngajat
 		}),
 		beforeSend : function() {
 			loading('show');

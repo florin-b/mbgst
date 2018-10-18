@@ -4,99 +4,32 @@ import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import websfa.beans.CautaCmdAprob;
-import websfa.beans.Comanda;
-import websfa.beans.ComandaAprobareAfis;
-import websfa.beans.ComandaAprobareDetalii;
-import websfa.beans.ComandaAprobareOperare;
-import websfa.beans.ComandaModificareDetalii;
-import websfa.beans.Status;
-import websfa.beans.articole.CautareComanda;
-import websfa.beans.articole.ComandaDetalii;
-import websfa.beans.articole.ComandaHeader;
-import websfa.model.articole.OperatiiComenzi;
+import websfa.beans.MasinaNeincarcata;
+
+import websfa.model.comenzi.OperatiiMasini;
 
 @Controller
 @Scope("session")
 public class ComenziController {
 
-	@RequestMapping(value = "/getComAfis", produces = "application/json")
+	@RequestMapping(value = "/getMasiniNeincarcate", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<ComandaHeader> getComenzi(CautareComanda cautareComanda) {
+	public List<MasinaNeincarcata> getMasiniNeincarcate(String filiala) {
 
-		return new OperatiiComenzi().getComenziAfisare(cautareComanda);
+		return new OperatiiMasini().getMasiniNeincarcate(filiala);
 
 	}
 
-	@RequestMapping(value = "/getdetcom", produces = "application/json")
+	@RequestMapping(value = "/setSfarsitIncarcare", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ComandaDetalii getDetaliiComanda(String idCmd) {
+	public void setSfarsitIncarre(String document, String codSofer) {
 
-		return new OperatiiComenzi().getDetaliiComanda(idCmd);
+		new OperatiiMasini().setSfarsitIncarcare(document, codSofer);
 
 	}
-
-	@RequestMapping(value = "/salveazaComanda", method = RequestMethod.POST, produces = "application/json")
-	@ResponseBody
-	public Status salveazaComanda(@RequestBody Comanda comanda) {
-
-		return new OperatiiComenzi().salveazaComanda(comanda);
-
-	}
-
-	@RequestMapping(value = "/getCmdAprob", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
-	public List<ComandaAprobareAfis> getComenziAprobare(CautaCmdAprob cautaCmd) {
-
-		return new OperatiiComenzi().getComenziAprobare(cautaCmd);
-
-	}
-
-	@RequestMapping(value = "/getDetCmdAprob", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
-	public ComandaAprobareDetalii getComandaAprobare(String idComanda) {
-
-		return new OperatiiComenzi().getDetaliiComandaAprob(idComanda);
-
-	}
-
-	@RequestMapping(value = "/getCmdModif", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
-	public List<ComandaAprobareAfis> getComenziModificare(CautaCmdAprob cautaCmd) {
-
-		return new OperatiiComenzi().getComenziModificare(cautaCmd);
-
-	}
-
-	@RequestMapping(value = "/getDetCmdModif", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
-	public ComandaModificareDetalii getDetaliiCmdModificare(String idComanda) {
-
-		return new OperatiiComenzi().getDetaliiComandaModif(idComanda);
-
-	}
-
-	@RequestMapping(value = "/aprobaComanda", method = RequestMethod.POST, produces = "application/json")
-	@ResponseBody
-	public Status aprobaComanda(@RequestBody ComandaAprobareOperare comanda) {
-
-		return new OperatiiComenzi().opereazaComanda(comanda);
-
-	}
-
-	@RequestMapping(value = "/stergeComanda", method = RequestMethod.POST, produces = "application/json")
-	@ResponseBody
-	public Status stergeComanda(@RequestBody ComandaAprobareOperare comanda) {
-
-		return new OperatiiComenzi().opereazaComanda(comanda);
-
-	}
-	
-	
 
 }

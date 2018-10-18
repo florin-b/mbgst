@@ -11,7 +11,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 import websfa.beans.nagivation.NavigationDetails;
 import websfa.enums.EnumMeniu;
 import websfa.helpers.HelperMeniu;
-import websfa.model.articole.OperatiiComenzi;
+
 
 public class Navigator extends SimpleTagSupport {
 
@@ -54,41 +54,9 @@ public class Navigator extends SimpleTagSupport {
 		NavigationDetails nd;
 
 		nd = new NavigationDetails();
-		nd.setLink(String.format("%s/comanda", root));
-		nd.setText("Creare comanda");
-		nd.setNume(EnumMeniu.CREARE_COMANDA);
-		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
-
-		nd = new NavigationDetails();
-		nd.setLink(String.format("%s/modifcmd", root));
-		nd.setText("Modificare comanda");
-		nd.setNume(EnumMeniu.MODIFICARE_COMANDA);
-		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
-
-		nd = new NavigationDetails();
-		nd.setLink(String.format("%s/afiscom", root));
-		nd.setText("Afisare comanda");
-		nd.setNume(EnumMeniu.AFISARE_COMANDA);
-		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
-
-		nd = new NavigationDetails();
-		nd.setLink(String.format("%s/aprobacmd", root));
-		nd.setText("Aprobare comanda");
-		nd.setNume(EnumMeniu.APROBARE_COMANDA);
-		if (tipUser.equals("SD"))
-			nd.setNavNumber(new OperatiiComenzi().getComenziAprobareSD(codDepart));
-		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
-
-		nd = new NavigationDetails();
-		nd.setLink(String.format("%s/stocuri", root));
-		nd.setText("Stocuri");
-		nd.setNume(EnumMeniu.STOCURI);
-		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
-
-		nd = new NavigationDetails();
-		nd.setLink(String.format("%s/preturi", root));
-		nd.setText("Preturi");
-		nd.setNume(EnumMeniu.PRETURI);
+		nd.setLink(String.format("%s/incarcare", root));
+		nd.setText("Incarcare masini");
+		nd.setNume(EnumMeniu.INCARCARE_MASINI);
 		HelperMeniu.addMenuOption(navigationLinks, nd, tipUser);
 
 		nd = new NavigationDetails();

@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>WebSFA Login</title>
+<title>MobiGEST Login</title>
 
 
 
@@ -26,7 +26,7 @@
 	<div data-role="page" id="init" data-url="">
 
 		<div data-role="header" data-theme="a">
-			<h1>WebSFA Test</h1>
+			<h1>MobiGEST</h1>
 		</div>
 
 		<div data-role="content" class="ui-content">
@@ -37,11 +37,11 @@
 
 				<h3>Autentificare</h3>
 
-				<form:label path="username">Потребител</form:label>
-				<form:input id="username" name="username" path="" value="LSTAVREV" />
+				<form:label path="username">Utilizator</form:label>
+				<form:input id="username" name="username" path="" />
 				<br>
-				<form:label path="username">парола</form:label>
-				<form:password id="password" name="password" path="" value="yPY4wC" />
+				<form:label path="username">Parola</form:label>
+				<form:password id="password" name="password" path="" />
 				<br>
 				<input type="submit" value="Login" />
 				<br>
@@ -65,7 +65,7 @@
 	</div>
 
 
-	
+
 
 </body>
 

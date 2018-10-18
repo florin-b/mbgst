@@ -47,9 +47,7 @@ a:link {
 
 		<div data-role="content" class="ui-content">
 
-			<br>
-			<div id="userName"></div>
-			<br>
+			<br> <br>
 
 			<ul data-role="listview" data-icon="false" id="listMenu">
 			</ul>

@@ -8,26 +8,16 @@ public class HelperMeniu {
 
 	public static void addMenuOption(List<NavigationDetails> navigationLinks, NavigationDetails nd, String tipUser) {
 
+		
+		
 		switch (tipUser) {
-		case "SD":
+		case "GS":
+		case "GD":
+		case "DZ": 
+		case "DADMIN":
 			switch (nd.getNume()) {
-			case AFISARE_COMANDA:
-			case APROBARE_COMANDA:
-			case PRETURI:
-			case STOCURI:
-				navigationLinks.add(nd);
-				break;
-			default:
-				break;
-			}
-			break;
-		case "AV":
-			switch (nd.getNume()) {
-			case CREARE_COMANDA:
-			case MODIFICARE_COMANDA:
-			case AFISARE_COMANDA:
-			case PRETURI:
-			case STOCURI:
+			case UTILIZATOR:
+			case INCARCARE_MASINI:
 				navigationLinks.add(nd);
 				break;
 			default:

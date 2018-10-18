@@ -158,7 +158,7 @@ function tablePretArticol(codArticol, datePret) {
 
 	row = $('<tr></tr>');
 	$(row).appendTo(pretTable);
-	$('<td></td>').text('Discount client').attr('style', 'width:30%').css(
+	$('<td></td>').text('Отстъпка клиент').attr('style', 'width:30%').css(
 			'color', colorGroup1).appendTo(row);
 
 	var procentReducereClient = (100 - (datePret.pret / datePret.pretLista) * 100)

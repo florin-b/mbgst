@@ -1,11 +1,11 @@
-package websfa.queries.user;
+package websfa.queries.articole;
 
 public class UserSqlQueries {
 
 	public static String getFullName() {
 		StringBuilder sqlString = new StringBuilder();
 
-		sqlString.append("select nume from agenti where cod =? ");
+		sqlString.append("select nume from personal where cod =? ");
 
 		return sqlString.toString();
 	}
@@ -13,7 +13,7 @@ public class UserSqlQueries {
 	public static String getTipAngajat() {
 		StringBuilder sqlString = new StringBuilder();
 
-		sqlString.append("select tip from agenti where cod = ?");
+		sqlString.append("select functie from personal where cod = ?");
 
 		return sqlString.toString();
 	}

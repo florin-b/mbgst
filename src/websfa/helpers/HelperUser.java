@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import websfa.queries.user.UserSqlQueries;
 import websfa.utils.Utils;
 
 public class HelperUser {
@@ -92,28 +91,6 @@ public class HelperUser {
 
 		return codDepart;
 
-	}
-
-	public static String getDepartAngajat(Connection conn, String angajatId) {
-
-		String codDepart = null;
-
-		try (PreparedStatement stmt = conn.prepareStatement(UserSqlQueries.getCodDepart())) {
-
-			stmt.setString(1, angajatId);
-			stmt.executeQuery();
-
-			ResultSet rs = stmt.getResultSet();
-
-			while (rs.next()) {
-				codDepart = rs.getString("divizie");
-			}
-
-		} catch (Exception ex) {
-			logger.error(Utils.getStackTrace(ex));
-		}
-
-		return codDepart;
 	}
 
 }

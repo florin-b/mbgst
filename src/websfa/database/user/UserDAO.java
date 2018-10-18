@@ -13,8 +13,8 @@ import websfa.beans.Login;
 import websfa.beans.User;
 import websfa.database.connection.DBManager;
 import websfa.helpers.HelperUser;
-
-import websfa.queries.user.UserSqlQueries;
+import websfa.queries.articole.SqlQueries;
+import websfa.queries.articole.UserSqlQueries;
 import websfa.utils.MailOperations;
 import websfa.utils.Utils;
 
@@ -29,7 +29,7 @@ public class UserDAO {
 		String storedProcedure = "{ call web_pkg.wlogin(?,?,?,?,?,?,?,?,?,?) }";
 		int logonStatus = 0;
 
-		try (Connection conn = new DBManager().getTestDataSource().getConnection(); CallableStatement callableStatement = conn.prepareCall(storedProcedure);) {
+		try (Connection conn = new DBManager().getProdDataSource().getConnection(); CallableStatement callableStatement = conn.prepareCall(storedProcedure);) {
 
 			callableStatement.setString(1, login.getUsername().trim());
 			callableStatement.setString(2, login.getPassword().trim());
@@ -59,13 +59,14 @@ public class UserDAO {
 				user.setCodPers(codAgent);
 				user.setNume(getNumeAngajat(conn, codAgent));
 				user.setTipAcces(callableStatement.getString(6));
-				user.setUnitLog(callableStatement.getString(5));
+				user.setUnitLog(getUnitLogAngajat(conn, codAgent));
 				user.setTipAngajat(getTipAngajat(conn, codAgent));
-				
-				String codDepart = HelperUser.getDepartAngajat(conn, codAgent);
 
-				user.setCodDepart(codDepart);
-				user.setSuccessLogon(true);
+				if (!user.getTipAcces().equals("5") && !user.getTipAcces().equals("11") && !user.getTipAcces().equals("38")) {
+					user.setSuccessLogon(false);
+					user.setLogonMessage("Acces interzis");
+				} else
+					user.setSuccessLogon(true);
 
 			} else {
 				user.setSuccessLogon(false);
@@ -125,7 +126,7 @@ public class UserDAO {
 
 			while (rs.next()) {
 
-				tipPers = rs.getString("tip");
+				tipPers = rs.getString("functie");
 			}
 
 		} catch (Exception ex) {
@@ -133,6 +134,30 @@ public class UserDAO {
 		}
 
 		return tipPers;
+	}
+
+	private static String getUnitLogAngajat(Connection conn, String angajatId) {
+
+		String unitLog = null;
+
+		try (PreparedStatement stmt = conn.prepareStatement(SqlQueries.getUnitLogAngajat())) {
+
+			stmt.setString(1, angajatId);
+
+			stmt.executeQuery();
+
+			ResultSet rs = stmt.getResultSet();
+
+			while (rs.next()) {
+
+				unitLog = rs.getString("filiala");
+			}
+
+		} catch (Exception ex) {
+			logger.error(Utils.getStackTrace(ex));
+		}
+
+		return unitLog;
 	}
 
 }

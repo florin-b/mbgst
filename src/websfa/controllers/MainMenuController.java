@@ -74,7 +74,7 @@ public class MainMenuController {
 		ModelAndView model;
 		Gson gson = new GsonBuilder().create();
 
-		List<NavigationDetails> mainMenu = new MenuNavigator().createNavigationLinks(user.getTipAngajat(), user.getCodDepart(), request);
+		List<NavigationDetails> mainMenu = new MenuNavigator().createNavigationLinks(user.getTipAngajat(), request);
 
 		model = new ModelAndView("mainMenu");
 		model.addObject("user", user);
@@ -84,96 +84,21 @@ public class MainMenuController {
 		return model;
 	}
 
-	@RequestMapping(value = "/stocuri", method = RequestMethod.GET)
-	public ModelAndView executeStocuri(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/incarcare", method = RequestMethod.GET)
+	public ModelAndView executeIncarcareMasini(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		checkSessionStatus(response);
 
 		ModelAndView model;
 		Gson gson = new GsonBuilder().create();
 
-		model = new ModelAndView("stocuri");
+		model = new ModelAndView("incarcare_masini");
 		model.addObject("user", user);
 		model.addObject("userjson", gson.toJson(user));
 
 		return model;
 	}
 
-	@RequestMapping(value = "/preturi", method = RequestMethod.GET)
-	public ModelAndView executePreturi(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		checkSessionStatus(response);
-
-		ModelAndView model;
-		Gson gson = new GsonBuilder().create();
-
-		model = new ModelAndView("preturi");
-		model.addObject("user", user);
-		model.addObject("userjson", gson.toJson(user));
-
-		return model;
-	}
-
-	@RequestMapping(value = "/afiscom", method = RequestMethod.GET)
-	public ModelAndView afiseazaComanda(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		checkSessionStatus(response);
-
-		ModelAndView model;
-		Gson gson = new GsonBuilder().create();
-
-		model = new ModelAndView("afiseaza_comanda");
-		model.addObject("user", user);
-		model.addObject("userjson", gson.toJson(user));
-
-		return model;
-	}
-
-	@RequestMapping(value = "/aprobacmd", method = RequestMethod.GET)
-	public ModelAndView aprobaComanda(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		checkSessionStatus(response);
-
-		ModelAndView model;
-		Gson gson = new GsonBuilder().create();
-
-		model = new ModelAndView("aproba_comanda");
-		model.addObject("user", user);
-		model.addObject("userjson", gson.toJson(user));
-
-		return model;
-	}
-
-	@RequestMapping(value = "/modifcmd", method = RequestMethod.GET)
-	public ModelAndView modificaComanda(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		checkSessionStatus(response);
-
-		ModelAndView model;
-		Gson gson = new GsonBuilder().create();
-
-		model = new ModelAndView("modificare_comanda");
-		model.addObject("user", user);
-		model.addObject("userjson", gson.toJson(user));
-
-		return model;
-	}
-
-	@RequestMapping(value = "/comanda", method = RequestMethod.GET)
-	public ModelAndView creeazaComanda(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		checkSessionStatus(response);
-
-		ModelAndView model;
-		Gson gson = new GsonBuilder().create();
-
-		model = new ModelAndView("creare_comanda");
-		model.addObject("user", user);
-		model.addObject("userjson", gson.toJson(user));
-
-		return model;
-	}
-	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public ModelAndView afisUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -198,8 +123,8 @@ public class MainMenuController {
 
 	@RequestMapping(value = "/mainMenu", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<NavigationDetails> getMainMenu(String tipUser, String codDepart, HttpServletRequest request) {
-		return new MenuNavigator().createNavigationLinks(tipUser, codDepart, request);
+	public List<NavigationDetails> getMainMenu(String tipUser, HttpServletRequest request) {
+		return new MenuNavigator().createNavigationLinks(tipUser, request);
 	}
 
 	private void checkSessionStatus(HttpServletResponse response) throws IOException {

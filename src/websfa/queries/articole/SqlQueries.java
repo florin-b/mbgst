@@ -2,127 +2,36 @@ package websfa.queries.articole;
 
 public class SqlQueries {
 
-	public static String cautaArticoleCod(String searchString) {
+	public static String getMasiniNeincarcate() {
 		StringBuilder sqlString = new StringBuilder();
 
-		sqlString.append(" select nume, decode(length(cod),18,substr(cod,-8),cod) from articole where ");
-		sqlString.append(" lower(decode(length(cod),18,substr(cod,-8),cod)) like lower('" + searchString + "%') and spart =? and rownum<50 order by nume");
+		sqlString.append(" select masina,numarb from ( ");
+		sqlString.append(" select b.masina,b.numarb, ROW_NUMBER() OVER(PARTITION BY b.masina,b.numarb order by masina,data_e) AS NRp ");
+		sqlString.append(" from websap.borderouri b join sapprd.vttk k on b.numarb=k.tknum ");
+		sqlString.append(" where b.sttrg = 2 and k.mandt='900' AND k.tplst = :filiala and k.shtyp = '1110' ");
+		sqlString.append(" and not exists(select 1 from sapprd.zsfarsitinc where document = b.numarb) ");
+		sqlString.append(" order by masina,data_e) ");
+		sqlString.append(" where nrp=1 ");
 
 		return sqlString.toString();
 	}
 
-	public static String cautaArticoleNume(String searchString) {
+	public static String getUnitLogAngajat() {
 		StringBuilder sqlString = new StringBuilder();
 
-		sqlString.append(" select nume, decode(length(cod),18,substr(cod,-8),cod) from articole where ");
-		sqlString.append(" lower(nume) like lower('" + searchString + "%') and spart =? and rownum<50 order by nume ");
+		sqlString.append("select filiala from personal  where cod=? ");
 
 		return sqlString.toString();
 	}
 
-	public static String getStoc() {
+	public static String setSfarsitIncarcare() {
 		StringBuilder sqlString = new StringBuilder();
 
-		sqlString.append(" select lgort depoz , nvl(sum(labst),0) stoc, meins,lgort, sintetic from ");
-		sqlString.append(" (select m.lgort,m.labst , mn.meins, mn.matnr  from sapdev.mard m, sapdev.mara mn ");
-		sqlString.append(" where m.mandt = '900'  and m.mandt = mn.mandt and m.matnr = mn.matnr and m.lgort != 'CUSF' ");
-		sqlString.append(" and m.matnr =? and m.werks in (?,?) ");
-		sqlString.append(" union all ");
-		sqlString.append(" select e.lgort depoz,-1 * sum(e.omeng), e.meins, e.matnr  from sapdev.vbbe e ");
-		sqlString.append(" where e.mandt = '900' ");
-		sqlString.append(" and e.matnr =:art and e.lgort != 'CUSF' and e.werks in (?,?) ");
-		sqlString.append(" group by e.meins,e.lgort, e.matnr), articole ar where ar.cod = matnr ");
-		sqlString.append(" group by meins,lgort, sintetic having sum(labst) > 0 order by depoz ");
+		sqlString.append(" insert into sapprd.zsfarsitinc(mandt, document, codsofer, data, ora) ");
+		sqlString.append(" values ('900',?,?, (select to_char(sysdate,'yyyymmdd') from dual), (select to_char(sysdate,'hh24mi') from dual) )");
 
 		return sqlString.toString();
 
-	}
-
-	public static String getStocDepozit() {
-		StringBuilder sqlString = new StringBuilder();
-
-		sqlString.append(" select nvl(sum(labst),0) stoc, meins, ar.sintetic from ");
-		sqlString.append(" (select m.labst , mn.meins, mn.matnr  from sapdev.mard m, sapdev.mara mn ");
-		sqlString.append(" where m.mandt = '900' and m.mandt = mn.mandt ");
-		sqlString.append(" and m.matnr = mn.matnr and m.matnr =?  and m.werks =? and m.lgort=?  ");
-		sqlString.append(" union all ");
-		sqlString.append(" select -1 * nvl(sum(e.omeng),0), e.meins, e.matnr  from sapdev.vbbe e ");
-		sqlString.append(" where e.mandt = '900' and e.matnr =? and e.werks =? and e.lgort=? ");
-		sqlString.append(" group by e.meins, e.matnr), articole ar where ar.cod = matnr group by meins, ar.sintetic having sum(labst) > 0 ");
-
-		return sqlString.toString();
-	}
-
-	public static String getProcenteDiscount() {
-		StringBuilder sqlString = new StringBuilder();
-
-		sqlString.append(" select distinct nvl(a.discount,0) av, ");
-		sqlString.append(" nvl((select distinct discount from sapdev.zdisc_pers_sint where  functie='SD' ");
-		sqlString.append(" and spart =? and werks =? and inactiv <> 'X' and matkl = c.cod),0) sd ");
-		sqlString.append(" from sapdev.zdisc_pers_sint a, articole b, sintetice c where  a.functie='AV' and a.spart =? and a.werks =? ");
-		sqlString.append(" and b.sintetic = c.cod and inactiv <> 'X' and matkl = c.cod and b.cod =? ");
-
-		return sqlString.toString();
-	}
-
-	public static String getCmpArticol() {
-		StringBuilder sqlString = new StringBuilder();
-
-		sqlString.append(" select nvl(to_char(decode(y.lbkum,0,y.verpr,y.salk3/y.lbkum),'99999.9999'),0) cmp from sapdev.mbew y where ");
-		sqlString.append(" y.mandt='900' and y.matnr=?  and y.bwkey =? ");
-
-		return sqlString.toString();
-	}
-
-	public static String getProcentReducereCmp() {
-		StringBuilder sqlString = new StringBuilder();
-
-		sqlString.append(" select nvl(sum(decode(art,'articol',procent)),0) proc_articol, nvl(sum(decode(art,'sintetic',procent)),0) proc_sintetic from ( ");
-		sqlString.append(" select sum(procent)procent, 'articol' art from sapdev.ZSUBCMP p where p.mandt = '900' ");
-		sqlString.append(" and p.spart = (select spart from articole where cod =:articol) ");
-		sqlString.append(" and p.datab <= to_char(sysdate, 'yyyymmdd') and p.datbi >= to_char(sysdate, 'yyyymmdd') ");
-		sqlString.append(" and matnr =:articol group by 'articol' ");
-		sqlString.append(" union ");
-		sqlString.append(" select sum(procent) procent, 'sintetic' art from sapdev.ZSUBCMP p ");
-		sqlString.append(" where p.mandt = '900' and p.spart =(select sintetic from articole where cod =:articol)  and");
-		sqlString.append(" p.datab <= to_char(sysdate, 'yyyymmdd') and p.datbi >= to_char(sysdate, 'yyyymmdd') ");
-		sqlString.append(" and matkl = (select sintetic from articole where cod =:articol) group by 'sintetic') x group by 'articol' ");
-
-		return sqlString.toString();
-	}
-
-	public static String getInfoArticolDesc() {
-		StringBuilder sqlString = new StringBuilder();
-
-		sqlString.append(" SELECT vtext FROM sapdev.T685t r where mandt = '900' and spras = '4' ");
-		sqlString.append(" and r.kvewe = 'A' and r.kappl = 'V' and KSCHL=? ");
-
-		return sqlString.toString();
-	}
-
-	public static String getPretMediu() {
-		StringBuilder sqlString = new StringBuilder();
-
-		sqlString.append(" select pret_med, adaos_med, cant from sapdev.zpret_mediu_oras where matnr =? and pdl=? ");
-
-		return sqlString.toString();
-	}
-
-	public static String getConditiiHeader() {
-		StringBuilder sqlString = new StringBuilder();
-
-		sqlString.append(" select id, condcalit, nrfact, nvl(observatii,' ') observatii from sapdev.zcondheadtableta where ");
-		sqlString.append(" cmdref = ? ");
-
-		return sqlString.toString();
-	}
-
-	public static String updateConditieID() {
-		StringBuilder sqlString = new StringBuilder();
-
-		sqlString.append("update sapdev.zcondheadtableta set cmdmodif = ? where id = ?");
-
-		return sqlString.toString();
 	}
 
 }

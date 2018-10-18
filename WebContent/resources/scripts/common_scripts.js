@@ -76,8 +76,6 @@ function getTipTranspText(tipTransp) {
 function getStareComandaText(idStareComanda) {
 	var textStare;
 
-	
-	
 	if (idStareComanda == 1) {
 		textStare = 'Comanda in curs de aprobare';
 	} else if (idStareComanda == 4) {
@@ -88,8 +86,6 @@ function getStareComandaText(idStareComanda) {
 
 }
 
-
-
 function getTipAngajat(tipAng) {
 
 	var strTipResp = 'Nedefinit';
@@ -98,10 +94,13 @@ function getTipAngajat(tipAng) {
 		strTipResp = 'Agent vanzari';
 	else if (tipAng == 'SD')
 		strTipResp = 'Sef departament';
+	else if (tipAng == 'GS')
+		strTipResp = 'Gestionar sef';
+	else if (tipAng == 'DZ')
+		strTipResp = 'Director zona';
+	else if (tipAng == 'DADMIN')
+		strTipResp = 'Director administrativ';
 
 	return strTipResp;
 
 }
-
-
-

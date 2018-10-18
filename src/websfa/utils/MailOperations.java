@@ -16,7 +16,7 @@ public class MailOperations {
 	public static void sendMail(String mailMessage) {
 
 		String to = "florin.brasoveanu@arabesque.ro";
-		String from = "WebSFATest";
+		String from = "MobiGEST";
 		String host = "localhost"; // mail.arabesque.ro, 10.1.5.5
 
 		Properties properties = System.getProperties();

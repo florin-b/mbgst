@@ -13,24 +13,10 @@ public class DBManager {
 
 	private static final Logger logger = LogManager.getLogger(DBManager.class);
 
+	
+	/*
+	
 	public DataSource getTestDataSource() {
-
-		OracleDataSource oracleDS = null;
-		try {
-			oracleDS = new OracleDataSource();
-			oracleDS.setURL("jdbc:oracle:thin:@10.1.4.14:1521:bgt");
-			oracleDS.setUser("WEBSAP");
-			oracleDS.setPassword("2INTER7");
-
-		} catch (Exception e) {
-			logger.error(Utils.getStackTrace(e));
-			MailOperations.sendMail(Utils.getStackTrace(e));
-
-		}
-		return oracleDS;
-	}
-
-	public DataSource getTestDataSourceRO() {
 
 		OracleDataSource oracleDS = null;
 		try {
@@ -42,6 +28,23 @@ public class DBManager {
 		} catch (Exception e) {
 			logger.error(Utils.getStackTrace(e));
 			MailOperations.sendMail(Utils.getStackTrace(e));
+		}
+		return oracleDS;
+	}
+	*/
+	
+	
+	public DataSource getProdDataSource() {
+
+		OracleDataSource oracleDS = null;
+		try {
+
+			oracleDS = new OracleDataSource();
+			oracleDS.setURL("jdbc:oracle:thin:@10.1.3.94:1521:prd002");
+			oracleDS.setUser("WEBSAP");
+			oracleDS.setPassword("2INTER7");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return oracleDS;
 	}
