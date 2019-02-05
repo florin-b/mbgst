@@ -18,8 +18,8 @@ public class TestClass {
 	public static void main(String[] args) throws MalformedURLException {
 
 		Login l = new Login();
-		l.setUsername("ICOMAN_TM");
-		l.setPassword("QRLdpj");
+		l.setUsername("MTANASESCU1");
+		l.setPassword("mza4Ee");
 
 		 new UserDAO().validateUser(l);
 

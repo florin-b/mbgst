@@ -62,7 +62,8 @@ public class UserDAO {
 				user.setUnitLog(getUnitLogAngajat(conn, codAgent));
 				user.setTipAngajat(getTipAngajat(conn, codAgent));
 
-				if (!user.getTipAcces().equals("5") && !user.getTipAcces().equals("11") && !user.getTipAcces().equals("38")) {
+				if (!user.getTipAcces().equals("5") && !user.getTipAcces().equals("11") && !user.getTipAcces().equals("38")
+						&& !user.getTipAcces().equals("4")) {
 					user.setSuccessLogon(false);
 					user.setLogonMessage("Acces interzis");
 				} else

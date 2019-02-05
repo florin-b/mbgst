@@ -34,7 +34,7 @@ public class DBManager {
 	*/
 	
 	
-	public DataSource getProdDataSource() {
+	public DataSource getProdDataSource_old() {
 
 		OracleDataSource oracleDS = null;
 		try {
@@ -48,5 +48,24 @@ public class DBManager {
 		}
 		return oracleDS;
 	}
+	
+	
+	public DataSource getProdDataSource() {
+
+		OracleDataSource oracleDS = null;
+		try {
+
+			oracleDS = new OracleDataSource();
+			oracleDS.setURL("jdbc:oracle:thin:@10.1.3.76:1521/PRD");
+			oracleDS.setUser("WEBSAP");
+			oracleDS.setPassword("2INTER7");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return oracleDS;
+	}		
+	
+	
 
 }

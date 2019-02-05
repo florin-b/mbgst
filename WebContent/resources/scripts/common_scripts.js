@@ -100,6 +100,8 @@ function getTipAngajat(tipAng) {
 		strTipResp = 'Director zona';
 	else if (tipAng == 'DADMIN')
 		strTipResp = 'Director administrativ';
+	else if (tipAng == 'GD')
+		strTipResp = 'Gestionar';	
 
 	return strTipResp;
 
