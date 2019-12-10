@@ -52,14 +52,14 @@
 }
 </style>
 
+
+
 </head>
 
 
 <body>
 
 	<div data-role="page" id="incarc_masini" data-theme="a" data-url="">
-
-
 
 		<div data-role="header" data-theme="a">
 			<h1>Incarcare masini</h1>
@@ -71,7 +71,7 @@
 
 		<div data-role="content" class="ui-content">
 
-			<br><br>
+			<br> <br>
 
 			<table style="width: 100%;">
 				<tr>
@@ -81,10 +81,11 @@
 				</tr>
 			</table>
 
-			<br> <br> <select name="masini_select"
-				id="masini_select">
+			<br> <br> <select name="masini_select" id="masini_select">
+			</select> <br> <br>
 
-			</select> <br> <br> <a href="#" id="sfIncarcare"
+
+			<br> <br> <a href="#" id="sfIncarcare"
 				class="ui-btn ui-corner-all"
 				style="background: #99FFD3; display: none">Sfarsit incarcare</a>
 
@@ -106,6 +107,8 @@
 
 	<script
 		src="<c:url value="/resources/helper_scritps/helper_livrare.js" />"></script>
+
+
 
 </body>
 </html>

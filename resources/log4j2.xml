@@ -12,7 +12,7 @@
 				pattern="%d{dd-MMM-yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
 
-		<RollingFile name="RollingFile" fileName="${log-path}/WebSFATest.log"
+		<RollingFile name="RollingFile" fileName="${log-path}/MobiGEST.log"
 			filePattern="${log-path}/WebSFATest-%d{dd-MMM-yyyy}-%i.log">
 			<PatternLayout
 				pattern="%d{dd-MMM-yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />

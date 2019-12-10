@@ -56,12 +56,13 @@ a:link {
 		</div>
 
 
-
-
 	</div>
 
 	<div id="userbean" style="visibility: hidden">${userjson}</div>
 	<div id="menubean" style="visibility: hidden">${menu}</div>
+
+
+
 
 	<script src="<c:url value="/resources/scripts/main_menu.js" />"></script>
 

@@ -7,9 +7,7 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import websfa.beans.Login;
-import websfa.database.user.UserDAO;
-import websfa.model.comenzi.OperatiiMasini;
+import websfa.utils.Utils;
 
 public class TestClass {
 
@@ -17,11 +15,23 @@ public class TestClass {
 
 	public static void main(String[] args) throws MalformedURLException {
 
+		
+		/*
 		Login l = new Login();
-		l.setUsername("MTANASESCU1");
-		l.setPassword("mza4Ee");
+		l.setUsername("MTOMESCU");
+		l.setPassword("7vT3mM");
 
 		 new UserDAO().validateUser(l);
+		 */
+		
+		
+		System.out.println(new Utils().getConnectionData());
+		
+		
+		//new DBManager().getProdDataSource();
+		
+	
+		
 
 		//new OperatiiMasini().setSfarsitIncarcare("112", "221");
 
