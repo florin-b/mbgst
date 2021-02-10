@@ -94,19 +94,18 @@ video {
 				<tr>
 					<td style="width: 70%; display: none"><h3 id='labelMasini'></h3></td>
 					<td><a href="#" id="refreshList" class="ui-btn ui-corner-all"
-						style="background: #DCDDFD;">Actualizeaza</a></td>
+						style="background: #DCDDFD; display: none">Actualizeaza</a></td>
 				</tr>
 			</table>
 
-			<br> <br> <select name="masini_select" id="masini_select">
-			</select> <br> <br>
+			<br> <br>
 
 
 
 			<div id="camdiv" align="center">
 				<video id="video" width="768" height="576" autoplay></video>
 				<br>
-				<button id="foto">Foto</button>
+				<button id="foto" style="background: #99FFD3;">Foto</button>
 				<br>
 				<canvas id="canvas" width="768" height="576"></canvas>
 
@@ -115,10 +114,9 @@ video {
 				<h2 id="nrAuto"></h2>
 			</div>
 
-			<br> <a href="#" id="sfIncarcare" class="ui-btn ui-corner-all"
-				style="background: #99FFD3; display: none">Sfarsit incarcare</a>
+			<br>
 
-<div id="pageBottom"></div>
+			<div id="pageBottom"></div>
 
 		</div>
 	</div>
@@ -163,6 +161,8 @@ video {
 
 		document.getElementById("foto").addEventListener("click", function() {
 			context.drawImage(video, 0, 0, 768, 576);
+			
+			context.drawImage('werwerwerwer',0, 0, 768, 576);
 			showSaveButton();
 
 		});

@@ -20,8 +20,14 @@
 	src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
 
+
+
+
+
 </head>
 <body>
+
+	
 
 	<div data-role="page" id="init" data-url="">
 
@@ -36,6 +42,7 @@
 				modelAttribute="login">
 
 				<h3>Autentificare</h3>
+
 
 				<form:label path="username">Utilizator</form:label>
 				<form:input id="username" name="username" path="" />

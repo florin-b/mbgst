@@ -4,6 +4,7 @@ public class MasinaNeincarcata {
 
 	private String nrMasina;
 	private String nrBorderou;
+	private String dataOra;
 
 	public MasinaNeincarcata() {
 
@@ -29,6 +30,14 @@ public class MasinaNeincarcata {
 
 	public void setNrBorderou(String nrBorderou) {
 		this.nrBorderou = nrBorderou;
+	}
+
+	public String getDataOra() {
+		return dataOra;
+	}
+
+	public void setDataOra(String dataOra) {
+		this.dataOra = dataOra;
 	}
 
 	@Override

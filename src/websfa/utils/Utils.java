@@ -9,6 +9,9 @@ import java.io.StringWriter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class Utils {
 
@@ -37,6 +40,30 @@ public class Utils {
 
 		return result.toString();
 
+	}
+
+	public static String getPlateNrFromJson(String jsonString) {
+		String plateNr = "-1";
+
+		Object obj;
+		try {
+			obj = new JSONParser().parse(jsonString);
+			org.json.simple.JSONObject jo = (org.json.simple.JSONObject) obj;
+			JSONArray ja = (JSONArray) jo.get("results");
+
+			if (ja.isEmpty()) {
+				return "-1";
+
+			}
+
+			org.json.simple.JSONObject articolObject = (org.json.simple.JSONObject) ja.get(0);
+			plateNr = (String) articolObject.get("plate");
+
+		} catch (ParseException e) {
+			logger.error(Utils.getStackTrace(e));
+		}
+
+		return plateNr;
 	}
 
 }

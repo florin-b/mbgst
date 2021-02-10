@@ -32,6 +32,22 @@ public class DBManager {
 		return oracleDS;
 	}
 
+	public DataSource getTestDataSource() {
+
+		OracleDataSource oracleDS = null;
+		try {
+
+			oracleDS = new OracleDataSource();
+			oracleDS.setURL("jdbc:oracle:thin:@10.1.3.89:1527/TES");
+			oracleDS.setUser("WEBSAP");
+			oracleDS.setPassword("2INTER7");
+
+		} catch (Exception e) {
+			logger.error(Utils.getStackTrace(e));
+		}
+		return oracleDS;
+	}
+
 	public DataSource getProdDataSource_env() {
 
 		InitialContext initContext;

@@ -1,10 +1,13 @@
 var userObj;
 var globalListArticole = [];
 var comandaCurenta;
+var nrBorderou;
 
 $(document).on('pageshow', '#incarc_masini', function() {
 
 	userObj = JSON.parse($('#userbean').text());
+
+	$('#canvas').hide();
 
 	getMasiniNeincarcate();
 
@@ -31,6 +34,7 @@ function getMasiniNeincarcate() {
 		},
 		success : function(data) {
 			$.mobile.loading('hide');
+
 			afisMasiniNeincarcate(data);
 
 		},
@@ -45,7 +49,38 @@ function getMasiniNeincarcate() {
 
 }
 
+function showSaveButton() {
+
+	$('#canvas').show();
+
+	$('#sfIncarcare').show();
+	scrollToBottom();
+
+	getNrAuto();
+
+}
+
+function scrollToCamDiv() {
+
+	$(function() {
+		$('html, body').animate({
+			scrollTop : $('#camdiv').offset().top
+		});
+	});
+}
+
+function scrollToCanvas() {
+
+	$(function() {
+		$('html, body').animate({
+			scrollTop : $('#canvas').offset().top
+		});
+	});
+}
+
 function afisMasiniNeincarcate(listMasini) {
+	
+	
 
 	$('#masini_select').empty();
 
@@ -68,11 +103,11 @@ function afisMasiniNeincarcate(listMasini) {
 		else
 			$('#labelMasini').text(
 					"Exista " + listMasini.length
-							+ " masini ce urmeaza a fi incarcate.");
+							+ " masini ce  urmeaza a fi incarcate.");
 
 		$('#masini_select').append($('<option>', {
 			value : 0,
-			text : "Selectati o masina"
+			text : "Selectati o  masina"
 		}));
 
 		for (var i = 0; i < listMasini.length; i++) {
@@ -83,11 +118,11 @@ function afisMasiniNeincarcate(listMasini) {
 		}
 
 		$("#masini_select").val("0").change();
-
 	}
 
 	$('#masini_select').selectmenu("refresh", true);
 
+	// $('#masini_select').hide();
 }
 
 function onChangeMasini() {
@@ -97,23 +132,35 @@ function onChangeMasini() {
 
 		if (documentId == '0') {
 			$('#sfIncarcare').hide();
+			$('#camdiv').hide();
+			$('#canvas').hide();
+			$('#nrAuto').text("");
 		} else {
-			$('#sfIncarcare').show();
+			$('#camdiv').show();
+			scrollToCamDiv();
 		}
 
 	});
-
 }
 
 function onClickIncarcare() {
 
-	$("#sfIncarcare").click(function() {
-		setSfarsitIncarcare();
-	});
+	$("#sfIncarcare")
+			.click(
+					function() {
+
+						var image = document.getElementById("canvas")
+								.toDataURL("image/png").replace("image/png",
+										"image/octet-stream");
+
+						setSfarsitIncarcare(image);
+
+					});
 
 }
 
 function onClickRefreshList() {
+	
 
 	$("#refreshList").click(function() {
 		getMasiniNeincarcate();
@@ -121,29 +168,97 @@ function onClickRefreshList() {
 
 }
 
-function setSfarsitIncarcare() {
+function scrollToBottom() {
 
-	$.ajax({
-		type : 'GET',
-		url : 'setSfarsitIncarcare',
-		data : ({
-			document : $("#masini_select option:selected").val(),
-			codSofer : userObj.codPers
-		}),
-		beforeSend : function() {
-			loading('show');
-		},
-		complete : function() {
-			loading('hide');
-			getMasiniNeincarcate();
-		},
-		success : function(data) {
-			$.mobile.loading('hide');
-		},
-		dataType : 'json',
-		contentType : 'application/json',
-
+	$(function() {
+		$('html, body').animate({
+			scrollTop : $('#pageBottom').offset().top
+		});
 	});
+}
+
+function getNrAuto() {
+
+	var image = document.getElementById("canvas").toDataURL("image/png")
+			.replace("image/png", "image/octet-stream");
+
+	try {
+		$.ajax({
+			type : 'POST',
+			url : 'valideazaMasina',
+			async : true,
+			data : ({
+				codUser : userObj.codPers,
+				filiala : userObj.unitLog,
+				image : image
+			}),
+			beforeSend : function() {
+				loading('show');
+			},
+			complete : function() {
+				loading('hide');
+			},
+			success : function(data) {
+
+				var masina = $.parseJSON(JSON.stringify(data));
+				nrBorderou = masina.nrBorderou;
+
+				$('#nrAuto').text(masina.nrMasina);
+				$.mobile.loading('hide');
+				$('#sfIncarcare').show();
+				scrollToBottom();
+
+			},
+			error : function(data) {
+				$.mobile.loading('hide');
+				alert('Error: ' + $.parseJSON(data));
+
+			}
+
+		});
+	} catch (error) {
+		alert(error);
+	}
+
+}
+
+function setSfarsitIncarcare(image) {
+
+	try {
+		$.ajax({
+			type : 'POST',
+			url : 'setSfarsitIncarcare',
+			data : ({
+				document : nrBorderou,
+				codSofer : userObj.codPers,
+				image : image
+			}),
+			beforeSend : function() {
+				loading('show');
+
+			},
+			complete : function() {
+				loading('hide');
+
+				$('#sfIncarcare').hide();
+				$('#canvas').hide();
+				$('#nrAuto').text("");
+
+				getMasiniNeincarcate();
+			},
+			success : function(data) {
+				$.mobile.loading('hide');
+			},
+			error : function(data) {
+				$.mobile.loading('hide');
+				alert('Error: ' + $.parseJSON(data));
+
+			}
+
+		});
+	} catch (error) {
+		alert(error);
+	}
 
 }
 

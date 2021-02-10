@@ -221,4 +221,16 @@ public class DateUtils {
 
 	}
 
+	public static String getStrTimeStamp() {
+		return new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
+
+	}
+
+	
+	public static String getStrTimeStampRo() {
+		return new SimpleDateFormat("dd-MM-yyyy HH:mm").format(Calendar.getInstance().getTime());
+
+	}	
+	
+	
 }

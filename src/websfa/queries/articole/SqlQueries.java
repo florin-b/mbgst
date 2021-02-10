@@ -34,4 +34,14 @@ public class SqlQueries {
 
 	}
 
+	public static String setSfarsitIncImg() {
+		StringBuilder sqlString = new StringBuilder();
+
+		sqlString.append(" insert into zsfarsitincfoto(document, img) ");
+		sqlString.append(" values (?,?) ");
+
+		return sqlString.toString();
+
+	}
+
 }
