@@ -85,7 +85,7 @@ public class OperatiiMasini {
 
 		boolean succes = false;
 
-		try (Connection conn = new DBManager().getTestDataSource().getConnection(); PreparedStatement stmt = conn.prepareStatement(SqlQueries.setSfarsitIncImg())) {
+		try (Connection conn = new DBManager().getProdDataSource().getConnection(); PreparedStatement stmt = conn.prepareStatement(SqlQueries.setSfarsitIncImg())) {
 
 			InputStream istream = new ByteArrayInputStream(img.getBytes(StandardCharsets.UTF_8));
 

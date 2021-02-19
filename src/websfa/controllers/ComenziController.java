@@ -44,7 +44,7 @@ public class ComenziController {
 			System.out.println(e.toString());
 		}
 
-		// new OperatiiMasini().setSfarsitIncarcare(document, codSofer);
+		 new OperatiiMasini().setSfarsitIncarcare(document, codSofer);
 
 	}
 

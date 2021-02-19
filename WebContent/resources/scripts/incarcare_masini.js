@@ -19,6 +19,7 @@ $(document).on('pageshow', '#incarc_masini', function() {
 });
 
 function getMasiniNeincarcate() {
+	
 
 	$.ajax({
 		type : 'GET',
@@ -56,7 +57,7 @@ function showSaveButton() {
 	$('#sfIncarcare').show();
 	scrollToBottom();
 
-	getNrAuto();
+	//getNrAuto();
 
 }
 
@@ -79,7 +80,6 @@ function scrollToCanvas() {
 }
 
 function afisMasiniNeincarcate(listMasini) {
-	
 	
 
 	$('#masini_select').empty();
@@ -129,7 +129,7 @@ function onChangeMasini() {
 
 	$('#masini_select').on('change', function() {
 		var documentId = $("#masini_select option:selected").val();
-
+		
 		if (documentId == '0') {
 			$('#sfIncarcare').hide();
 			$('#camdiv').hide();
@@ -137,6 +137,7 @@ function onChangeMasini() {
 			$('#nrAuto').text("");
 		} else {
 			$('#camdiv').show();
+			nrBorderou = documentId;
 			scrollToCamDiv();
 		}
 
@@ -160,6 +161,7 @@ function onClickIncarcare() {
 }
 
 function onClickRefreshList() {
+	
 	
 
 	$("#refreshList").click(function() {
@@ -223,6 +225,7 @@ function getNrAuto() {
 }
 
 function setSfarsitIncarcare(image) {
+	
 
 	try {
 		$.ajax({
